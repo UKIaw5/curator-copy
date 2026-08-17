@@ -2,7 +2,7 @@ import os
 import glob
 import shutil
 
-# 💡 こちらも本丸のファイルパスに変更
+# 💡 本丸のファイルパス
 HISTORY_FILE = "output/seen_urls.json"
 HISTORY_BAK = "output/seen_urls.json.bak"
 
@@ -26,37 +26,31 @@ def main():
 
     if not files_to_delete:
         print("ℹ️ No output files found to delete.")
-    else:
-        print("\n⚠️ The following generated files will be DELETED:")
-        for f in files_to_delete:
-            print(f" - {f}")
+        return
 
-    # 2. 履歴復元の確認
-    print(f"\n⚠️ `{HISTORY_FILE}` will be restored from backup.")
+    print("\n⚠️ Deleting the following generated files:")
+    for f in files_to_delete:
+        print(f" - {f}")
+
+    # 2. ファイル削除を即時実行
+    for f in files_to_delete:
+        try:
+            os.remove(f)
+            print(f"🗑️ Deleted: {f}")
+        except Exception as e:
+            print(f"❌ Failed to delete {f}: {e}")
     
-    confirm = input("\nAre you sure you want to rollback? (y/n): ")
-    if confirm.lower() == 'y':
-        # ファイル削除
-        for f in files_to_delete:
-            try:
-                os.remove(f)
-                print(f"🗑️ Deleted: {f}")
-            except Exception as e:
-                print(f"❌ Failed to delete {f}: {e}")
-        
-        # 履歴の復元
-        if os.path.exists(HISTORY_BAK):
-            try:
-                shutil.copy2(HISTORY_BAK, HISTORY_FILE)
-                print(f"🔄 Restored history from {HISTORY_BAK}.")
-            except Exception as e:
-                print(f"❌ Failed to restore history: {e}")
-        else:
-            print("⚠️ No history backup found. History might not be reverted.")
-            
-        print("\n✅ Rollback complete! You can tune your code/prompts and run Part A again.")
+    # 3. 履歴の復元
+    if os.path.exists(HISTORY_BAK):
+        try:
+            shutil.copy2(HISTORY_BAK, HISTORY_FILE)
+            print(f"🔄 Restored history from {HISTORY_BAK}.")
+        except Exception as e:
+            print(f"❌ Failed to restore history: {e}")
     else:
-        print("\n🚫 Rollback cancelled.")
+        print("⚠️ No history backup found. History might not be reverted.")
+        
+    print("\n✅ Rollback complete! You can tune your code/prompts and run Part A again.")
 
 if __name__ == "__main__":
     main()

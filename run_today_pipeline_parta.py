@@ -9,18 +9,17 @@ from fetchers.github_trending import fetch_github_trending
 from fetchers.huggingface import fetch_huggingface_papers
 from generators.generate_x_posts import run_stage1
 from generators.refiner import refine_to_x_post
+from generators.curator import select_best_items
+from generators.reviewer import review_and_edit_post
 
-# 本丸の重複管理ファイル
 HISTORY_FILE = "output/seen_urls.json"
 HISTORY_BAK = "output/seen_urls.json.bak"
 
 def backup_history():
-    """ロールバック用に履歴ファイルをバックアップする"""
     if os.path.exists(HISTORY_FILE):
         shutil.copy2(HISTORY_FILE, HISTORY_BAK)
 
 def load_history():
-    """履歴ファイルから過去に処理したURLのリストを読み込む"""
     if os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE, "r", encoding="utf-8") as f:
             try:
@@ -30,7 +29,6 @@ def load_history():
     return set()
 
 def save_history(history_set):
-    """新しいURLを含めて履歴ファイルを保存する"""
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(list(history_set), f, ensure_ascii=False, indent=4)
 
@@ -74,22 +72,28 @@ def main():
 
     print(f"Total fetched items combined: {len(all_items)}")
 
-    # 🌟 --- 履歴フィルター処理 --- 🌟
-    backup_history()  # 新規追加の前に現在の履歴(seen_urls)をバックアップ
+    backup_history()
     posted_history = load_history()
-    new_items = []
+    candidate_items = []
     
     for item in all_items:
         item_id = item.get('link') or item.get('url') or item.get('title')
         if not item_id: continue
         if item_id not in posted_history:
-            new_items.append(item)
-            posted_history.add(item_id)
+            candidate_items.append(item)
 
-    print(f"🔍 After duplication check: {len(new_items)} new items to process.")
-    if not new_items:
+    print(f"🔍 After duplication check: {len(candidate_items)} new candidate items to process.")
+    if not candidate_items:
         print("ℹ️ No new items to process. Exiting.")
         return
+
+    curated_items = select_best_items(candidate_items, max_select=8)
+    print(f"🎯 After Qwen curation: {len(curated_items)} items selected for generation.")
+
+    for item in curated_items:
+        item_id = item.get('link') or item.get('url') or item.get('title')
+        if item_id:
+            posted_history.add(item_id)
 
     output_dir = "output"
     raw_dir = os.path.join(output_dir, "raw")
@@ -98,7 +102,7 @@ def main():
 
     print("\nStep 3: Generating detailed tech summaries (Stage 1 - Qwen)...")
     stage1_filename = f"output_prex_posts_{timestamp}.md"
-    run_stage1(new_items, raw_dir, filename=stage1_filename)
+    run_stage1(curated_items, raw_dir, filename=stage1_filename)
 
     latest_summaries_path = os.path.join(raw_dir, stage1_filename)
     if not os.path.exists(latest_summaries_path):
@@ -113,13 +117,16 @@ def main():
         print("ℹ️ No content to refine.")
         return
 
-    # Step 4: Refine each summary using Gemma2 professional tone (従来の詳細なループとログを復元)
-    print(f"\nStep 4: Refining {len(summaries)} summaries into professional X posts (Stage 2 - Gemma2)...")
+    print(f"\nStep 4: Refining {len(summaries)} summaries into professional X posts (Stage 2 - Gemma2 & Qwen Review)...")
     refined_posts = []
     for i, summary in enumerate(summaries, 1):
-        print(f"[{i}/{len(summaries)}] Refining summary...")
-        post = refine_to_x_post(summary)
-        refined_posts.append(post)
+        print(f"[{i}/{len(summaries)}] Generating draft with Gemma2...")
+        gemma_draft = refine_to_x_post(summary)
+        
+        print(f"[{i}/{len(summaries)}] Reviewing & editing with Qwen...")
+        final_post = review_and_edit_post(gemma_draft, summary)
+        
+        refined_posts.append(final_post)
 
     final_content = "\n\n---\n\n".join(refined_posts)
 
@@ -128,10 +135,9 @@ def main():
     with open(timestamped_file, "w", encoding="utf-8") as f:
         f.write(final_content)
 
-    # 全処理成功後に履歴を保存
     save_history(posted_history)
     
-    print(f"\n💾 Updated history file with new items.")
+    print(f"\n💾 Updated history file with curated items.")
     print(f"💾 Saved Stage 1 prex to `{latest_summaries_path}`")
     print(f"💾 Saved Stage 2 x posts to `{timestamped_file}`")
     

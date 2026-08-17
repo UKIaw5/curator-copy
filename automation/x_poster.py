@@ -126,6 +126,8 @@ def schedule_post_on_x(page, text: str, target_time: datetime):
         time.sleep(2.0)
         
         # 4. タイムライン上の「予約投稿(Schedule)」ボタンをクリック
+        time.sleep(2.0)
+        
         post_btn = page.locator('[data-testid="tweetButtonInline"]:visible, [data-testid="tweetButton"]:visible').first
         try:
             post_btn.click(force=True, timeout=5000)
@@ -134,7 +136,7 @@ def schedule_post_on_x(page, text: str, target_time: datetime):
             post_btn.evaluate("node => node.click()")
             
         print(f"✅ Successfully scheduled post for {target_time.strftime('%Y-%m-%d %H:%M')}!")
-        time.sleep(3.0)
+        time.sleep(5.0)
         
     except Exception as e:
         print(f"❌ Failed during schedule modal interaction: {e}")

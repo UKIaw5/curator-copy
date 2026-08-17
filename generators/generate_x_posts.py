@@ -6,6 +6,8 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 
 def generate_detailed_summary(item: dict) -> str:
     model_name = os.getenv("QWEN_MODEL", "qwen2.5-coder:14b")
+    # itemからURLを安全に取得（'url' または 'link'）
+    item_url = item.get('url') or item.get('link') or ''
     
     prompt = f"""You are a senior tech analyst and AI researcher. Analyze the following article and write a comprehensive, detailed technical summary in ENGLISH.
 
@@ -13,14 +15,15 @@ def generate_detailed_summary(item: dict) -> str:
 Title: {item.get('title', '')}
 Content: {item.get('content', '')}
 Source: {item.get('source', '')}
-URL: {item.get('url', '')}
+URL: {item_url}
 --------------------
 
 --- INSTRUCTIONS ---
 1. Provide a detailed explanation in English of WHAT this tool/article is, HOW it works, and WHY it matters to developers.
 2. Use clear bullet points and structured formatting in English.
-3. Include the original URL ({item.get('url', '')}) at the very end.
+3. Include the original URL ({item_url}) at the very end.
 4. Return ONLY the summary text. No meta-commentary or markdown code blocks.
+5. Extract specific architecture names, benchmarks, key metrics, or concrete use cases rather than general overviews.
 """
     payload = {
         "model": model_name,
@@ -33,12 +36,17 @@ URL: {item.get('url', '')}
         res.raise_for_status()
         data = res.json()
         summary = data.get("response", "").strip()
+        
         if summary:
+            # 💡 Qwenの要約内にURLが含まれていなければ、末尾に強制付与する
+            if item_url and item_url not in summary:
+                summary = f"{summary}\n\nURL: {item_url}"
             return summary
+            
     except Exception as e:
-        print(f"⚠️ Qwen API warning for '{item.get('title')}': {e})")
+        print(f"⚠️ Qwen API warning for '{item.get('title')}': {e}")
     
-    return f"Title: {item.get('title')}\nURL: {item.get('url')}"
+    return f"Title: {item.get('title')}\nURL: {item_url}"
 
 def run(items: list, output_dir: str = "output", filename: str = "latest_summaries.md"):
     os.makedirs(output_dir, exist_ok=True)
@@ -54,7 +62,7 @@ def run(items: list, output_dir: str = "output", filename: str = "latest_summari
 
     summaries = []
     for item in items:
-        url = item.get("url")
+        url = item.get("url") or item.get("link")
         if not url or url in seen_urls:
             print(f"⏩ Skipping duplicate URL: {url}")
             continue
