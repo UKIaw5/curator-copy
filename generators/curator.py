@@ -1,8 +1,9 @@
+import os
 import re
 import requests
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "qwen2.5-coder:14b"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
+MODEL_NAME = os.getenv("QWEN_MODEL", "qwen3.8:27b")
 
 def select_best_items(items: list, max_select: int = 5) -> list:
     """
@@ -35,12 +36,14 @@ Selected Indices (comma-separated numbers only):
     payload = {
         "model": MODEL_NAME,
         "prompt": prompt,
-        "stream": False
+        "stream": False,
+        "keep_alive": 0,
+        "options": {"temperature": 0.5}
     }
 
     try:
         print(f"🤖 Qwen ({MODEL_NAME}) is curating the best items from {len(items)} candidates...")
-        res = requests.post(OLLAMA_URL, json=payload, timeout=120)
+        res = requests.post(OLLAMA_URL, json=payload, timeout=300)
         res.raise_for_status()
         data = res.json()
         response_text = data.get("response", "").strip()

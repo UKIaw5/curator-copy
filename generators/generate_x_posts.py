@@ -2,11 +2,11 @@ import os
 import json
 import requests
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
 
 def generate_detailed_summary(item: dict) -> str:
     model_name = os.getenv("QWEN_MODEL", "qwen2.5-coder:14b")
-    # itemからURLを安全に取得（'url' または 'link'）
+    # Safely retrieve URL from item ('url' or 'link')
     item_url = item.get('url') or item.get('link') or ''
     
     prompt = f"""You are a senior tech analyst and AI researcher. Analyze the following article and write a comprehensive, detailed technical summary in ENGLISH.
@@ -32,13 +32,13 @@ URL: {item_url}
     }
     
     try:
-        res = requests.post(OLLAMA_URL, json=payload, timeout=90)
+        res = requests.post(OLLAMA_URL, json=payload, timeout=300)
         res.raise_for_status()
         data = res.json()
         summary = data.get("response", "").strip()
         
         if summary:
-            # 💡 Qwenの要約内にURLが含まれていなければ、末尾に強制付与する
+            # Force append URL if it's missing from the generated summary
             if item_url and item_url not in summary:
                 summary = f"{summary}\n\nURL: {item_url}"
             return summary
@@ -50,7 +50,7 @@ URL: {item_url}
 
 def run(items: list, output_dir: str = "output", filename: str = "latest_summaries.md"):
     os.makedirs(output_dir, exist_ok=True)
-    seen_urls_path = os.path.join("output", "seen_urls.json")
+    seen_urls_path = os.path.join(output_dir, "seen_urls.json")
     
     seen_urls = set()
     if os.path.exists(seen_urls_path):
