@@ -36,10 +36,10 @@ def main():
 
     print(f"🎯 Summaries detected: {len(summaries)}")
 
-    print(f"\nStep: Refining {len(summaries)} summaries into X posts (Gemma2 & Qwen Review)...")
+    print(f"\nStep: Refining {len(summaries)} summaries into X posts (gemma4:12b & Qwen Review)...")
     refined_posts = []
     for i, summary in enumerate(summaries, 1):
-        print(f"\n--- [{i}/{len(summaries)}] Generating draft with Gemma2 ---")
+        print(f"\n--- [{i}/{len(summaries)}] Generating draft with gemma4:12b ---")
         gemma_draft = refine_to_x_post(summary)
         print(f"📝 Gemma Draft:\n{gemma_draft}")
         
