@@ -4,7 +4,7 @@ import requests
 from generators.refiner import extract_clean_url, get_x_effective_length
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
-MODEL_NAME = os.getenv("QWEN_REVIEWER_MODEL", "qwen3.8:27b")
+MODEL_NAME = os.getenv("QWEN_REVIEWER_MODEL", "gemma4:12b")
 
 def review_and_edit_post(gemma_post: str, original_summary: str) -> str:
     target_url = extract_clean_url(gemma_post) or extract_clean_url(original_summary)

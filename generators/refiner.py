@@ -77,7 +77,7 @@ Input:
 {summary_text}
 """
 
-    model_name = os.getenv("GEMMA_MODEL", "gemma4:12b")
+    model_name = os.getenv("GEMMA_MODEL", "qwen3.8:27b")
     body_text = ""
 
     for attempt in range(1, max_retries + 1):

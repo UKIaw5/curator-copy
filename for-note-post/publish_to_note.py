@@ -57,9 +57,10 @@ def get_latest_article():
 
 def parse_article_content(raw_content):
     lines = raw_content.splitlines()
-    title = lines[0].replace("#", "").strip() if lines else "無題のタイトル"
+    # 💡 修正点: generate_note_article.py のサニタイズ処理に合わせて「■」も除去する
+    title = lines[0].replace("#", "").replace("■", "").strip() if lines else "無題のタイトル"
     
-    boundary_marker = "--- [NOTE PAID BOUNDARY] ---"
+    boundary_marker = "<!-- PAYWALL -->"
     
     parts = raw_content.split(boundary_marker)
     free_section = parts[0].replace(lines[0], "").strip() if len(parts) > 0 else raw_content
@@ -84,7 +85,7 @@ def main():
     if paid_section:
         print(f"📊 Paid section length: {len(paid_section)} chars")
     else:
-        print("⚠️ 警告: '--- [NOTE PAID BOUNDARY] ---' が見つからなかったため、有料エリアは設定されません！")
+        print("⚠️ 警告: '<!-- PAYWALL -->' が見つからなかったため、有料エリアは設定されません！")
 
     with sync_playwright() as p:
         print("🌐 Launching browser...")
@@ -195,10 +196,7 @@ def main():
                     else:
                         print("⚠️ Price input field could not be targeted.")
                         
-                    # 💡追加点1：右上にある「有料エリア設定」などの保存/確認ボタンを押す
                     print("💾 Clicking '有料エリア設定' (Save/Confirm) button...")
-                    # 右上のボタンは「設定を保存」や「確認」などのテキストである可能性が高いため、ボタン要素で広く探します
-                    # もし特定のテキスト（例：「保存」）であれば name="保存" に変更してください
                     setting_confirm_btn = page.get_by_role("button", name=re.compile("設定|保存|完了")).first
                     if setting_confirm_btn.is_visible():
                         setting_confirm_btn.click()
@@ -206,14 +204,12 @@ def main():
                     else:
                         print("⚠️ '有料エリア設定' 保存ボタンが見つかりませんでした。画面の状態を確認してください。")
 
-            # 💡追加点2：最終的な「投稿」ボタンを押す
             print("📢 Clicking final '投稿' (Publish) button...")
             final_publish_btn = page.get_by_role("button", name=re.compile("投稿|公開")).filter(has_text=re.compile("投稿|公開")).last
             
             if final_publish_btn.is_visible():
                 final_publish_btn.click()
                 print("✅ Final publish button clicked!")
-                # 投稿完了画面に遷移するのを待つ
                 page.wait_for_timeout(5000) 
             else:
                 print("⚠️ 最終的な '投稿' ボタンが見つかりませんでした。")
