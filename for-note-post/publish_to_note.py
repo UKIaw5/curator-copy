@@ -1,7 +1,11 @@
 import os
 import re
 import json
+import shutil
+from datetime import datetime
 from playwright.sync_api import sync_playwright
+
+STATUS_FILE = "note_status.json"
 
 def load_cookies_to_context(context):
     cookie_path = "note_cookies.json"
@@ -57,7 +61,6 @@ def get_latest_article():
 
 def parse_article_content(raw_content):
     lines = raw_content.splitlines()
-    # 💡 修正点: generate_note_article.py のサニタイズ処理に合わせて「■」も除去する
     title = lines[0].replace("#", "").replace("■", "").strip() if lines else "無題のタイトル"
     
     boundary_marker = "<!-- PAYWALL -->"
@@ -67,9 +70,46 @@ def parse_article_content(raw_content):
     paid_section = parts[1].strip() if len(parts) > 1 else ""
     return title, free_section, paid_section
 
+def update_status_and_archive(file_path):
+    """投稿完了後に status ファイルを更新し、ファイルを archive ディレクトリへ移動する"""
+    filename = os.path.basename(file_path)
+    
+    # 1. note_status.json の更新
+    status_data = {}
+    if os.path.exists(STATUS_FILE):
+        try:
+            with open(STATUS_FILE, "r", encoding="utf-8") as f:
+                status_data = json.load(f)
+        except json.JSONDecodeError:
+            status_data = {}
+            
+    if "published_articles" not in status_data:
+        status_data["published_articles"] = []
+        
+    status_data["published_articles"].append({
+        "filename": filename,
+        "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+    
+    with open(STATUS_FILE, "w", encoding="utf-8") as f:
+        json.dump(status_data, f, ensure_ascii=False, indent=4)
+    print(f"📝 Updated {STATUS_FILE} with published record.")
+
+    # 2. output/archive への移動
+    archive_dir = os.path.join("output", "archive")
+    os.makedirs(archive_dir, exist_ok=True)
+    destination_path = os.path.join(archive_dir, filename)
+    
+    # 万が一同名ファイルがある場合はタイムスタンプで退避
+    if os.path.exists(destination_path):
+        base, ext = os.path.splitext(filename)
+        destination_path = os.path.join(archive_dir, f"{base}_{datetime.now().strftime('%H%M%S')}{ext}")
+        
+    shutil.move(file_path, destination_path)
+    print(f"📦 Moved published file to: {destination_path}")
 
 def main():
-    print("=== Starting Note Auto-Publisher (Final Polish) ===")
+    print("=== Starting Note Auto-Publisher (Final Polish + Archiver) ===")
     
     res = get_latest_article()
     if not res:
@@ -85,7 +125,7 @@ def main():
     if paid_section:
         print(f"📊 Paid section length: {len(paid_section)} chars")
     else:
-        print("⚠️ 警告: '<!-- PAYWALL -->' が見つからなかったため、有料エリアは設定されません！")
+        print("⚠️ 警告: '<!-- PAYWALL -->' が見つからないため、有料エリアは設定されません！")
 
     with sync_playwright() as p:
         print("🌐 Launching browser...")
@@ -163,9 +203,19 @@ def main():
             except Exception as e:
                 print(f"⚠️ Could not insert paid line via keyboard: {e}")
 
-            # 4. Input Paid Section
+            # 4. Input Paid Section & Links
             print("✍️ Typing paid section into the paid area...")
-            page.keyboard.type(paid_section, delay=2)
+            
+            lines = paid_section.splitlines()
+            for line in lines:
+                if line.startswith("https://") or line.startswith("http://"):
+                    page.keyboard.type(line, delay=2)
+                    page.wait_for_timeout(500)
+                    page.keyboard.press("Enter")
+                    page.wait_for_timeout(500)
+                else:
+                    page.keyboard.type(line, delay=2)
+                    page.keyboard.press("Enter")
 
         # 5. Click "公開に進む"
         print("🚀 Clicking '公開に進む' button...")
@@ -211,8 +261,12 @@ def main():
                 final_publish_btn.click()
                 print("✅ Final publish button clicked!")
                 page.wait_for_timeout(5000) 
+                
+                # 7. Post-process: Update status and archive file
+                update_status_and_archive(file_path)
+                
             else:
-                print("⚠️ 最終的な '投稿' ボタンが見つかりませんでした。")
+                print("⚠️ 最終的な '投稿' ボタンが見つかりませんでした。ステータス更新とアーカイブはスキップされます。")
                 
         except Exception as e:
             print(f"⚠️ Error during publication settings automation: {e}")

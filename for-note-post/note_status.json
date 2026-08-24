@@ -1,14 +1,24 @@
 {
-    "output_prex_posts_20260823_202704.md": {
+    "output_prex_posts_20260824_153751.md": {
         "0": {
             "note_used": true,
-            "generated_at": "20260824_013445",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260824_013445.md"
+            "generated_at": "20260824_174551",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260824_174551.md"
         },
         "1": {
             "note_used": true,
-            "generated_at": "20260824_024929",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260824_024929.md"
+            "generated_at": "20260824_185340",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260824_185340.md"
         }
-    }
+    },
+    "published_articles": [
+        {
+            "filename": "note_article_20260824_174551.md",
+            "published_at": "2026-08-24 18:23:59"
+        },
+        {
+            "filename": "note_article_20260824_170409.md",
+            "published_at": "2026-08-24 18:33:11"
+        }
+    ]
 }

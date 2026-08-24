@@ -272,7 +272,7 @@ Raw Data:
         f"{paid_text}\n\n"
         f"### 現場での具体的インパクトと適用場面\n\n"
         f"{part_insight}\n\n"
-        f"### 参考文献 / 公式リンク\n\n"
+        f"### 参考リンク\n\n"
         f"{part_links}"
     )
     final_article = lint_markdown(final_raw)
