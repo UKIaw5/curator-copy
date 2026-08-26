@@ -1,9 +1,11 @@
 from datetime import datetime
+import glob
 import json
 import os
-import shutil
+import re
 import subprocess
-import time  # 💡 timeモジュールを追加しました
+import time
+
 from fetchers.arxiv import fetch_arxiv
 from fetchers.github_trending import fetch_github_trending
 from fetchers.hacker_news import fetch_hacker_news
@@ -11,166 +13,196 @@ from fetchers.huggingface import fetch_huggingface_papers
 from generators.curator import select_best_items
 from generators.generate_x_posts import run_stage1
 from generators.refiner import refine_to_x_post
-from generators.reviewer import review_and_edit_post
 
-HISTORY_FILE = "output/seen_urls.json"
-HISTORY_BAK = "output/seen_urls.json.bak"
+HISTORY_FILE = "output/history.json"
 
 
-def backup_history():
-  if os.path.exists(HISTORY_FILE):
-    shutil.copy2(HISTORY_FILE, HISTORY_BAK)
-
-
-def load_history():
+def load_published_urls():
+  published_urls = set()
   if os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "r", encoding="utf-8") as f:
       try:
-        return set(json.load(f))
+        data = json.load(f)
+        for url, meta in data.items():
+          if meta.get("status") == "published":
+            published_urls.add(url)
       except json.JSONDecodeError:
-        return set()
-  return set()
+        pass
+
+  archived_files = glob.glob("output/archive/*.md")
+  url_pattern = re.compile(r'https?://[^\s<>"\\\)\]]+')
+  for path in archived_files:
+    with open(path, "r", encoding="utf-8") as f:
+      for u in url_pattern.findall(f.read()):
+        published_urls.add(re.sub(r"[\.\,\)\*\_\:]+$", "", u))
+
+  return published_urls
 
 
-def save_history(history_set):
-  with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-    json.dump(list(history_set), f, ensure_ascii=False, indent=4)
+def get_pending_raw_info():
+  raw_dir = "output/raw"
+  raw_files = sorted(
+      glob.glob(os.path.join(raw_dir, "output_prex_posts_*.md"))
+  )
+  if not raw_files:
+    return None, None
+
+  latest_raw = raw_files[-1]
+  filename = os.path.basename(latest_raw)
+  timestamp = filename.replace("output_prex_posts_", "").replace(".md", "")
+
+  draft_file = os.path.join("output", f"output_x_posts_{timestamp}.md")
+  archived_draft = os.path.join(
+      "output/archive", f"output_x_posts_{timestamp}.md"
+  )
+
+  if not os.path.exists(draft_file) and not os.path.exists(archived_draft):
+    return latest_raw, timestamp
+
+  return None, None
 
 
 def git_pull():
   try:
     print("Step 1: Pulling latest changes from Git...")
-    subprocess.run(["git", "pull"], check=False)
+    res = subprocess.run(
+        ["git", "pull"], capture_output=True, text=True, check=False
+    )
+    if res.stdout.strip():
+      print(f"  [Git] {res.stdout.strip()}")
   except Exception as e:
-    print(f"Git pull warning: {e}")
+    print(f"⚠️ Git pull warning: {e}")
 
 
 def main():
   print("=== Starting Daily Curation Pipeline (Part A: Fetch & Refine) ===")
   git_pull()
 
-  print("\nStep 2: Fetching data from multiple sources...")
-  all_items = []
-
-  try:
-    hn_items = fetch_hacker_news(limit=10)
-    all_items.extend(hn_items)
-    print(f"- Fetched {len(hn_items)} items from Hacker News")
-  except Exception as e:
-    print(f"Error fetching Hacker News: {e}")
-
-  try:
-    arxiv_items = fetch_arxiv(category="cs.AI", limit=10)
-    all_items.extend(arxiv_items)
-    print(f"- Fetched {len(arxiv_items)} items from arXiv (cs.AI)")
-  except Exception as e:
-    print(f"Error fetching arXiv: {e}")
-
-  try:
-    gh_items = fetch_github_trending(limit=10)
-    all_items.extend(gh_items)
-    print(f"- Fetched {len(gh_items)} items from GitHub Trending")
-  except Exception as e:
-    print(f"Error fetching GitHub Trending: {e}")
-
-  try:
-    hf_items = fetch_huggingface_papers(limit=10)
-    all_items.extend(hf_items)
-    print(f"- Fetched {len(hf_items)} items from Hugging Face Papers")
-  except Exception as e:
-    print(f"Error fetching Hugging Face Papers: {e}")
-
-  print(f"Total fetched items combined: {len(all_items)}")
-
-  backup_history()
-  posted_history = load_history()
-  candidate_items = []
-
-  for item in all_items:
-    item_id = item.get("link") or item.get("url") or item.get("title")
-    if not item_id:
-      continue
-    if item_id not in posted_history:
-      candidate_items.append(item)
-
-  print(
-      f"🔍 After duplication check: {len(candidate_items)} new candidate items"
-      " to process."
-  )
-  if not candidate_items:
-    print("ℹ️ No new items to process. Exiting.")
-    return
-
-  curated_items = select_best_items(candidate_items, max_select=8)
-  print(
-      f"🎯 After Qwen curation: {len(curated_items)} items selected for"
-      " generation."
-  )
-
-  for item in curated_items:
-    item_id = item.get("link") or item.get("url") or item.get("title")
-    if item_id:
-      posted_history.add(item_id)
-
   output_dir = "output"
   raw_dir = os.path.join(output_dir, "raw")
   os.makedirs(raw_dir, exist_ok=True)
-  timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-  print("\nStep 3: Generating detailed tech summaries (Stage 1 - Qwen)...")
-  stage1_filename = f"output_prex_posts_{timestamp}.md"
-  run_stage1(curated_items, raw_dir, filename=stage1_filename)
+  pending_raw_path, timestamp = get_pending_raw_info()
 
-  latest_summaries_path = os.path.join(raw_dir, stage1_filename)
-  if not os.path.exists(latest_summaries_path):
-    print("ℹ️ No summaries generated.")
-    return
+  if pending_raw_path:
+    print(f"\n⏩ Found pending Raw file: `{pending_raw_path}`")
+    print("⏩ Resuming directly from Step 4 (Refining)...")
+    with open(pending_raw_path, "r", encoding="utf-8") as f:
+      raw_content = f.read()
+  else:
+    published_history = load_published_urls()
+    print(
+        f"📊 Loaded {len(published_history)} published URLs from"
+        " history/archive."
+    )
 
-  with open(latest_summaries_path, "r", encoding="utf-8") as f:
-    raw_content = f.read()
+    print("\nStep 2: Fetching data from multiple sources...")
+    all_items = []
 
+    for fetcher, name in [
+        (fetch_hacker_news, "Hacker News"),
+        (lambda: fetch_arxiv(category="cs.AI"), "arXiv"),
+        (fetch_github_trending, "GitHub Trending"),
+        (fetch_huggingface_papers, "Hugging Face Papers"),
+    ]:
+      try:
+        items = fetcher() or []
+        all_items.extend(items)
+        print(f"  - Fetched {len(items)} items from {name}")
+      except Exception as e:
+        print(f"❌ Error fetching {name}: {e}")
+
+    candidate_items = [
+        item
+        for item in all_items
+        if (item.get("link") or item.get("url") or item.get("title"))
+        not in published_history
+    ]
+    print(
+        "🔍 Candidates after deduplication:"
+        f" {len(candidate_items)} / {len(all_items)} items."
+    )
+
+    if not candidate_items:
+      print("ℹ️ No new items to process. Exiting.")
+      return
+
+    curated_items = select_best_items(candidate_items, max_select=8)
+    print(f"🎯 Curated {len(curated_items)} items for output.")
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    stage1_filename = f"output_prex_posts_{timestamp}.md"
+
+    print("\nStep 3: Generating detailed tech summaries (Stage 1 - Qwen)...")
+    run_stage1(curated_items, raw_dir, filename=stage1_filename)
+
+    pending_raw_path = os.path.join(raw_dir, stage1_filename)
+    if not os.path.exists(pending_raw_path):
+      print(
+          f"❌ Stage 1 output file not created: `{pending_raw_path}`. Exiting."
+      )
+      return
+
+    with open(pending_raw_path, "r", encoding="utf-8") as f:
+      raw_content = f.read()
+
+  # 【改善ポイント】区切り線（---）の空白や改行数のブレを正規表現で吸収して分割
   summaries = [
-      s.strip() for s in raw_content.split("\n\n---\n\n") if s.strip()
+      s.strip()
+      for s in re.split(r"\n+\s*---\s*\n+", raw_content.strip())
+      if s.strip()
   ]
-  if not summaries:
-    print("ℹ️ No content to refine.")
-    return
 
   print(
-      f"\nStep 4: Refining {len(summaries)} summaries into professional X posts"
-      " (Stage 2 - gemma4:12b & Qwen Review)..."
+      f"\nStep 4: Refining {len(summaries)} summaries into professional X"
+      " posts (Gemma 12B)..."
   )
+
+  if not summaries:
+    print("ℹ️ No summaries extracted from Raw content. Exiting.")
+    print(f"🔍 [DEBUG Raw Text Preview]\n{raw_content[:300]}\n...")
+    return
+
   refined_posts = []
+
   for i, summary in enumerate(summaries, 1):
-    print(f"[{i}/{len(summaries)}] Generating draft with gemma4:12b...")
-    gemma_draft = refine_to_x_post(summary)
+    print(f"\n--- [{i}/{len(summaries)}] Processing Item ---")
+    preview_in = summary.replace("\n", " ")[:70]
+    print(f"📥 Input Preview: {preview_in}...")
 
-    print(f"[{i}/{len(summaries)}] Reviewing & editing with Qwen...")
-    final_post = review_and_edit_post(gemma_draft, summary)
+    try:
+      post = refine_to_x_post(summary)
+      if post:
+        preview_out = post.replace("\n", " ")[:70]
+        print(f"✨ Refined Output: {preview_out}...")
+        refined_posts.append(post)
+      else:
+        print("⚠️ Refine returned empty string. (Check Ollama connection)")
+    except Exception as e:
+      print(f"❌ Error in refine_to_x_post: {e}")
 
-    refined_posts.append(final_post)
-
-    # 💡 変更点: ループの合間に3秒のウェイトを挿入（必要に応じて秒数は変更可能）
     if i < len(summaries):
-      print("⏳ Cooling down for 3 seconds before the next item...")
-      time.sleep(3)
+      time.sleep(2)
+
+  if not refined_posts:
+    print(
+        "\n❌ No posts generated. Check if Ollama is running or returning"
+        " valid text."
+    )
+    return
 
   final_content = "\n\n---\n\n".join(refined_posts)
-
   timestamped_file = os.path.join(output_dir, f"output_x_posts_{timestamp}.md")
 
   with open(timestamped_file, "w", encoding="utf-8") as f:
     f.write(final_content)
 
-  save_history(posted_history)
-
-  print(f"\n💾 Updated history file with curated items.")
-  print(f"💾 Saved Stage 1 prex to `{latest_summaries_path}`")
-  print(f"💾 Saved Stage 2 x posts to `{timestamped_file}`")
-
-  print("\n✅ Part A completed! Please review the Markdown files.")
-  print("👉 If OK, run `part_b_publish.py` to schedule and sync.")
-  print("👉 If you want to tune and retry, run `rollback_part_a.py` first.")
+  print(f"\n💾 Saved Stage 1 prex to `{pending_raw_path}`")
+  print(
+      f"💾 Saved Stage 2 x posts to `{timestamped_file}` (Total"
+      f" {len(refined_posts)} posts)"
+  )
+  print("\n✅ Part A completed successfully!")
 
 
 if __name__ == "__main__":

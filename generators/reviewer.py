@@ -3,9 +3,11 @@ import re
 import requests
 from generators.refiner import extract_clean_url, get_x_effective_length
 
-# 💡 OllamaのOpenAI互換エンドポイントを指定
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/v1/chat/completions")
-MODEL_NAME = os.getenv("QWEN_REVIEWER_MODEL", "smtek/Qwen3.8-27B:Q2_K_XL")
+OLLAMA_URL = os.getenv(
+    "OLLAMA_URL", "http://localhost:11434/v1/chat/completions"
+)
+MODEL_NAME = os.getenv("GEMMA_REVIEWER_MODEL", "gemma4:12b")
+
 
 def review_and_edit_post(gemma_post: str, original_summary: str) -> str:
   target_url = extract_clean_url(gemma_post) or extract_clean_url(
@@ -15,39 +17,36 @@ def review_and_edit_post(gemma_post: str, original_summary: str) -> str:
 
   max_body_len = 110 if target_url else 135
 
-  prompt = f"""You are an elite technical editor for a cutting-edge tech X (Twitter) account.
-Polish the following Japanese draft to make it punchy, highly engaging, and irresistible for developers to retweet.
+  # 💡 日本語プロンプトに統一し、前置きや解説の出力を徹底排除
+  prompt = f"""あなたは技術系X（旧Twitter）アカウントの優秀なテクニカルエディターです。
+以下の日本語の下書き（Draft）を、エンジニアが思わずリツイートしたくなるような、切れ味鋭い魅力的な文章に推敲・校正してください。
 
-[Original Context]
+【元データ文脈】
 {original_summary}
 
-[Draft to Edit]
+【校正対象の下書き】
 {body_text}
 
-[Strict Rules]
-1. Output ONLY the final polished Japanese post. NO conversational filler, NO greetings, NO explanations, NO meta-commentary (e.g., do NOT write "修正しました" or "問題ありません").
-2. Tone: Strictly casual Japanese (タメ語 / だ・である調). Absolutely NO desu/masu (です・ます).
-3. Emoji & Punctuation Rules (CRITICAL):
-    - NEVER place an emoji immediately after a period (。), comma (、), or punctuation (e.g., "。🔥" or "。🚀" are forbidden). Separate them or remove the period before an emoji.
-4. Impact & Variety: Make the phrasing sharp, diverse, and exciting. Avoid repetitive buzzwords.
-5. Accuracy: Do not distort core technical facts.
-6. STRICT LENGTH: Output Japanese body MUST be between 55 and {max_body_len} characters.
-7. DO NOT include URLs.
+【厳格なルール】
+1. 校正後の本文のみを出力してください。「修正しました」「問題ありません」などの挨拶・解説・前置きは一切禁止です。
+2. 語調: 常体（だ・である調 / タメ語）。「です・ます」は絶対に使用禁止。
+3. 絵文字・句読点ルール:
+   - 句読点（。、）の直後に絵文字を置くのは禁止（例: 「。🔥」はNG）。
+4. 本文の文字数: 日本語本文は必ず50文字〜{max_body_len}文字以内に収めてください。
+5. URLは含めないでください。
 
-Polished Japanese Text:"""
+校正後の日本語本文:"""
 
   payload = {
       "model": MODEL_NAME,
       "messages": [{"role": "user", "content": prompt}],
-      "temperature": 0.4,
+      "temperature": 0.3,
   }
 
   try:
-    # 💡 Ollamaへリクエスト送信
     res = requests.post(OLLAMA_URL, json=payload, timeout=300)
     res.raise_for_status()
 
-    # 💡 OpenAI互換レスポンス構造（choices -> message -> content）
     res_json = res.json()
     edited_body = (
         res_json.get("choices", [{}])[0]
@@ -56,7 +55,7 @@ Polished Japanese Text:"""
         .strip()
     )
 
-    # ▼ Qwenの相槌・メタ発言を検知した場合はGemmaのオリジナル原稿を採用する安全装置
+    # 前置きフレーズの検知と安全装置
     filler_keywords = [
         "問題なし",
         "そのまま",
@@ -67,9 +66,7 @@ Polished Japanese Text:"""
         "修正点",
     ]
     if any(keyword in edited_body for keyword in filler_keywords):
-      print(
-          "⚠️ Qwen returned conversational filler. Falling back to Gemma draft."
-      )
+      print("⚠️ Reviewer returned conversational filler. Falling back...")
       return gemma_post
 
     edited_body = re.sub(
@@ -81,13 +78,14 @@ Polished Japanese Text:"""
 
     effective_len = get_x_effective_length(edited_body, bool(target_url))
 
-    if 80 <= effective_len <= 135:
-      print(f"✅ Qwen review accepted via Ollama ({effective_len} chars).")
+    # 💡 判定範囲を 50〜135 文字へ緩和
+    if 50 <= effective_len <= 135:
+      print(f"✅ Review accepted via Ollama ({effective_len} chars).")
       return f"{edited_body}\n\n{target_url}" if target_url else edited_body
     else:
       print(
-          f"⚠️ Qwen review length out of bounds ({effective_len} chars)."
-          " Falling back to Gemma draft."
+          f"⚠️ Review length out of bounds ({effective_len} chars). Falling back"
+          " to Gemma draft."
       )
       return gemma_post
 
