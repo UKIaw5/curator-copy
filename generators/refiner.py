@@ -4,6 +4,8 @@ import re
 import requests
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
+GEMMA_MODEL = os.getenv("GEMMA_MODEL", "gemma4:12b")
+QWEN_MODEL = os.getenv("QWEN_MODEL", "qwen2.5:7b")
 
 # --- 素材プール定義 ---
 RAW_EMOJI_POOL = [
@@ -86,13 +88,12 @@ RAW_CLOSING_POOL = [
     "見事すぎる、この発想",
     "圧巻だわ、この精度",
     "スマートすぎる、この設計",
-    "完璧すぎる,この着眼点",
+    "完璧すぎる、この着眼点",
     "完成度高すぎ、この仕組み",
 ]
 
 
 class PoolManager:
-  """実行セッション内でフレーズや絵文字が重複しないよう管理するクラス"""
 
   def __init__(self):
     self.emojis = []
@@ -118,12 +119,10 @@ class PoolManager:
     return self.closings.pop()
 
 
-# グローバルプールマネージャー（プロセス内でユニーク性を保持）
 pool_manager = PoolManager()
 
 
 def extract_clean_url(text: str) -> str:
-  """テキストからURLを抽出し、末尾の記号やMarkdownノイズ(**等)を綺麗に除去する"""
   match = re.search(r'https?://[^\s<>"\)\]]+', text)
   if not match:
     return ""
@@ -137,7 +136,6 @@ def get_x_effective_length(body_text: str, has_url: bool) -> int:
 
 
 def clean_llm_response(raw_text: str) -> str:
-  """思考タグやメタ発言、Markdown太字ノイズなどをトリムする"""
   if not raw_text:
     return ""
 
@@ -161,57 +159,87 @@ def clean_llm_response(raw_text: str) -> str:
   result = " ".join(processed_lines)
   result = re.sub(r"[【】\[\]]", "", result).strip()
   result = re.sub(r"\*\*", "", result).strip()
-  return result
+  result = result.replace(",", "、")
+
+  # --- 絵文字の前後に発生する不要なスペースを一律除去 ---
+  emoji_pattern = r"\s*([\u2300-\u27BF\U0001F300-\U0001FAF6\U0001F600-\U0001F64F\U0001F680-\U0001F6FF])\s*"
+  result = re.sub(emoji_pattern, r"\1", result)
+
+  return result.strip()
+
+
+def is_subject_missing(text: str) -> bool:
+  if not text:
+    return True
+  return bool(re.match(r"^(が|の|を|は|に|で|と|より|から|、)", text.strip()))
+
+
+def fix_subject_with_qwen(summary_text: str, draft_post: str) -> str:
+  prompt = f"""You are a precise text editor.
+Given a Technical Summary and a Draft X Post, extract the primary Product/Paper/Library name from the Summary, and prepend it onto the Draft Post so it naturally completes the sentence.
+
+[Rule]
+1. Output ONLY the fixed Japanese text. No explanations.
+2. Ensure the sentence starts explicitly with the product name as the subject.
+
+[Input Summary]
+{summary_text}
+
+[Draft Post (Missing Subject)]
+{draft_post}
+"""
+
+  payload = {
+      "model": QWEN_MODEL,
+      "messages": [{"role": "user", "content": prompt}],
+      "stream": False,
+      "options": {"temperature": 0.2},
+  }
+
+  try:
+    res = requests.post(OLLAMA_URL, json=payload, timeout=60)
+    res.raise_for_status()
+    raw = res.json().get("message", {}).get("content", "").strip()
+    fixed_text = clean_llm_response(raw)
+    return fixed_text if fixed_text else draft_post
+  except Exception as e:
+    print(f"⚠️ Qwen repair error: {e}")
+    return draft_post
 
 
 def refine_to_x_post(summary_text: str, max_retries: int = 3) -> str:
   target_url = extract_clean_url(summary_text)
 
-  # プールから今回専用の要素を1つずつ重複なしで抽出
   assigned_hook = pool_manager.get_hook()
   assigned_closing = pool_manager.get_closing()
   assigned_emoji = pool_manager.get_emoji()
 
   system_prompt = (
       "You are a concise X (Twitter) post generator.\n"
-      "CRITICAL INSTRUCTIONS:\n"
-      "1. Output ONLY the final Japanese text directly and immediately.\n"
-      "2. Use strictly casual Japanese (タメ語 / だ・である調・ラフな口調). NEVER use"
-      " desu/masu (です・ます)."
+      "Output ONLY the final Japanese text directly and immediately.\n"
+      "Use strictly casual Japanese (タメ語). NEVER use desu/masu (です・ます)."
   )
 
-  base_prompt = f"""You are an energetic tech developer sharing AI & software breakthroughs on X (Twitter).
-Refine the following technical summary into a rich, high-impact Japanese X post.
+  base_prompt = f"""You are an energetic tech developer sharing AI breakthroughs on X.
+Refine the summary into a high-impact Japanese post.
 
-[Strict Style Guidelines]
-1. Hook & Tone:
-   - Use strictly casual Japanese (タメ語). No "です・ます".
-   - Naturally incorporate or align with these specific expressions:
-     * Hook expression idea: "{assigned_hook}"
-     * Closing sentiment idea: "{assigned_closing}"
-   - DO NOT use full-width brackets like 【】 or [ ].
+Rules:
+1. Try to start with the product/paper name if possible.
+2. Naturally include or align with these expressions:
+   - Hook expression: "{assigned_hook}"
+   - Closing idea: "{assigned_closing}"
+3. Include emoji `{assigned_emoji}` (never right after '。' or '、').
+4. Keep it short and punchy (around 50-80 Japanese characters).
 
-2. Emoji Rules (CRITICAL):
-   - Use the designated emoji `{assigned_emoji}` naturally.
-   - NEVER place an emoji immediately after a Japanese period (。), comma (、), or punctuation mark (e.g., "。{assigned_emoji}" is strictly prohibited).
-
-3. Content & Substance:
-   - Must include at least ONE concrete technical feature, metric, or mechanism from the input.
-
-4. Output Rules:
-   - DO NOT include any URL. Output ONLY the Japanese text.
-   - Keep the response VERY CONCISE (strictly 1-2 short sentences).
-
-Input:
+Summary:
 {summary_text}
 """
 
-  model_name = os.getenv("GEMMA_MODEL", "gemma4:12b")
   body_text = ""
 
   for attempt in range(1, max_retries + 1):
     payload = {
-        "model": model_name,
+        "model": GEMMA_MODEL,
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": base_prompt},
@@ -219,7 +247,7 @@ Input:
         "stream": False,
         "keep_alive": 0,
         "options": {
-            "temperature": 0.75,
+            "temperature": 0.7,
             "num_ctx": 8192,
             "num_predict": 8192,
         },
@@ -233,28 +261,25 @@ Input:
       raw_response = data.get("message", {}).get("content", "").strip()
       body_text = clean_llm_response(raw_response)
 
+      if is_subject_missing(body_text):
+        print(f"⚠️ [Attempt {attempt}] Subject missing detected in Gemma output.")
+        body_text = fix_subject_with_qwen(summary_text, body_text)
+
       effective_len = get_x_effective_length(body_text, bool(target_url))
       print(
           f"📊 [Attempt {attempt}/{max_retries}] Body: {len(body_text)} chars |"
-          f" Effective X Length: {effective_len} chars"
+          f" Effective Length: {effective_len} chars"
       )
 
-      if 70 <= effective_len <= 140:
-        print("✅ Perfect! Fits X length bounds.")
+      if 60 <= effective_len <= 135 and not is_subject_missing(body_text):
+        print("✅ Perfect! Fits X length bounds and structure.")
         return f"{body_text}\n\n{target_url}" if target_url else body_text
-      else:
-        print(
-            f"⚠️ Length out of bounds ({effective_len} chars)."
-            " Retrying..."
-        )
 
     except Exception as e:
       print(f"⚠️ Refine API error (Attempt {attempt}): {e}")
-      if attempt == max_retries:
-        break
 
   print("⚠️ Applying safe fallback...")
-  if not body_text:
+  if is_subject_missing(body_text):
     clean_summary = re.sub(r'https?://[^\s<>"]*', "", summary_text).strip()
     first_line = (
         clean_summary.split("\n")[0] if clean_summary else "注目のAI最新技術"
@@ -262,10 +287,13 @@ Input:
     first_line = (
         first_line.replace("**", "").replace("[", "").replace("]", "")
     )
-    body_text = f"{assigned_emoji} {first_line[:90]}"
+    body_text = f"{first_line[:80]} {assigned_hook}{assigned_emoji}"
 
   max_body_len = 115 if target_url else 140
   if len(body_text) > max_body_len:
     body_text = body_text[: max_body_len - 3] + "..."
+
+  # フォールバック時もクレンジングを通して余白を揃える
+  body_text = clean_llm_response(body_text)
 
   return f"{body_text}\n\n{target_url}" if target_url else body_text
