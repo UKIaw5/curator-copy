@@ -119,6 +119,11 @@ def lint_markdown(text: str) -> str:
                 processed_lines.append(line)
         t = "\n".join(processed_lines)
         
+        # --- 🛡️ 追加: LaTeXの数式（$R_{AI}$など）のアンダースコア崩れを防ぐ置換 ---
+        # $R_{AI}$ のような記法をプレーンな R_AI に置換する
+        t = re.sub(r'\$([A-Za-z0-9]+)_([A-Za-z0-9]+)\$', r'\1_\2', t)
+        # -----------------------------------------------------------------
+
         # 3. Remove bold formatting syntax
         t = t.replace('**', '')
         

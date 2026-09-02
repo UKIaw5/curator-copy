@@ -14,6 +14,30 @@
         {
             "filename": "note_article_20260824_170409.md",
             "published_at": "2026-08-24 18:33:11"
+        },
+        {
+            "filename": "note_article_20260831_234045.md",
+            "published_at": "2026-09-02 20:32:59"
+        },
+        {
+            "filename": "note_article_20260831_234045.md",
+            "published_at": "2026-09-02 20:36:49"
+        },
+        {
+            "filename": "note_article_20260902_205330.md",
+            "published_at": "2026-09-02 21:36:51"
+        },
+        {
+            "filename": "note_article_20260902_215243.md",
+            "published_at": "2026-09-02 21:59:58"
+        },
+        {
+            "filename": "note_article_20260902_225305.md",
+            "published_at": "2026-09-02 22:56:23"
+        },
+        {
+            "filename": "note_article_20260902_231923.md",
+            "published_at": "2026-09-02 23:20:29"
         }
     ],
     "output_prex_posts_20260831_155917.md": {
@@ -21,6 +45,28 @@
             "note_used": false,
             "generated_at": "20260831_234045",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260831_234045.md"
+        }
+    },
+    "output_prex_posts_20260902_173103.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20260902_205330",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260902_205330.md"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20260902_215243",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260902_215243.md"
+        },
+        "7": {
+            "note_used": true,
+            "generated_at": "20260902_225305",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260902_225305.md"
+        },
+        "6": {
+            "note_used": true,
+            "generated_at": "20260902_231923",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260902_231923.md"
         }
     }
 }

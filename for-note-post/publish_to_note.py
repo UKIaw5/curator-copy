@@ -1,227 +1,272 @@
 import os
-import json
-import time
 import re
+import json
+import shutil
 from datetime import datetime
 from playwright.sync_api import sync_playwright
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-COOKIES_PATH = os.path.join(BASE_DIR, "note_cookies.json")
-STATUS_PATH = os.path.join(BASE_DIR, "note_status.json")
-OUTPUT_DIR = os.path.join(BASE_DIR, "output")
-ARCHIVE_DIR = os.path.join(OUTPUT_DIR, "archive")
+STATUS_FILE = "note_status.json"
+
+def load_cookies_to_context(context):
+    cookie_path = "note_cookies.json"
+    if not os.path.exists(cookie_path):
+        print(f"⚠️ {cookie_path} not found.")
+        return False
+        
+    try:
+        with open(cookie_path, "r", encoding="utf-8") as f:
+            raw_cookies = json.load(f)
+            
+        formatted_cookies = []
+        for c in raw_cookies:
+            fc = {}
+            if "name" in c: fc["name"] = c["name"]
+            if "value" in c: fc["value"] = c["value"]
+            if "domain" in c: fc["domain"] = c["domain"]
+            if "path" in c: fc["path"] = c["path"]
+            if "secure" in c: fc["secure"] = c["secure"]
+            if "httpOnly" in c: fc["httpOnly"] = c["httpOnly"]
+            
+            if "expirationDate" in c:
+                fc["expires"] = int(c["expirationDate"])
+            elif "expires" in c:
+                fc["expires"] = int(c["expires"])
+                
+            if "sameSite" in c:
+                ss = str(c["sameSite"]).lower()
+                if ss == "lax": fc["sameSite"] = "Lax"
+                elif ss == "strict": fc["sameSite"] = "Strict"
+                elif ss in ["none", "no_restriction"]: fc["sameSite"] = "None"
+            
+            formatted_cookies.append(fc)
+            
+        context.add_cookies(formatted_cookies)
+        print("✅ Cookies loaded and formatted successfully!")
+        return True
+    except Exception as e:
+        print(f"⚠️ Failed to load cookies: {e}")
+        return False
 
 def get_latest_article():
-    if not os.path.exists(OUTPUT_DIR):
+    output_dir = "output"
+    if not os.path.exists(output_dir):
         return None
-    files = [os.path.join(OUTPUT_DIR, f) for f in os.listdir(OUTPUT_DIR) if f.endswith(".md")]
+    files = [os.path.join(output_dir, f) for f in os.listdir(output_dir) if f.endswith(".md") or f.endswith(".txt")]
     if not files:
         return None
-    return max(files, key=os.path.getmtime)
-
-def parse_markdown(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
+    latest_file = max(files, key=os.path.getmtime)
+    with open(latest_file, "r", encoding="utf-8") as f:
         content = f.read()
+    return latest_file, content
 
-    lines = content.splitlines()
-    title = ""
-    if lines:
-        title = lines[0].replace("#", "").replace("■", "").strip()
-
-    # 💡 <!-- PAYWALL --> も拾えるように正規表現を更新
-    split_pattern = r'<!--\s*(?:PAYWALL|PAID_START)\s*-->|---PAID---|\[有料エリア\]|■有料エリア|### 有料エリア|有料エリア'
-    parts = re.split(split_pattern, content)
+def parse_article_content(raw_content):
+    lines = raw_content.splitlines()
+    title = lines[0].replace("#", "").replace("■", "").strip() if lines else "無題のタイトル"
     
-    if len(parts) > 1:
-        free_section = parts[0].replace(lines[0], "").strip() if lines else parts[0].strip()
-        paid_section = parts[1].strip()
-    else:
-        print("⚠️ Warning: Paywall marker not found! Treating whole content as free.")
-        free_section = content.replace(lines[0], "").strip() if lines else content
-        paid_section = ""
+    boundary_marker = "<!-- PAYWALL -->"
+    
+    parts = raw_content.split(boundary_marker)
+    free_section = parts[0].replace(lines[0], "").strip() if len(parts) > 0 else raw_content
+    paid_section = parts[1].strip() if len(parts) > 1 else ""
+    return title, free_section, paid_section
 
-    hashtags = re.findall(r'#[\w\u3000-\u9fff]+', content)
-    hashtags = list(set(hashtags))[:5]
+def update_status_and_archive(file_path):
+    """投稿完了後に status ファイルを更新し、ファイルを archive ディレクトリへ移動する"""
+    filename = os.path.basename(file_path)
+    
+    # 1. note_status.json の更新
+    status_data = {}
+    if os.path.exists(STATUS_FILE):
+        try:
+            with open(STATUS_FILE, "r", encoding="utf-8") as f:
+                status_data = json.load(f)
+        except json.JSONDecodeError:
+            status_data = {}
+            
+    if "published_articles" not in status_data:
+        status_data["published_articles"] = []
+        
+    status_data["published_articles"].append({
+        "filename": filename,
+        "published_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+    
+    with open(STATUS_FILE, "w", encoding="utf-8") as f:
+        json.dump(status_data, f, ensure_ascii=False, indent=4)
+    print(f"📝 Updated {STATUS_FILE} with published record.")
 
-    return title, free_section, paid_section, hashtags
+    # 2. output/archive への移動
+    archive_dir = os.path.join("output", "archive")
+    os.makedirs(archive_dir, exist_ok=True)
+    destination_path = os.path.join(archive_dir, filename)
+    
+    # 万が一同名ファイルがある場合はタイムスタンプで退避
+    if os.path.exists(destination_path):
+        base, ext = os.path.splitext(filename)
+        destination_path = os.path.join(archive_dir, f"{base}_{datetime.now().strftime('%H%M%S')}{ext}")
+        
+    shutil.move(file_path, destination_path)
+    print(f"📦 Moved published file to: {destination_path}")
 
 def main():
-    print("=== Starting Note Auto-Publisher (v2.7 Fixed Workflow) ===")
+    print("=== Starting Note Auto-Publisher (Final Polish + Archiver) ===")
     
-    article_path = get_latest_article()
-    if not article_path:
-        print("❌ No markdown file found in output/")
+    res = get_latest_article()
+    if not res:
+        print("❌ No generated note articles found in output/")
         return
-
-    print(f"📌 Target Article: {article_path}")
-    title, free_section, paid_section, hashtags = parse_markdown(article_path)
     
+    file_path, raw_content = res
+    title, free_section, paid_section = parse_article_content(raw_content)
+    print(f"📌 Target Article: {file_path}")
     print(f"📌 Title: {title}")
-    print(f"🏷️ Hashtags: {hashtags}")
+    
     print(f"📊 Free section length: {len(free_section)} chars")
-    print(f"📊 Paid section length: {len(paid_section)} chars")
-
-    # アイキャッチ画像のパス確認
-    base_name, _ = os.path.splitext(os.path.basename(article_path))
-    eyecatch_filename = f"{base_name}.png"
-    eyecatch_path = os.path.join(OUTPUT_DIR, eyecatch_filename)
+    if paid_section:
+        print(f"📊 Paid section length: {len(paid_section)} chars")
+    else:
+        print("⚠️ 警告: '<!-- PAYWALL -->' が見つからないため、有料エリアは設定されません！")
 
     with sync_playwright() as p:
-        # 💡 headless=Falseにしてブラウザの動きを目で見えるようにする
-        browser = p.chromium.launch(headless=False, slow_mo=80)
-        context = browser.new_context(viewport={"width": 1280, "height": 800})
-
-        # クッキーの読み込み
-        if os.path.exists(COOKIES_PATH):
-            with open(COOKIES_PATH, "r", encoding="utf-8") as f:
-                cookies = json.load(f)
-                formatted_cookies = []
-                for c in cookies:
-                    cookie = {
-                        "name": c.get("name"),
-                        "value": c.get("value"),
-                        "domain": c.get("domain"),
-                        "path": c.get("path", "/"),
-                    }
-                    if "expires" in c and isinstance(c["expires"], (int, float)):
-                        cookie["expires"] = c["expires"]
-                    formatted_cookies.append(cookie)
-                context.add_cookies(formatted_cookies)
-            print("✅ Cookies loaded successfully!")
-
+        print("🌐 Launching browser...")
+        
+        browser = p.chromium.launch(
+            headless=False, 
+            slow_mo=100, 
+            args=["--window-size=1024,720"]
+        )
+        context = browser.new_context(viewport={"width": 1024, "height": 720})
+        
+        if not load_cookies_to_context(context):
+            browser.close()
+            return
+        
         page = context.new_page()
+        
         print("🚀 Navigating to note editor...")
-        page.goto("https://editor.note.com/new/")
+        page.goto("https://editor.note.com/new/", timeout=60000)
         
         print("⏳ Waiting for editor to load...")
-        page.wait_for_selector("div.ProseMirror", timeout=30000)
-        print("✅ Editor loaded successfully!")
-        
-        # ------------------------------------------------------------------
-        # 🖼️ 【初手】アイキャッチ画像のアップロード
-        # ------------------------------------------------------------------
-        if os.path.exists(eyecatch_path):
-            print(f"🖼️ [Step 1] Uploading eyecatch image first: {eyecatch_path}")
-            try:
-                # noteのエディタにあるファイル入力要素を探して画像を設定
-                file_input = page.locator("input[type='file']").first
-                if file_input.count() > 0:
-                    file_input.set_input_files(eyecatch_path)
-                    print("✅ Eyecatch image attached successfully!")
-                    page.wait_for_timeout(3000)
-                else:
-                    print("⚠️ File input not found directly, trying button click...")
-                    eyecatch_btn = page.locator("button, div").filter(has_text="見出し画像").first
-                    if eyecatch_btn.is_visible():
-                        eyecatch_btn.click()
-                        page.wait_for_timeout(1000)
-                        page.locator("input[type='file']").first.set_input_files(eyecatch_path)
-                        print("✅ Eyecatch image attached via button!")
-                        page.wait_for_timeout(3000)
-            except Exception as e:
-                print(f"⚠️ Could not upload eyecatch image: {e}")
-        else:
-            print("⚠️ Eyecatch image not found in output/, skipping.")
+        try:
+            page.wait_for_selector("textarea, div[contenteditable='true']", timeout=30000)
+            print("✅ Editor loaded successfully!")
+        except Exception as e:
+            print(f"⚠️ Failed to detect editor: {e}")
+            browser.close()
+            return
 
-        # ------------------------------------------------------------------
-        # ✍️ タイトルの入力
-        # ------------------------------------------------------------------
-        print("✍️ [Step 2] Typing title...")
+        # 1. Input Title
+        print("✍️ Typing title...")
         title_input = page.locator("textarea.p-editor__titleInput, textarea").first
         title_input.click()
         title_input.fill(title)
-        page.wait_for_timeout(1000)
-
-        # ------------------------------------------------------------------
-        # ✍️ 無料パートの入力
-        # ------------------------------------------------------------------
-        print("✍️ [Step 3] Typing free section...")
+        
+        # 2. Input Free Section
+        print("✍️ Typing free section...")
         body_editor = page.locator("div.ProseMirror").first
         body_editor.click()
-        page.keyboard.type(free_section, delay=1)
-        page.wait_for_timeout(1000)
-
-        # ------------------------------------------------------------------
-        # 💰 有料パート（ある場合）
-        # ------------------------------------------------------------------
-        if paid_section:
-            print("💰 [Step 4] Inserting paid boundary and typing paid section...")
-            page.keyboard.press("Enter")
-            page.keyboard.type("/paid")
-            page.wait_for_timeout(1500)
-            page.keyboard.press("Enter")
-            page.wait_for_timeout(1000)
-            
-            # カーソルを下に移動して有料テキストを入力
-            page.keyboard.press("ArrowDown")
-            page.keyboard.press("ArrowDown")
-            page.keyboard.type(paid_section, delay=1)
-            page.wait_for_timeout(1000)
-
-        # ------------------------------------------------------------------
-        # 🚀 公開設定・投稿フロー
-        # ------------------------------------------------------------------
-        print("🚀 [Step 5] Clicking '公開に進む' button...")
-        publish_btn = page.locator("button").filter(has_text="公開に進む").first
-        publish_btn.click()
-        page.wait_for_timeout(3000)
-
-        print("💰 Selecting '有料' option...")
-        paid_radio = page.locator("label, span, div").filter(has_text="有料").first
-        paid_radio.click()
-        page.wait_for_timeout(1000)
-
-        print("💴 Setting price to 100 yen...")
-        price_input = page.locator("input[type='number'], input[name*='price']").first
-        if price_input.count() > 0:
-            price_input.click()
-            price_input.fill("100")
-            print("✅ Price set to 100 yen!")
-        page.wait_for_timeout(1000)
-
-        print("💾 Clicking '有料エリア設定' (Save/Confirm) button...")
-        confirm_btn = page.locator("button").filter(has_text="有料エリア設定").first
-        if confirm_btn.count() > 0 and confirm_btn.is_visible():
-            confirm_btn.click()
-            page.wait_for_timeout(2000)
-
-        # ハッシュタグの追加
-        if hashtags:
-            print(f"🏷️ Adding hashtags: {hashtags}")
-            try:
-                tag_input = page.locator("input[placeholder*='ハッシュタグ'], input[type='text']").last
-                for tag in hashtags:
-                    tag_input.click()
-                    tag_input.fill(tag)
-                    page.keyboard.press("Enter")
-                    page.wait_for_timeout(500)
-            except Exception as e:
-                print(f"⚠️ Could not add hashtags: {e}")
-
-        print("📢 Clicking final '投稿' (Publish) button...")
-        final_publish_btn = page.locator("button").filter(has_text="投稿").last
-        if final_publish_btn.count() > 0:
-            final_publish_btn.click()
-            print("✅ Final publish button clicked!")
-            # 💡 公開処理が確実に完了するよう余裕を持って待機
-            page.wait_for_timeout(7000)
-        else:
-            print("❌ Final publish button not found!")
-
-        # ステータスとアーカイブの処理
-        if not os.path.exists(ARCHIVE_DIR):
-            os.makedirs(ARCHIVE_DIR)
-
-        # status.json の更新処理（必要に応じて）
+        page.keyboard.type(free_section, delay=2)
         
-        # ファイルの移動
-        os.rename(article_path, os.path.join(ARCHIVE_DIR, os.path.basename(article_path)))
-        if os.path.exists(eyecatch_path):
-            os.rename(eyecatch_path, os.path.join(ARCHIVE_DIR, eyecatch_filename))
-        print("📦 Moved article and eyecatch to archive successfully.")
+        page.wait_for_timeout(1000)
 
-    print("🎉 All automation steps completed!")
-    input("Press Enter to close browser...")
+        # 3. Insert Paid Boundary via Keyboard Navigation
+        if paid_section:
+            print("💰 Inserting paid boundary via keyboard navigation...")
+            try:
+                page.keyboard.press("End")
+                page.keyboard.press("Enter")
+                page.wait_for_timeout(1000)
+                
+                print("⌨️ Pressing 'Tab' to focus '+' button...")
+                page.keyboard.press("Tab")
+                page.wait_for_timeout(500)
+                
+                print("⌨️ Pressing 'Enter' to open menu...")
+                page.keyboard.press("Enter")
+                page.wait_for_timeout(1000)
+                
+                print("⌨️ Pressing 'ArrowUp' then 'Enter' to select paid boundary...")
+                page.keyboard.press("ArrowUp")
+                page.wait_for_timeout(500)
+                page.keyboard.press("Enter")
+                
+                page.wait_for_timeout(1500)
+                
+                print("⌨️ Pressing 'ArrowDown' x2 to move cursor below the line...")
+                page.keyboard.press("ArrowDown")
+                page.wait_for_timeout(300)
+                page.keyboard.press("ArrowDown")
+                page.wait_for_timeout(500)
+                
+                print("✅ Paid boundary line and cursor position fixed!")
+                
+            except Exception as e:
+                print(f"⚠️ Could not insert paid line via keyboard: {e}")
+
+            # 4. Input Paid Section (URL判定処理を削除し、一括タイピングに変更)
+            print("✍️ Typing paid section into the paid area...")
+            page.keyboard.type(paid_section, delay=2)
+            page.wait_for_timeout(1000)
+
+        # 5. Click "公開に進む"
+        print("🚀 Clicking '公開に進む' button...")
+        try:
+            publish_btn = page.get_by_role("button", name=re.compile("公開に進む"))
+            publish_btn.click()
+            
+            print("⏳ Waiting for publish configuration screen...")
+            page.wait_for_timeout(4000)
+
+            # 6. Select "有料" and set price
+            if paid_section:
+                print("💰 Selecting '有料' option...")
+                paid_option = page.get_by_text("有料", exact=True)
+                if paid_option.count() > 0:
+                    paid_option.first.click()
+                    page.wait_for_timeout(1000)
+                    
+                    # Set Price to 100 yen
+                    print("💴 Setting price to 100 yen...")
+                    price_input = page.locator("input[type='text'], input[type='tel'], input[type='number']").filter(has_not=page.locator("textarea")).first
+                    if price_input.count() > 0:
+                        price_input.click()
+                        price_input.press("Control+A")
+                        price_input.fill("100")
+                        print("✅ Price set to 100 yen!")
+                        page.wait_for_timeout(1000)
+                    else:
+                        print("⚠️ Price input field could not be targeted.")
+                        
+                    print("💾 Clicking '有料エリア設定' (Save/Confirm) button...")
+                    setting_confirm_btn = page.get_by_role("button", name=re.compile("設定|保存|完了")).first
+                    if setting_confirm_btn.is_visible():
+                        setting_confirm_btn.click()
+                        page.wait_for_timeout(2000)
+                    else:
+                        print("⚠️ '有料エリア設定' 保存ボタンが見つかりませんでした。画面の状態を確認してください。")
+
+            print("📢 Clicking final '投稿' (Publish) button...")
+            final_publish_btn = page.get_by_role("button", name=re.compile("投稿|公開")).filter(has_text=re.compile("投稿|公開")).last
+            
+            if final_publish_btn.is_visible():
+                final_publish_btn.click()
+                print("✅ Final publish button clicked!")
+                page.wait_for_timeout(5000) 
+                
+                # 7. Post-process: Update status and archive file
+                update_status_and_archive(file_path)
+                
+            else:
+                print("⚠️ 最終的な '投稿' ボタンが見つかりませんでした。ステータス更新とアーカイブはスキップされます。")
+                
+        except Exception as e:
+            print(f"⚠️ Error during publication settings automation: {e}")
+
+        print("\n🎉 All automation steps completed!")
+        input("Check the browser to confirm the article has been published successfully. Press Enter to close...")
+
+        browser.close()
+        print("✅ Session closed.")
 
 if __name__ == "__main__":
     main()
