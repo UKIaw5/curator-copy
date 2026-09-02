@@ -4,11 +4,6 @@
             "note_used": true,
             "generated_at": "20260824_174551",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260824_174551.md"
-        },
-        "1": {
-            "note_used": true,
-            "generated_at": "20260824_185340",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260824_185340.md"
         }
     },
     "published_articles": [
@@ -20,5 +15,12 @@
             "filename": "note_article_20260824_170409.md",
             "published_at": "2026-08-24 18:33:11"
         }
-    ]
+    ],
+    "output_prex_posts_20260831_155917.md": {
+        "0": {
+            "note_used": false,
+            "generated_at": "20260831_234045",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260831_234045.md"
+        }
+    }
 }
