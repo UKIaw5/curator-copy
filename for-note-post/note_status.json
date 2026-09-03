@@ -38,13 +38,65 @@
         {
             "filename": "note_article_20260902_231923.md",
             "published_at": "2026-09-02 23:20:29"
+        },
+        {
+            "filename": "note_article_20260903_000105.md",
+            "published_at": "2026-09-03 00:45:08"
+        },
+        {
+            "filename": "note_article_20260903_010226.md",
+            "published_at": "2026-09-03 01:18:50"
         }
     ],
     "output_prex_posts_20260831_155917.md": {
         "0": {
-            "note_used": false,
-            "generated_at": "20260831_234045",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260831_234045.md"
+            "note_used": true,
+            "generated_at": "20260903_182434",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_182434.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:35:40"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20260903_183952",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_183952.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:36:17"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20260903_185358",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_185358.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:36:57"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20260903_190850",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_190850.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:37:37"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20260903_192440",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_192440.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:38:19"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20260903_194142",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_194142.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:39:08"
+        },
+        "6": {
+            "note_used": true,
+            "generated_at": "20260903_195824",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_195824.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:39:46"
         }
     },
     "output_prex_posts_20260902_173103.md": {
@@ -67,6 +119,30 @@
             "note_used": true,
             "generated_at": "20260902_231923",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260902_231923.md"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20260903_000105",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_000105.md"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20260903_010226",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_010226.md"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20260903_175235",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_175235.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:40:32"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20260903_180842",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_180842.md",
+            "published_to_note": true,
+            "published_at": "2026-09-03 20:41:10"
         }
     }
 }
