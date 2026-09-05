@@ -144,5 +144,17 @@
             "published_to_note": true,
             "published_at": "2026-09-03 20:41:10"
         }
+    },
+    "output_prex_posts_20260903_211156.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20260904_124854",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260904_124854.md"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20260904_124944",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260904_124944.md"
+        }
     }
 }
