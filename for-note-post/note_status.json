@@ -97,6 +97,20 @@
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260903_195824.md",
             "published_to_note": true,
             "published_at": "2026-09-03 20:39:46"
+        },
+        "7": {
+            "note_used": true,
+            "generated_at": "20260905_173118",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_173118.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:04:32"
+        },
+        "8": {
+            "note_used": true,
+            "generated_at": "20260905_174604",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_174604.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:05:12"
         }
     },
     "output_prex_posts_20260902_173103.md": {
@@ -155,6 +169,150 @@
             "note_used": true,
             "generated_at": "20260904_124944",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260904_124944.md"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20260905_154938",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_154938.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:05:50"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20260905_160303",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_160303.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:06:27"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20260905_161850",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_161850.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:07:12"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20260905_163344",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_163344.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:07:57"
+        },
+        "6": {
+            "note_used": true,
+            "generated_at": "20260905_164743",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_164743.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:08:42"
+        },
+        "7": {
+            "note_used": true,
+            "generated_at": "20260905_170157",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_170157.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:09:23"
+        },
+        "8": {
+            "note_used": true,
+            "generated_at": "20260905_171612",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_171612.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:10:10"
+        }
+    },
+    "output_prex_posts_20260905_124429.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20260905_134644",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_134644.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:10:51"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20260905_140133",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_140133.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:11:33"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20260905_141628",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_141628.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:12:17"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20260905_143249",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_143249.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:13:03"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20260905_144832",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_144832.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:13:42"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20260905_150452",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_150452.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:14:31"
+        },
+        "6": {
+            "note_used": true,
+            "generated_at": "20260905_151952",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_151952.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:15:18"
+        },
+        "7": {
+            "note_used": true,
+            "generated_at": "20260905_153625",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_153625.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:16:06"
+        }
+    },
+    "output_prex_posts_20260829_232157.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20260905_180053",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_180053.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:16:42"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20260905_181606",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_181606.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:17:19"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20260905_183017",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_183017.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:17:55"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20260905_184531",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_184531.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:18:41"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20260905_190046",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20260905_190046.md",
+            "published_to_note": true,
+            "published_at": "2026-09-05 19:19:20"
         }
     }
 }
