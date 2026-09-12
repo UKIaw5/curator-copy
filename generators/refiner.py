@@ -193,7 +193,12 @@ Given a Technical Summary and a Draft X Post, extract the primary Product/Paper/
       "model": QWEN_MODEL,
       "messages": [{"role": "user", "content": prompt}],
       "stream": False,
-      "options": {"temperature": 0.2},
+      "keep_alive": 0,  # 💡 QwenのVRAM残留を防止
+      "options": {
+          "temperature": 0.2,
+          "num_ctx": 2048,  # 💡 VRAM領域の過剰確保を抑制
+          "num_predict": 256,
+      },
   }
 
   try:
@@ -248,13 +253,13 @@ Summary:
         "keep_alive": 0,
         "options": {
             "temperature": 0.7,
-            "num_ctx": 8192,
-            "num_predict": 8192,
+            "num_ctx": 2048,  # 💡 8192 -> 2048 (クラッシュの最大の原因を排除)
+            "num_predict": 256,  # 💡 8192 -> 256 (短文生成に必要な最小枠に絞る)
         },
     }
 
     try:
-      res = requests.post(OLLAMA_URL, json=payload, timeout=300)
+      res = requests.post(OLLAMA_URL, json=payload, timeout=90)
       res.raise_for_status()
       data = res.json()
 
@@ -293,7 +298,6 @@ Summary:
   if len(body_text) > max_body_len:
     body_text = body_text[: max_body_len - 3] + "..."
 
-  # フォールバック時もクレンジングを通して余白を揃える
   body_text = clean_llm_response(body_text)
 
   return f"{body_text}\n\n{target_url}" if target_url else body_text

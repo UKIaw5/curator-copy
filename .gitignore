@@ -22,3 +22,6 @@ x_user_data/
 # Mac/Windows system files
 .DS_Store
 Thumbs.db
+
+# etc
+memo.txt

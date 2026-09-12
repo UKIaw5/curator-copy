@@ -82,7 +82,7 @@ def main():
   raw_dir = os.path.join(output_dir, "raw")
   os.makedirs(raw_dir, exist_ok=True)
 
-  pending_raw_path, timestamp = get_pending_raw_info()
+  pending_raw_path, timestamp = None, None  # 💡 常に新規取得からやり直す
 
   if pending_raw_path:
     print(f"\n⏩ Found pending Raw file: `{pending_raw_path}`")
@@ -182,7 +182,7 @@ def main():
       print(f"❌ Error in refine_to_x_post: {e}")
 
     if i < len(summaries):
-      time.sleep(2)
+      time.sleep(4)
 
   if not refined_posts:
     print(

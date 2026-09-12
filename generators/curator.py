@@ -38,7 +38,7 @@ Selected Indices (comma-separated numbers only):
         "prompt": prompt,
         "stream": False,
         "keep_alive": 0,
-        "options": {"temperature": 0.5}
+        "options": {"num_ctx": 2048, "num_predict": 512, "temperature": 0.5}
     }
 
     try:
