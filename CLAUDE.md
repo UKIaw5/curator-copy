@@ -119,6 +119,7 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 - `for-note-post/*.py`のStep5(`insight_prompt`)は本文(`part_body`)を踏まえて「本文にはない新しい切り口」を書かせる設計にしてあること。生データだけから独立生成する方式に戻すと、本文とほぼ同じ内容の重複セクションになる(実例で確認済み)
 - `for-note-post/publish_to_note*.py`の`BASE_DIR`アンカー。`STATUS_FILE`/cookie/archiveパスを裸の相対パス(`"note_status.json"`等)に戻すと、リポジトリルートから`python3 for-note-post/publish_to_note_batch.py`のように実行した際に**エラーも出さず静かに「何も処理せず完了」と表示する**(実際に本番で発生し、記事が1件も公開されないのに成功表示が出た)。`for-note-post/`に`cd`してから実行する運用だけに頼らないこと
 - `for-note-post/publish_to_note*.py`の`parse_article_content`系のタイトル抽出。`#`/`■`だけでなくバッククォート(`` ` ``)と`**`も除去すること。TOC生成がツール名をMarkdownのコード書式で装飾することがあり、除去しないとnote.comのタイトル欄にバッククォートがそのまま表示される(過去公開済み記事3件で実例を確認)
+- `for-note-post/publish_to_note*.py`の本文入力は`type_with_link_detection()`を使うこと。単純な`insert_text()`(貼り付け相当)だとURLがクリックできないただの文字列になり、単純な`type()`(1文字ずつ)だと本文中のURLがnote.com側のリンクカード化処理と衝突して`"[]()"`というプレースホルダー表示に壊れる(両方とも実際の公開記事で実例を確認済み)。URL部分だけ1文字ずつ入力→スペースで確定→カード生成を待つ、というハイブリッド方式が必要
 
 ## 6. 認証情報の取り扱い
 
