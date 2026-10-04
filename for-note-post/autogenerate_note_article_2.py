@@ -18,6 +18,16 @@ HOOK_MODEL = "qwen2.5-coder:14b"
 INSIGHT_MODEL = "qwen2.5-coder:14b"
 LINK_MODEL = "qwen2.5-coder:14b"
 
+# 💡 モデルが「データが空/不十分」として本来の出力ではなく拒否・確認の
+# 返答をしてきた場合に検出するためのマーカー。英語("Please provide...")
+# だけでなく日本語での丁寧な拒否("申し訳ございません...")も実例を確認済み
+REFUSAL_MARKERS = [
+    "Please provide",
+    "please provide",
+    "申し訳ございません",
+    "申し訳ありません",
+]
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATUS_FILE = os.path.join(BASE_DIR, "note_status.json")
 PAYWALL_MARKER = "<!-- PAYWALL -->"
@@ -42,7 +52,7 @@ def call_llm(model_name: str, prompt: str, num_predict: int = 4000, num_ctx: int
         res = requests.post(OLLAMA_URL, json=payload, timeout=600)
         res.raise_for_status()
         response_text = res.json().get("response", "").strip()
-        if "Please provide" in response_text or "Professional Engineering" in response_text:
+        if any(marker in response_text for marker in REFUSAL_MARKERS):
             return ""
         return response_text
     except Exception as e:
