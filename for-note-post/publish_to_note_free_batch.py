@@ -5,8 +5,13 @@ import shutil
 from datetime import datetime
 from playwright.sync_api import sync_playwright
 
-STATUS_FILE = "note_status.json"
-ARCHIVE_DIR = "output/archive_published"
+# 💡 カレントディレクトリに依存する相対パスだと、リポジトリルートから
+# `python3 for-note-post/publish_to_note_free_batch.py` のように実行された際に
+# note_status.json/cookieが見つからず、エラーも出さずに「何も無い」と
+# 誤判定してしまう(実例で確認)。スクリプト自身の場所からの絶対パスにする
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATUS_FILE = os.path.join(BASE_DIR, "note_status.json")
+ARCHIVE_DIR = os.path.join(BASE_DIR, "output", "archive_published")
 
 def load_status():
     if os.path.exists(STATUS_FILE):
@@ -20,7 +25,7 @@ def save_status(data):
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 def load_cookies_to_context(context):
-    cookie_path = "note_cookies.json"
+    cookie_path = os.path.join(BASE_DIR, "note_cookies.json")
     if not os.path.exists(cookie_path):
         print(f"⚠️ {cookie_path} not found.")
         return False

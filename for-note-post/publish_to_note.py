@@ -5,10 +5,16 @@ import shutil
 from datetime import datetime
 from playwright.sync_api import sync_playwright
 
-STATUS_FILE = "note_status.json"
+# 💡 カレントディレクトリに依存する相対パスだと、リポジトリルートから
+# `python3 for-note-post/publish_to_note.py` のように実行された際に
+# note_status.json/cookieが見つからず、エラーも出さずに誤動作する恐れが
+# ある(publish_to_note_batch.pyで実例を確認)。スクリプト自身の場所からの
+# 絶対パスにする
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATUS_FILE = os.path.join(BASE_DIR, "note_status.json")
 
 def load_cookies_to_context(context):
-    cookie_path = "note_cookies.json"
+    cookie_path = os.path.join(BASE_DIR, "note_cookies.json")
     if not os.path.exists(cookie_path):
         print(f"⚠️ {cookie_path} not found.")
         return False
@@ -48,7 +54,7 @@ def load_cookies_to_context(context):
         return False
 
 def get_latest_article():
-    output_dir = "output"
+    output_dir = os.path.join(BASE_DIR, "output")
     if not os.path.exists(output_dir):
         return None
     files = [os.path.join(output_dir, f) for f in os.listdir(output_dir) if f.endswith(".md") or f.endswith(".txt")]
@@ -99,7 +105,7 @@ def update_status_and_archive(file_path):
     print(f"📝 Updated {STATUS_FILE} with published record.")
 
     # 2. output/archive への移動
-    archive_dir = os.path.join("output", "archive")
+    archive_dir = os.path.join(BASE_DIR, "output", "archive")
     os.makedirs(archive_dir, exist_ok=True)
     destination_path = os.path.join(archive_dir, filename)
     
