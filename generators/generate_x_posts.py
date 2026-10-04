@@ -6,7 +6,11 @@ import requests
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
 
 def generate_detailed_summary(item: dict) -> str:
-    model_name = os.getenv("QWEN_MODEL", "qwen2.5-coder:14b")
+    # 💡 qwen2.5-coder:14bはコード特化モデルで、根拠のない技術詳細を自信満々に
+    # 書く(ハルシネーション)傾向が見られたため、qwen3.8:27bに変更。
+    # 処理時間は長くなる(実測: 約4倍)が、分からないことを明記する誠実さがあり
+    # 技術要約の質が高い。
+    model_name = os.getenv("QWEN_MODEL", "qwen3.8:27b")
     # Safely retrieve URL from item ('url' or 'link')
     item_url = item.get('url') or item.get('link') or ''
     
@@ -29,7 +33,10 @@ URL: {item_url}
     payload = {
         "model": model_name,
         "prompt": prompt,
-        "stream": False
+        "stream": False,
+        "think": False,  # 💡 思考トレースがnum_predictを食い尽くすのを防ぐ
+                         # (有効時: 260秒 → 無効時: 130秒、品質は維持)
+        "options": {"num_predict": 1500, "num_ctx": 4096},
     }
     
     try:
