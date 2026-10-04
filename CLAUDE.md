@@ -26,6 +26,8 @@ note.com向けには `for-note-post/` 配下に独立した並行パイプライ
 
 Stage1の複数要約は `<<<CURATOR_ITEM_BOUNDARY>>>` という専用トークンで連結・分割している(`generate_x_posts.py`で書き込み、`run_today_pipeline_parta.py`等で読み込み)。**`---`のような自然言語に出現しうる文字列を区切りに使わないこと** — Qwenが要約本文の末尾に`---`区切りの「Source:」フッターを自然に出力し、1件の要約が誤って2分割された実例がある(空の断片をGemmaが別内容で「捏造」し、無関係なURLに紐付けて投稿する事故につながった)。
 
+`output/raw/`には2026-10-04より前に生成された、旧形式(`---`区切り)の生データファイルが現存している(18件)。これらを読む箇所は全て新トークンが見つからない場合に旧形式へフォールバックする`split_raw_items`相当のロジックを持つ(新トークンのみで分割すると、旧ファイル全体が1件の要約として誤認識され、無関係な複数記事の内容が混入する事故が実際に発生した)。
+
 ## 2. ディレクトリ構成
 
 | ディレクトリ | 役割 |
@@ -124,6 +126,8 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 **本番の状態ファイル(`output/raw/seen_urls.json`, `output/history.json`)や本番の出力先(`output/`, `output/raw/`)を、動作確認のためだけに汚さないこと。** 過去に実データでPart Aを検証目的で直接実行し、`seen_urls.json`に試験的に処理したURLが書き込まれてしまい、本番運用に使えるよう手動で巻き戻す対応が必要になったことがある。
 
 - **Part Aの動作確認には必ず`python3 run_today_pipeline_parta.py --dry-run`を使うこと。** 出力は`output/dry_run/`(gitignore対象)に隔離され、`seen_urls.json`等の本番履歴ファイルには一切書き込まれない。Part B/`x_poster.py`は`output/`直下しかglobしないため、dry-runの出力が誤って投稿されることもない
-- 確認が終わったら`output/dry_run/`は削除してよい(gitignoreされているため残しても実害はないが、紛れるので消すほうが安全)
+- **note.com側(`generate_note_article.py`, `autogenerate_note_article.py`, `autogenerate_note_article_2.py`)の動作確認にも`--dry-run`を使うこと。** 出力は`for-note-post/output/dry_run/`に隔離され、`note_status.json`・本番の生データアーカイブ移動には一切影響しない。バッチ版(`autogenerate_*`)は1件処理したら自動的に停止する
+- これらのスクリプトは`playwright`に依存するため、**システムのpython3ではなく`.venv/bin/python3`(または`source .venv/bin/activate`後)で実行すること**。system pythonには`playwright`が入っていない
+- 確認が終わったら各`output/dry_run/`は削除してよい(gitignoreされているため残しても実害はないが、紛れるので消すほうが安全)
 - `generators/`配下の個々の関数(`refine_to_x_post`, `review_and_edit_post`, `generate_detailed_summary`等)を単体で素のPythonから直接呼ぶ検証は、ファイルへの書き込みが発生しないため安全(このセッションでもバグ調査に多用した)
 - 新しくファイル書き込み・履歴更新を伴うステージを追加する場合は、同じく`--dry-run`で書き込み先を切り替えられるようにしておくこと
