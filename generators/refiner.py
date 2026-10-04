@@ -3,9 +3,10 @@ import random
 import re
 import requests
 
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
+# 変更後 (環境変数に依存せずチャットAPIを強制指定)
+OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
 GEMMA_MODEL = os.getenv("GEMMA_MODEL", "gemma4:12b")
-QWEN_MODEL = os.getenv("QWEN_MODEL", "qwen2.5:7b")
+QWEN_MODEL = os.getenv("QWEN_MODEL", "qwen2.5-coder:14b") # 現在の14bモデルに合わせる
 
 # --- 素材プール定義 ---
 RAW_EMOJI_POOL = [
@@ -202,7 +203,7 @@ Given a Technical Summary and a Draft X Post, extract the primary Product/Paper/
   }
 
   try:
-    res = requests.post(OLLAMA_URL, json=payload, timeout=60)
+    res = requests.post(OLLAMA_CHAT_URL, json=payload, timeout=60)
     res.raise_for_status()
     raw = res.json().get("message", {}).get("content", "").strip()
     fixed_text = clean_llm_response(raw)
@@ -210,6 +211,44 @@ Given a Technical Summary and a Draft X Post, extract the primary Product/Paper/
   except Exception as e:
     print(f"⚠️ Qwen repair error: {e}")
     return draft_post
+
+
+def generate_safe_japanese_fallback(summary_text: str) -> str:
+  """最終手段のフォールバック。summary_textの1行目を直接使うと英語のまま
+  投稿に混入するため、Qwenに明示的に日本語一文へ圧縮させる。"""
+  clean_summary = re.sub(r'https?://[^\s<>"]*', "", summary_text).strip()
+  if not clean_summary:
+    return "注目の技術情報"
+
+  prompt = f"""Read the following technical summary (it may be in English) and write ONE short, natural Japanese sentence (casual タメ語, 40-90 characters) that starts with the product/paper/library name as the subject and briefly states what it does.
+
+Rules:
+1. Output ONLY the Japanese sentence. No English words except the proper noun itself.
+2. Never use です/ます. No preamble, no explanation, no markdown.
+
+Summary:
+{clean_summary[:800]}
+"""
+
+  payload = {
+      "model": QWEN_MODEL,
+      "messages": [{"role": "user", "content": prompt}],
+      "stream": False,
+      "keep_alive": 0,
+      "options": {"temperature": 0.3, "num_ctx": 2048, "num_predict": 200},
+  }
+
+  try:
+    res = requests.post(OLLAMA_CHAT_URL, json=payload, timeout=60)
+    res.raise_for_status()
+    raw = res.json().get("message", {}).get("content", "").strip()
+    fixed = clean_llm_response(raw)
+    if fixed and not is_subject_missing(fixed):
+      return fixed
+  except Exception as e:
+    print(f"⚠️ Qwen fallback-translation error: {e}")
+
+  return "注目の技術情報"
 
 
 def refine_to_x_post(summary_text: str, max_retries: int = 3) -> str:
@@ -259,7 +298,7 @@ Summary:
     }
 
     try:
-      res = requests.post(OLLAMA_URL, json=payload, timeout=90)
+      res = requests.post(OLLAMA_CHAT_URL, json=payload, timeout=90)
       res.raise_for_status()
       data = res.json()
 
@@ -285,14 +324,8 @@ Summary:
 
   print("⚠️ Applying safe fallback...")
   if is_subject_missing(body_text):
-    clean_summary = re.sub(r'https?://[^\s<>"]*', "", summary_text).strip()
-    first_line = (
-        clean_summary.split("\n")[0] if clean_summary else "注目のAI最新技術"
-    )
-    first_line = (
-        first_line.replace("**", "").replace("[", "").replace("]", "")
-    )
-    body_text = f"{first_line[:80]} {assigned_hook}{assigned_emoji}"
+    safe_sentence = generate_safe_japanese_fallback(summary_text)
+    body_text = f"{safe_sentence[:80]} {assigned_hook}{assigned_emoji}"
 
   max_body_len = 115 if target_url else 140
   if len(body_text) > max_body_len:

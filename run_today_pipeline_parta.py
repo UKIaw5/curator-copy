@@ -13,6 +13,7 @@ from fetchers.huggingface import fetch_huggingface_papers
 from generators.curator import select_best_items
 from generators.generate_x_posts import run_stage1
 from generators.refiner import refine_to_x_post
+from generators.reviewer import review_and_edit_post
 
 HISTORY_FILE = "output/history.json"
 
@@ -155,7 +156,7 @@ def main():
 
   print(
       f"\nStep 4: Refining {len(summaries)} summaries into professional X"
-      " posts (Gemma 12B)..."
+      " posts (Gemma 12B + Qwen review)..."
   )
 
   if not summaries:
@@ -175,6 +176,11 @@ def main():
       if post:
         preview_out = post.replace("\n", " ")[:70]
         print(f"✨ Refined Output: {preview_out}...")
+
+        post = review_and_edit_post(post, summary)
+        preview_reviewed = post.replace("\n", " ")[:70]
+        print(f"🔍 Reviewed Output: {preview_reviewed}...")
+
         refined_posts.append(post)
       else:
         print("⚠️ Refine returned empty string. (Check Ollama connection)")
