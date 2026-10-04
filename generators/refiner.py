@@ -169,6 +169,18 @@ def clean_llm_response(raw_text: str) -> str:
   return result.strip()
 
 
+def truncate_at_boundary(text: str, max_len: int) -> str:
+  """文字数上限を超えた場合、句点等の境界で切る。適切な境界が見つからない
+  場合のみ文字単位で切って"..."を付ける。"""
+  if len(text) <= max_len:
+    return text
+  truncated = text[:max_len]
+  boundary = max(truncated.rfind(c) for c in "。！？")
+  if boundary >= int(max_len * 0.5):
+    return truncated[: boundary + 1]
+  return truncated[: max_len - 3] + "..."
+
+
 def is_subject_missing(text: str) -> bool:
   if not text:
     return True
@@ -346,8 +358,7 @@ Summary:
     body_text = f"{safe_sentence[:80]} {assigned_hook}{assigned_emoji}"
 
   max_body_len = 115 if target_url else 140
-  if len(body_text) > max_body_len:
-    body_text = body_text[: max_body_len - 3] + "..."
+  body_text = truncate_at_boundary(body_text, max_body_len)
 
   body_text = clean_llm_response(body_text)
 
