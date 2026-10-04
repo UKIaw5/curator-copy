@@ -175,6 +175,14 @@ def is_subject_missing(text: str) -> bool:
   return bool(re.match(r"^(が|の|を|は|に|で|と|より|から|、)", text.strip()))
 
 
+def is_japanese_text(text: str, min_ratio: float = 0.3) -> bool:
+  """GemmaがタメOK語への変換を放棄し、入力の英語をそのまま返すケースを検出する。"""
+  if not text:
+    return False
+  japanese_chars = re.findall(r"[぀-ヿ一-鿿]", text)
+  return (len(japanese_chars) / len(text)) >= min_ratio
+
+
 def fix_subject_with_qwen(summary_text: str, draft_post: str) -> str:
   prompt = f"""You are a precise text editor.
 Given a Technical Summary and a Draft X Post, extract the primary Product/Paper/Library name from the Summary, and prepend it onto the Draft Post so it naturally completes the sentence.
@@ -243,7 +251,7 @@ Summary:
     res.raise_for_status()
     raw = res.json().get("message", {}).get("content", "").strip()
     fixed = clean_llm_response(raw)
-    if fixed and not is_subject_missing(fixed):
+    if fixed and not is_subject_missing(fixed) and is_japanese_text(fixed):
       return fixed
   except Exception as e:
     print(f"⚠️ Qwen fallback-translation error: {e}")
@@ -315,15 +323,21 @@ Summary:
           f" Effective Length: {effective_len} chars"
       )
 
-      if 60 <= effective_len <= 135 and not is_subject_missing(body_text):
+      if (
+          60 <= effective_len <= 135
+          and not is_subject_missing(body_text)
+          and is_japanese_text(body_text)
+      ):
         print("✅ Perfect! Fits X length bounds and structure.")
         return f"{body_text}\n\n{target_url}" if target_url else body_text
+      elif not is_japanese_text(body_text):
+        print(f"⚠️ [Attempt {attempt}] Gemma output is not Japanese. Retrying...")
 
     except Exception as e:
       print(f"⚠️ Refine API error (Attempt {attempt}): {e}")
 
   print("⚠️ Applying safe fallback...")
-  if is_subject_missing(body_text):
+  if is_subject_missing(body_text) or not is_japanese_text(body_text):
     safe_sentence = generate_safe_japanese_fallback(summary_text)
     body_text = f"{safe_sentence[:80]} {assigned_hook}{assigned_emoji}"
 
