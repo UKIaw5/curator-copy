@@ -147,10 +147,11 @@ def main():
     with open(pending_raw_path, "r", encoding="utf-8") as f:
       raw_content = f.read()
 
-  # 【改善ポイント】区切り線（---）の空白や改行数のブレを正規表現で吸収して分割
+  # 💡 "---"ではなく専用の境界文字列で分割する(Qwenが要約内で"---"を
+  # 区切り線として自然に使い、1件の要約が誤って複数件に分割されるのを防ぐ)
   summaries = [
       s.strip()
-      for s in re.split(r"\n+\s*---\s*\n+", raw_content.strip())
+      for s in raw_content.strip().split("<<<CURATOR_ITEM_BOUNDARY>>>")
       if s.strip()
   ]
 

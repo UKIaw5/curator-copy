@@ -11,8 +11,8 @@ def review_with_qwen(draft_post: str) -> str:
 
     import requests
     OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/chat")
-    # モデル名を qwen3.8:27b に変更
-    qwen_model = os.getenv("QWEN_MODEL", "qwen3.8:27b")
+    # モデル名を qwen2.5-coder:14b に変更
+    qwen_model = os.getenv("QWEN_MODEL", "qwen2.5-coder:14b")
 
     prompt = f"以下のX投稿案を確認し、誤字脱字や不自然な日本語があれば修正してください。問題なければそのまま出力してください。\n\n{draft_post}"
     
@@ -44,7 +44,9 @@ def main():
     with open(latest_file, "r", encoding="utf-8") as f:
         content = f.read()
 
-    summaries = [s.strip() for s in content.split("---") if s.strip()]
+    summaries = [
+        s.strip() for s in content.split("<<<CURATOR_ITEM_BOUNDARY>>>") if s.strip()
+    ]
     print(f"🎯 Summaries detected: {len(summaries)}\n")
 
     final_posts = []
@@ -55,7 +57,7 @@ def main():
         print(f"📝 Gemma Draft:\n{gemma_draft}\n")
 
         if not SKIP_QWEN_REVIEW:
-            print("🔍 Reviewing with Qwen (qwen3.8:27b)...")
+            print("🔍 Reviewing with Qwen (qwen2.5-coder:14b)...")
             final_post = review_with_qwen(gemma_draft)
         else:
             final_post = gemma_draft

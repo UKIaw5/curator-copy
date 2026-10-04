@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 import requests
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
@@ -51,6 +52,7 @@ URL: {item_url}
 def run(items: list, output_dir: str = "output", filename: str = "latest_summaries.md"):
     os.makedirs(output_dir, exist_ok=True)
     seen_urls_path = os.path.join(output_dir, "seen_urls.json")
+    seen_urls_bak_path = os.path.join(output_dir, "seen_urls.json.bak")
     
     seen_urls = set()
     if os.path.exists(seen_urls_path):
@@ -77,10 +79,21 @@ def run(items: list, output_dir: str = "output", filename: str = "latest_summari
         return
 
     raw_file = os.path.join(output_dir, filename)
-    content_to_write = "\n\n---\n\n".join(summaries)
+    # 💡 "---" はQwenが要約本文の区切り線として自然に使うことがあり、
+    # 単純な"---"区切りだと1件の要約が誤って複数件に分割されてしまう。
+    # 衝突しないユニークな区切り文字列を使う。
+    content_to_write = "\n\n<<<CURATOR_ITEM_BOUNDARY>>>\n\n".join(summaries)
 
     with open(raw_file, "w", encoding="utf-8") as f:
         f.write(content_to_write)
+
+    # 💡 履歴更新の直前に .bak バックアップを作成
+    if os.path.exists(seen_urls_path):
+        try:
+            shutil.copy2(seen_urls_path, seen_urls_bak_path)
+            print(f"📦 Created history backup: {seen_urls_bak_path}")
+        except Exception as e:
+            print(f"⚠️ Failed to create history backup: {e}")
 
     with open(seen_urls_path, "w", encoding="utf-8") as f:
         json.dump(list(seen_urls), f, ensure_ascii=False, indent=2)

@@ -26,9 +26,11 @@ def main():
         raw_content = f.read()
 
     # サマリーの分割
-    summaries = [s.strip() for s in raw_content.split("\n\n---\n\n") if s.strip()]
-    if not summaries:
-        summaries = [s.strip() for s in raw_content.split("\n---\n") if s.strip()]
+    summaries = [
+        s.strip()
+        for s in raw_content.split("<<<CURATOR_ITEM_BOUNDARY>>>")
+        if s.strip()
+    ]
 
     if not summaries:
         print("ℹ️ No content summaries detected in the file.")
