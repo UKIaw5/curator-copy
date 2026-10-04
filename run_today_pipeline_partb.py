@@ -22,13 +22,13 @@ def git_commit_and_push():
 def main():
     print("=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===")
     
-    print("\nStep 1: Launching X Auto-Scheduler...")
+    print("\nStep 1: Launching SocialDog Auto-Scheduler...")
     os.environ["DISPLAY"] = ":0"
     try:
-        subprocess.run(["python3", "automation/x_poster.py"], check=True)
-        print("✅ X Poster executed successfully.")
+        subprocess.run(["python3", "automation/socialdog_poster.py"], check=True)
+        print("✅ SocialDog Poster executed successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error during x_poster.py execution: {e}")
+        print(f"❌ Error during socialdog_poster.py execution: {e}")
         return
 
     git_commit_and_push()
