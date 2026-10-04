@@ -160,11 +160,14 @@ def lint_markdown(text: str) -> str:
         t = re.sub(r'(?m)^\s*(\d+)[\.\s]+\1\.\s+', r'\1. ', t)
         
         # 2. Convert Markdown headers to ■
+        # 💡 "#"の直後にスペースが無い行("#LLM #Python"等のハッシュタグ行)は
+        # 見出しではないので変換しない。\s*だと0文字にもマッチしてしまい、
+        # ハッシュタグ1つ目の"#"まで誤って消してしまう事故があったため\s+に変更
         lines = t.splitlines()
         processed_lines = []
         for line in lines:
-            if re.match(r'^#+\s*', line):
-                processed_lines.append(re.sub(r'^#+\s*', '■ ', line))
+            if re.match(r'^#+\s+', line):
+                processed_lines.append(re.sub(r'^#+\s+', '■ ', line))
             else:
                 processed_lines.append(line)
         t = "\n".join(processed_lines)
