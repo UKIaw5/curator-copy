@@ -170,7 +170,11 @@ def main():
                 print("✍️ Typing full free body content...")
                 body_editor = page.locator("div.ProseMirror").first
                 body_editor.click()
-                page.keyboard.type(full_body, delay=1)
+                # 💡 1文字ずつのtype()だと、本文中のURLをnote.com側が
+                # タイピング中にリンクカード化しようとして崩れる事故を確認
+                # (実例: 参考URLが "[]()" というプレースホルダーのまま
+                # 表示される)。貼り付け相当のinsert_text()に変更
+                page.keyboard.insert_text(full_body)
                 page.wait_for_timeout(1500)
 
                 # --- 3. 公開設定画面へ進む ---

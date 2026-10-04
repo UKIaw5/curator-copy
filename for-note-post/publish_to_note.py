@@ -175,10 +175,14 @@ def main():
         title_input.fill(title)
         
         # 2. Input Free Section
+        # 💡 1文字ずつのtype()だと、本文中のURLをnote.com側がタイピング中に
+        # リンクカード化しようとして崩れる事故を確認(実例: 参考URLが
+        # "[]()" というプレースホルダーのまま表示される)。貼り付け相当の
+        # insert_text()に変更
         print("✍️ Typing free section...")
         body_editor = page.locator("div.ProseMirror").first
         body_editor.click()
-        page.keyboard.type(free_section, delay=2)
+        page.keyboard.insert_text(free_section)
         
         page.wait_for_timeout(1000)
 
@@ -216,9 +220,9 @@ def main():
             except Exception as e:
                 print(f"⚠️ Could not insert paid line via keyboard: {e}")
 
-            # 4. Input Paid Section (URL判定処理を削除し、一括タイピングに変更)
+            # 4. Input Paid Section
             print("✍️ Typing paid section into the paid area...")
-            page.keyboard.type(paid_section, delay=2)
+            page.keyboard.insert_text(paid_section)
             page.wait_for_timeout(1000)
 
         # 5. Click "公開に進む"

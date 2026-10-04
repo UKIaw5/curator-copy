@@ -167,10 +167,14 @@ def main():
                 title_input.fill(title)
                 
                 # --- 無料部分入力 ---
+                # 💡 1文字ずつのtype()だと、本文中のURLをnote.com側が
+                # タイピング中にリンクカード化しようとして崩れる事故を確認
+                # (実例: 参考URLが "[]()" というプレースホルダーのまま
+                # 表示される)。貼り付け相当のinsert_text()に変更
                 print("✍️ Typing free section...")
                 body_editor = page.locator("div.ProseMirror").first
                 body_editor.click()
-                page.keyboard.type(free_section, delay=1)
+                page.keyboard.insert_text(free_section)
                 page.wait_for_timeout(1000)
 
                 # --- 有料境界の挿入 & 有料部分入力 ---
@@ -196,7 +200,7 @@ def main():
                     page.wait_for_timeout(400)
                     
                     print("✍️ Typing paid section into the paid area...")
-                    page.keyboard.type(paid_section, delay=1)
+                    page.keyboard.insert_text(paid_section)
                     page.wait_for_timeout(1000)
 
                 # --- 公開設定画面へ ---

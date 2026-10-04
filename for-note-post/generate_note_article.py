@@ -441,6 +441,10 @@ Raw Data:
 """
     print(f"🔗 Step 6: Extracting links with {LINK_MODEL}...")
     part_links = call_llm(LINK_MODEL, link_prompt, num_predict=1000)
+    # 💡 「素のURLのみ」と指示しても、モデルがMarkdownリンク構文
+    # [text](url) で返すことがある(リンクテキストが空だと note.com上で
+    # "[]()" という壊れた表示になる実例を確認)。素のURLに変換しておく
+    part_links = re.sub(r'\[([^\]]*)\]\((https?://[^\s)]+)\)', r'\2', part_links)
 
     # --- Step 6.5: Hashtag Generation ---
     hashtag_prompt = f"""
