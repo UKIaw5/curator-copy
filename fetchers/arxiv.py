@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 
 ATOM_NS = {"atom": "http://www.w3.org/2005/Atom"}
 
-def fetch_arxiv(category="cs.AI", limit=30):
+def fetch_arxiv(category="cs.AI", limit=15):
     """arXivの検索APIから、投稿日の新しい順に論文を取得する。
 
     以前はRSSフィード(rss.arxiv.org)を使っていたが、あれは「その日に
