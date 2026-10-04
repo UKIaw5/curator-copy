@@ -67,7 +67,11 @@ def get_latest_article():
 
 def parse_article_content(raw_content):
     lines = raw_content.splitlines()
-    title = lines[0].replace("#", "").replace("■", "").strip() if lines else "無題のタイトル"
+    # 💡 モデルがタイトル中のツール名等をMarkdownのコード書式(`name`)や太字(**name**)
+    # で装飾することがあり、#/■だけ除去してもバッククォートがタイトルに残ってしまう
+    # (実例: "■ `universal-modder`: ..." → note.comのタイトル欄にバッククォートが
+    # そのまま表示される事故を確認)
+    title = lines[0].replace("#", "").replace("■", "").replace("`", "").replace("**", "").strip() if lines else "無題のタイトル"
     
     boundary_marker = "<!-- PAYWALL -->"
 

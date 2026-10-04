@@ -79,7 +79,11 @@ def get_next_unpublished_article():
 def parse_article_content_as_free(raw_content):
     """ペイウォールマーカーを削除し、すべての文章を1つの無料本文として結合・整形する"""
     lines = raw_content.splitlines()
-    title = lines[0].replace("#", "").replace("■", "").strip() if lines else "無題のタイトル"
+    # 💡 モデルがタイトル中のツール名等をMarkdownのコード書式(`name`)や太字(**name**)
+    # で装飾することがあり、#/■だけ除去してもバッククォートがタイトルに残ってしまう
+    # (実例: "■ `universal-modder`: ..." → note.comのタイトル欄にバッククォートが
+    # そのまま表示される事故を確認)
+    title = lines[0].replace("#", "").replace("■", "").replace("`", "").replace("**", "").strip() if lines else "無題のタイトル"
     
     # ペイウォールマーカー（<!-- PAYWALL --> または --- [NOTE PAID BOUNDARY] ---）をすべて除去する
     cleaned_content = raw_content
