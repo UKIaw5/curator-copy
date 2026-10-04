@@ -4,9 +4,14 @@ import glob
 import json
 import requests
 import re
+import sys
 import html
 from datetime import datetime
 from playwright.sync_api import sync_playwright
+
+# 💡 --dry-run: 生成結果をoutput/dry_run/に隔離し、note_status.jsonや
+# 本番のoutput/・アーカイブ移動に一切影響させない検証モード
+DRY_RUN = "--dry-run" in sys.argv
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -29,7 +34,12 @@ REFUSAL_MARKERS = [
 ]
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATUS_FILE = os.path.join(BASE_DIR, "note_status.json")
+OUTPUT_SUBDIR = "output/dry_run" if DRY_RUN else "output"
+STATUS_FILE = (
+    os.path.join(BASE_DIR, "output/dry_run/note_status.json")
+    if DRY_RUN
+    else os.path.join(BASE_DIR, "note_status.json")
+)
 PAYWALL_MARKER = "<!-- PAYWALL -->"
 
 def call_llm(model_name: str, prompt: str, num_predict: int = 4000, num_ctx: int = 8192) -> str:
@@ -66,6 +76,18 @@ def save_status(data):
     with open(STATUS_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
+def split_raw_items(raw_content: str) -> list:
+    """Stage1の生データを個別の要約に分割する。新形式は専用の境界トークン
+    <<<CURATOR_ITEM_BOUNDARY>>>で区切られているが、2026-10-04より前に
+    生成された既存ファイルは旧形式("---"区切り)のままなので両対応する。
+    旧形式のまま新トークンだけで分割すると、1ファイル全体が1件の要約と
+    誤認識され、無関係な複数記事の内容が1つの記事に混入する事故につながる。"""
+    if "<<<CURATOR_ITEM_BOUNDARY>>>" in raw_content:
+        parts = raw_content.split("<<<CURATOR_ITEM_BOUNDARY>>>")
+    else:
+        parts = re.split(r"\n+\s*---\s*\n+", raw_content)
+    return [s.strip() for s in parts if s.strip()]
+
 def get_active_raw_file():
     raw_dir = os.path.join(BASE_DIR, "../output/raw")
     status = load_status()
@@ -77,11 +99,7 @@ def get_active_raw_file():
     for latest_file in raw_files:
         basename = os.path.basename(latest_file)
         with open(latest_file, "r", encoding="utf-8") as f:
-            items = [
-                s.strip()
-                for s in f.read().split("<<<CURATOR_ITEM_BOUNDARY>>>")
-                if s.strip()
-            ]
+            items = split_raw_items(f.read())
         if basename not in status:
             status[basename] = {}
         if any(not status[basename].get(str(i), {}).get("note_used", False) for i in range(len(items))):
@@ -255,7 +273,13 @@ def generate_eyecatch(title: str, output_image_path: str):
 
 def main():
     print("=== Note Article Generator v2.6 (Auto Batch Mode) ===")
-    
+    if DRY_RUN:
+        print(
+            "🧪 DRY RUN MODE: output goes to `output/dry_run/`, and "
+            "`note_status.json` / the real raw-file archive are NOT "
+            "touched. Only ONE item will be processed, then the script stops."
+        )
+
     while True:
         latest_file, items, status = get_active_raw_file()
         if not items:
@@ -266,6 +290,9 @@ def main():
         available = [(i, t) for i, t in enumerate(items) if not status[basename].get(str(i), {}).get("note_used", False)]
 
         if not available:
+            if DRY_RUN:
+                print("🧪 DRY RUN: would archive a fully-consumed raw file here. Skipping.")
+                break
             # 現在のファイルのアイテムをすべて消化し終えたらアーカイブへ移動
             archive_dir = os.path.join(BASE_DIR, "../output/raw/archive_note_used")
             os.makedirs(archive_dir, exist_ok=True)
@@ -429,9 +456,9 @@ Raw Data:
         )
         final_article = lint_markdown(final_raw)
 
-        os.makedirs(os.path.join(BASE_DIR, "output"), exist_ok=True)
-        out_path = os.path.join(BASE_DIR, f"output/note_article_{ts}.md")
-        
+        os.makedirs(os.path.join(BASE_DIR, OUTPUT_SUBDIR), exist_ok=True)
+        out_path = os.path.join(BASE_DIR, f"{OUTPUT_SUBDIR}/note_article_{ts}.md")
+
         with open(out_path, "w", encoding="utf-8") as f:
             f.write(final_article)
 
@@ -443,6 +470,14 @@ Raw Data:
         }
         save_status(status)
         print(f"💾 Saved Final Article: {out_path}")
+
+        if DRY_RUN:
+            print(
+                "🧪 Dry run complete. Review the output above/in "
+                f"`{OUTPUT_SUBDIR}/`, then delete that folder when done - "
+                "it's gitignored and never touched by production runs."
+            )
+            break
 
     print("✅ All batch generation tasks completed successfully!")
 
