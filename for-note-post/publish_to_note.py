@@ -83,6 +83,28 @@ def parse_article_content(raw_content):
     paid_section = parts[1].strip() if len(parts) > 1 else ""
     return title, free_section, paid_section
 
+def relink_urls_in_editor(page, urls: list):
+    """insert_textで入力済みの本文中から各URLを見つけ、選択→削除→
+    1文字ずつ再入力することでクリック可能なリンクに変換する。
+    本文編集の最後の操作として行い、この後は何も挿入しない
+    (以前URLをtype()で混在入力して事故を起こした教訓を踏まえた設計)。
+    """
+    for url in urls:
+        try:
+            target = page.get_by_text(url, exact=True).first
+            target.click(click_count=3)
+            page.wait_for_timeout(300)
+            page.keyboard.press("Backspace")
+            page.wait_for_timeout(300)
+            page.keyboard.type(url, delay=20)
+            page.wait_for_timeout(1500)
+            print(f"🔗 Relinked URL: {url}")
+        except Exception as e:
+            print(f"⚠️ Failed to relink URL {url}: {e}")
+
+def extract_urls(text):
+    return re.findall(r'https?://[^\s)]+', text)
+
 def update_status_and_archive(file_path):
     """投稿完了後に status ファイルを更新し、ファイルを archive ディレクトリへ移動する"""
     filename = os.path.basename(file_path)
@@ -121,9 +143,11 @@ def update_status_and_archive(file_path):
     shutil.move(file_path, destination_path)
     print(f"📦 Moved published file to: {destination_path}")
 
-def main():
+def main(draft_only=False):
     print("=== Starting Note Auto-Publisher (Final Polish + Archiver) ===")
-    
+    if draft_only:
+        print("🧪 DRAFT-ONLY MODE: will stop at '下書き保存', nothing will be published.")
+
     res = get_latest_article()
     if not res:
         print("❌ No generated note articles found in output/")
@@ -226,6 +250,26 @@ def main():
             page.keyboard.insert_text(paid_section)
             page.wait_for_timeout(1000)
 
+        # --- URLをクリック可能なリンクに変換(本文編集の最後の操作) ---
+        urls = extract_urls(free_section) + extract_urls(paid_section)
+        if urls:
+            print(f"🔗 Relinking {len(urls)} URL(s) in editor...")
+            relink_urls_in_editor(page, urls)
+
+        if draft_only:
+            print("🧪 Clicking '下書き保存' (draft-only mode, will NOT publish)...")
+            try:
+                draft_btn = page.get_by_role("button", name=re.compile("下書き保存"))
+                draft_btn.click()
+                page.wait_for_timeout(3000)
+                print("🧪 Saved as draft. Check note.com now to confirm no corruption and that the link is clickable.")
+            except Exception as e:
+                print(f"⚠️ Could not click draft save button: {e}")
+            input("Press Enter here to close the browser (this will NOT publish anything)...")
+            browser.close()
+            print("✅ Draft-only test finished (not published).")
+            return
+
         # 5. Click "公開に進む"
         print("🚀 Clicking '公開に進む' button...")
         try:
@@ -287,4 +331,5 @@ def main():
         print("✅ Session closed.")
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(draft_only="--draft-only" in sys.argv)
