@@ -78,6 +78,15 @@ def get_active_raw_file():
             return latest_file, items, status
     return None, [], status
 
+def strip_duplicate_intro(draft_body: str) -> str:
+    """Gemmaが「タイトル/目次を繰り返すな」という指示を無視し、本文冒頭に
+    TOCと同じタイトル・目次・得られることリストを再掲することがある。
+    最初の番号付き見出し(例: "## 1. ...")より前の部分を取り除く。"""
+    match = re.search(r'^#{1,3}\s*\d+[\.\、]', draft_body, flags=re.MULTILINE)
+    if match and match.start() > 0:
+        return draft_body[match.start():].strip()
+    return draft_body
+
 def insert_paywall_smartly(text: str) -> str:
     if PAYWALL_MARKER in text:
         return text
@@ -298,6 +307,7 @@ Raw Data:
         print(f"🤖 Step 2: Generating deep-dive body matching TOC with {WRITER_MODEL}...")
         draft_body = call_llm(WRITER_MODEL, body_writer_prompt, num_predict=3000)
         if not draft_body: draft_body = selected_text
+        draft_body = strip_duplicate_intro(draft_body)
 
         # --- Step 3: Review ---
         reviewer_prompt = f"""
