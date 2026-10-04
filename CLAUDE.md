@@ -71,14 +71,16 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 | 用途 | 呼び出し元 | デフォルトモデル | 環境変数 |
 |---|---|---|---|
 | 記事選別(キュレーション) | `generators/curator.py` | `qwen3.8:27b` | `QWEN_MODEL` |
-| Stage1 詳細要約(英語) | `generators/generate_x_posts.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
+| Stage1 詳細要約(英語) | `generators/generate_x_posts.py` | `qwen3.8:27b`(旧: `qwen2.5-coder:14b`) | `QWEN_MODEL` |
 | Stage2 投稿文精製(日本語) | `generators/refiner.py` | `gemma4:12b` | `GEMMA_MODEL` |
 | 主語補完(Gemma出力の救済) | `generators/refiner.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
 | 日本語フォールバック圧縮(最終救済) | `generators/refiner.py` (`generate_safe_japanese_fallback`) | `qwen2.5-coder:14b` | `QWEN_MODEL` |
 | Stage3 投稿文の校正 | `generators/reviewer.py` | `gemma4:12b` | `GEMMA_REVIEWER_MODEL` |
-| note記事生成(TOC/本文/校正/フック/インサイト/リンク) | `for-note-post/*.py` | すべて `qwen2.5-coder:14b` or `gemma4:12b` 固定(環境変数非対応、コード内直書き) | なし |
+| note記事生成(TOC/本文/校正/フック/インサイト/リンク) | `for-note-post/*.py` | すべて `qwen2.5-coder:14b` or `gemma4:12b` 固定(環境変数非対応、コード内直書き)。`think: False`は適用済みだが、Xパイプラインほど検証していない | なし |
 
-**注意:** `curator.py`のQwenデフォルトだけ`qwen3.8:27b`で、他は`qwen2.5-coder:14b`。同じ`QWEN_MODEL`変数を共有しているため、環境変数で上書きすると全箇所に影響する。モデルを個別に変えたい場合は環境変数を分けるかコードを直接変更する必要がある。
+**注意:** `curator.py`と`generate_x_posts.py`は`qwen3.8:27b`、`refiner.py`の補助呼び出し(主語補完・フォールバック)は`qwen2.5-coder:14b`。同じ`QWEN_MODEL`環境変数を複数箇所で共有しているため、環境変数で上書きすると全箇所に影響する。モデルを個別に変えたい場合は環境変数を分けるかコードを直接変更する必要がある。
+
+**Stage1を`qwen2.5-coder:14b`→`qwen3.8:27b`に変更した理由(2026-10-04):** 同一記事で比較したところ、`qwen2.5-coder:14b`(コード特化モデル)は元データに存在しない技術詳細(例: 存在しないNode.jsバックエンドの記述)を自信満々に書く、いわゆるハルシネーション傾向が見られた。`qwen3.8:27b`は「公開情報にこの詳細は含まれていない」と明記するなど、不確かな情報を補完せず誠実に書く傾向があり、要約の正確性を優先してこちらを採用した。**代償として処理時間が約4倍(1件あたり約30秒→約130秒)** になっている。日次バッチの実行時間が問題になる場合は、ここが再検討対象になる。
 
 **⚠️ 思考(reasoning)モデルを使う場合は必ず`"think": False`をペイロードに付けること。** `qwen3.8:27b`や`gemma4:12b`はOllama上で内部思考トレース(`thinking`/`reasoning`フィールド)を出力する設定になっており、`think`を指定しないと`num_predict`の枠を思考だけで使い切り、本来の出力(`content`/`response`)が空文字・尻切れになる(`finish_reason/done_reason: "length"`で判別できる)。本プロジェクトでは2026-10-04に`curator.py`(AI選別が常にフォールバック)・`refiner.py`(リトライ多発)・`reviewer.py`(校正が常に空)の3箇所でこれが実際に発生し、全箇所に`think: False`を追加して解決した。**新しいOllama呼び出しを追加する際は、まずそのモデルがthinking対応かどうかを`curl http://localhost:11434/api/tags`等で確認し、思考トレースの有無を疑うこと。**
 
@@ -88,7 +90,7 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 
 ### 変えてよい(品質改善の実験対象)
 - Xポストの文字数判定: `refiner.py`の`60 <= effective_len <= 135`、`reviewer.py`の`50〜135`。URL有りの場合は実効文字数に+25文字加算(`get_x_effective_length`)
-- `refiner.py`の絵文字/フック/クロージングのプール(`RAW_EMOJI_POOL`等)とプロンプト文言
+- `refiner.py`のプロンプト文言。2026-10-04に、固定の煽り文句プール(`RAW_HOOK_POOL`/`RAW_CLOSING_POOL`/`RAW_EMOJI_POOL`、全投稿が「が熱い」「が凄すぎる」等の同じ表現になる原因だった)を廃止し、「要約内の具体的事実を1つ以上盛り込む」ことを必須化する方式に変更済み。絵文字は任意・モデルが自由に選ぶ方式
 - 各段のモデル割り当て(4章参照)、`temperature`, `num_ctx`, `num_predict`などのOllamaオプション
 - `curator.py`の`max_select`(選別件数)
 
