@@ -3,9 +3,7 @@ import re
 import requests
 from generators.refiner import extract_clean_url, get_x_effective_length
 
-OLLAMA_URL = os.getenv(
-    "OLLAMA_URL", "http://localhost:11434/v1/chat/completions"
-)
+OLLAMA_URL = os.getenv("OLLAMA_CHAT_URL", "http://localhost:11434/api/chat")
 MODEL_NAME = os.getenv("GEMMA_REVIEWER_MODEL", "gemma4:12b")
 
 
@@ -40,7 +38,11 @@ def review_and_edit_post(gemma_post: str, original_summary: str) -> str:
   payload = {
       "model": MODEL_NAME,
       "messages": [{"role": "user", "content": prompt}],
-      "temperature": 0.3,
+      "stream": False,
+      "think": False,  # 💡 思考(reasoning)トレースが出力トークン枠を使い切り、
+                       # contentが空文字になるのを防ぐ（gemma4:12bはreasoning対応）
+      "keep_alive": 0,
+      "options": {"temperature": 0.3, "num_ctx": 2048, "num_predict": 300},
   }
 
   try:
@@ -48,12 +50,7 @@ def review_and_edit_post(gemma_post: str, original_summary: str) -> str:
     res.raise_for_status()
 
     res_json = res.json()
-    edited_body = (
-        res_json.get("choices", [{}])[0]
-        .get("message", {})
-        .get("content", "")
-        .strip()
-    )
+    edited_body = res_json.get("message", {}).get("content", "").strip()
 
     # 前置きフレーズの検知と安全装置
     filler_keywords = [
