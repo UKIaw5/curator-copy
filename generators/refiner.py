@@ -1,5 +1,4 @@
 import os
-import random
 import re
 import requests
 
@@ -7,120 +6,6 @@ import requests
 OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
 GEMMA_MODEL = os.getenv("GEMMA_MODEL", "gemma4:12b")
 QWEN_MODEL = os.getenv("QWEN_MODEL", "qwen2.5-coder:14b") # 現在の14bモデルに合わせる
-
-# --- 素材プール定義 ---
-RAW_EMOJI_POOL = [
-    "🔥",
-    "🚀",
-    "💡",
-    "⚡",
-    "👀",
-    "💥",
-    "✨",
-    "🎯",
-    "😎",
-    "🛠️",
-    "💪",
-    "👏",
-    "🧠",
-    "📦",
-    "🙌",
-]
-
-RAW_HOOK_POOL = [
-    "が熱い",
-    "が凄すぎる",
-    "が天才的",
-    "が神がかってる",
-    "が革新的",
-    "がエグい",
-    "の進化が止まらない",
-    "がぶっ飛んでる",
-    "が異次元すぎる",
-    "がマジで画期的",
-    "の設計センスが光る",
-    "が個人的に刺さりまくり",
-    "の破壊力がヤバい",
-    "のアプローチが面白すぎる",
-    "が最高にスマート",
-    "のポテンシャルが半端ない",
-    "が完全にプロ仕様",
-    "の完成度に脱帽",
-    "が圧倒的すぎる件",
-    "の本気度が伝わってくる",
-    "がついに来てしまった",
-    "が期待感しかない",
-    "が本気で強い",
-    "が優秀すぎる",
-    "の速度感がエグい",
-    "が刺さりすぎてツラい",
-    "がマジで最高レベル",
-    "の着眼点が神レベル",
-    "が完全にアツい",
-    "が最高にクール",
-]
-
-RAW_CLOSING_POOL = [
-    "マジで筋が良い",
-    "完成度が高すぎる",
-    "アプローチが非常にスマート",
-    "開発の参考になりすぎる",
-    "現場で即役立つレベル",
-    "思わず唸る出来栄え",
-    "着眼点が鋭すぎる",
-    "効率化のインパクトが大きい",
-    "仕組みとして美しすぎる",
-    "今すぐ試したくなるクオリティ",
-    "必見の実装解",
-    "開発者の強力な味方",
-    "技術選定の強力な一手",
-    "シンプルながら強い構成",
-    "最良のパフォーマンス",
-    "開発体験を爆上げする仕組み",
-    "アーキテクチャの模範解答",
-    "プロダクト組み込みの最適解",
-    "色々と応用が効きそう",
-    "キャッチアップ必須の内容",
-    "えぐいな、このパフォーマンス",
-    "天才かよ、このアプローチ",
-    "凄すぎる、この設計思想",
-    "マジで強い、この構成",
-    "痺れるな、この実装解",
-    "見事すぎる、この発想",
-    "圧巻だわ、この精度",
-    "スマートすぎる、この設計",
-    "完璧すぎる、この着眼点",
-    "完成度高すぎ、この仕組み",
-]
-
-
-class PoolManager:
-
-  def __init__(self):
-    self.emojis = []
-    self.hooks = []
-    self.closings = []
-
-  def get_emoji(self) -> str:
-    if not self.emojis:
-      self.emojis = RAW_EMOJI_POOL.copy()
-      random.shuffle(self.emojis)
-    return self.emojis.pop()
-
-  def get_hook(self) -> str:
-    if not self.hooks:
-      self.hooks = RAW_HOOK_POOL.copy()
-      random.shuffle(self.hooks)
-    return self.hooks.pop()
-
-  def get_closing(self) -> str:
-    if not self.closings:
-      self.closings = RAW_CLOSING_POOL.copy()
-      random.shuffle(self.closings)
-    return self.closings.pop()
-
-
-pool_manager = PoolManager()
 
 
 def extract_clean_url(text: str) -> str:
@@ -276,28 +161,27 @@ Summary:
 def refine_to_x_post(summary_text: str, max_retries: int = 3) -> str:
   target_url = extract_clean_url(summary_text)
 
-  assigned_hook = pool_manager.get_hook()
-  assigned_closing = pool_manager.get_closing()
-  assigned_emoji = pool_manager.get_emoji()
-
   system_prompt = (
-      "You are a concise X (Twitter) post generator.\n"
+      "You are a sharp, credible Japanese tech writer who explains the latest"
+      " AI tools and papers to engineers on X (Twitter).\n"
       "Output ONLY the final Japanese text directly and immediately.\n"
-      "Use strictly casual Japanese (タメ語). NEVER use desu/masu (です・ます)."
+      "Use casual but confident Japanese (だ・である調/タメ語). NEVER use"
+      " desu/masu (です・ます)."
   )
 
-  base_prompt = f"""You are an energetic tech developer sharing AI breakthroughs on X.
-Refine the summary into a high-impact Japanese post.
+  # 💡 固定の煽り文句プールを強制挿入する方式をやめ、要約内の具体的な事実
+  # (数値・手法名・ベンチマーク等)を1つ盛り込むことを必須化した。
+  # これにより「が熱い」「が凄すぎる」のような中身のない誇張表現が
+  # 全ての投稿で同じになる問題と、内容の薄さを解消する。
+  base_prompt = f"""以下の技術要約を、エンジニアが読んで「何がどう凄いのか」が具体的に伝わるXの投稿文に変換してください。
 
-Rules:
-1. Try to start with the product/paper name if possible.
-2. Naturally include or align with these expressions:
-   - Hook expression: "{assigned_hook}"
-   - Closing idea: "{assigned_closing}"
-3. Include emoji `{assigned_emoji}` (never right after '。' or '、').
-4. Keep it short and punchy (around 50-80 Japanese characters).
+ルール:
+1. 可能な限り、製品名・論文名・ライブラリ名を主語にして書き始めてください。
+2. 「神」「ヤバい」「エグい」のような中身のない誇張表現だけに頼らず、要約の中にある**具体的な事実を1つ以上**(数値、手法名、ベンチマーク結果、仕組みなど)を必ず盛り込んでください。
+3. 絵文字は任意です。使う場合は1つだけ、文末付近に自然に置いてください(句読点の直後は避ける)。無理に絵文字を入れる必要はありません。
+4. 文字数は日本語本文で50〜80文字程度にしてください。
 
-Summary:
+要約:
 {summary_text}
 """
 
@@ -354,8 +238,7 @@ Summary:
 
   print("⚠️ Applying safe fallback...")
   if is_subject_missing(body_text) or not is_japanese_text(body_text):
-    safe_sentence = generate_safe_japanese_fallback(summary_text)
-    body_text = f"{safe_sentence[:80]} {assigned_hook}{assigned_emoji}"
+    body_text = generate_safe_japanese_fallback(summary_text)
 
   max_body_len = 115 if target_url else 140
   body_text = truncate_at_boundary(body_text, max_body_len)
