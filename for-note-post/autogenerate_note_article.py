@@ -401,15 +401,27 @@ Original paragraph:
                 free_text = "\n\n".join(free_paragraphs)
 
         # --- Step 5: Field Impact ---
+        # 💡 本文(part_body)を渡さず生データだけから生成していたため、本文と
+        # ほぼ同じ内容を焼き直すだけの重複セクションになっていた(実例で確認)。
+        # 本文を踏まえた上で「本文にはない新しい切り口」を明示的に要求する
         insight_prompt = f"""
-Write an advanced analytical subsection about concrete production-level insights and field impact based on the raw data.
-Output ONLY the body paragraphs and bullet points in professional Japanese. Do not use Markdown headers.
+以下は、ある技術記事の本文です。この本文の内容を踏まえた上で、「現場での具体的インパクトと適用場面」について分析してください。
 
-Raw Data:
+[厳守事項]
+1. 本文で既に説明されている内容をそのまま言い換えたり要約したりしないでください。
+2. 実務導入のメリット・コストや工数への影響・既存ワークフローとの比較・競合技術との違いなど、本文にはない新しい切り口を加えてください。
+3. 出力は日本語の本文段落・箇条書きのみとし、Markdown見出しは使わないでください。
+
+[本文]
+{part_body}
+
+[元データ(参考)]
 {selected_text}
 """
         print(f"💡 Step 5: Generating field impact with {INSIGHT_MODEL}...")
-        part_insight = call_llm(INSIGHT_MODEL, insight_prompt)
+        # 💡 本文全体をプロンプトに含めるため、デフォルトのnum_ctx(8192)では
+        # 本文が長い記事だと収まらない恐れがあるので拡張しておく
+        part_insight = call_llm(INSIGHT_MODEL, insight_prompt, num_ctx=16384)
         if not part_insight or not is_japanese_text(part_insight):
             part_insight = "実務における適用価値と今後の展望についての考察。"
 
