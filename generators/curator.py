@@ -40,7 +40,9 @@ Selected Indices (comma-separated numbers only):
         "think": False,  # 💡 Qwen3の思考トレースがnum_predictを食い尽くし、
                           # responseが空になるのを防ぐ
         "keep_alive": 0,
-        "options": {"num_ctx": 2048, "num_predict": 512, "temperature": 0.5}
+        # 💡 arXivフェッチャーが最大30件返すようになり候補が増えたため、
+        # 2048だとプロンプトが収まらずcontextオーバーフローの恐れがある
+        "options": {"num_ctx": 8192, "num_predict": 512, "temperature": 0.5}
     }
 
     try:
