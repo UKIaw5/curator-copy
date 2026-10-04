@@ -19,6 +19,17 @@ QUEUE_URL = "https://web.social-dog.net/teams/1418529/publish/queue/list"
 OUTPUT_DIR = "output"
 ARCHIVE_DIR = os.path.join(OUTPUT_DIR, "archive")
 
+# 💡 狙いたい投稿時間帯(時, 分)。個人開発者・エンジニア層がXを見やすい
+# であろうタイミングを想定した初期値。実際のエンゲージメントを見て調整してよい
+TARGET_TIME_SLOTS = [
+    (7, 30),   # 通勤・身支度前
+    (9, 30),   # 始業後のひと段落
+    (12, 15),  # 昼休み
+    (15, 30),  # 午後の小休憩
+    (19, 0),   # 帰宅後
+    (22, 0),   # 就寝前
+]
+
 
 def load_cookies_to_context(context):
     if not os.path.exists(COOKIE_FILE):
@@ -78,6 +89,31 @@ def parse_posts_from_file(file_path):
     return [p.strip() for p in content.split("\n\n---\n\n") if p.strip()]
 
 
+def compute_schedule_times(count: int, jitter_minutes: int = 15) -> list:
+    """TARGET_TIME_SLOTSを基準に、予約時刻をcount件分算出する。
+
+    実行時刻から見て直近すぎる(10分以内の)枠は使わず、今日の残り枠→
+    翌日以降の同じ枠、という順で埋めていく。これにより「いつパイプラインを
+    走らせるか」に関わらず、狙った時間帯に投稿が着地する。機械的な規則性を
+    避けるため±jitter_minutes分のゆらぎも加える。
+    """
+    now = datetime.now()
+    buffer = timedelta(minutes=10)
+
+    candidates = []
+    day_offset = 0
+    while len(candidates) < count and day_offset <= 14:
+        base_date = now.date() + timedelta(days=day_offset)
+        for hour, minute in TARGET_TIME_SLOTS:
+            slot_time = datetime.combine(base_date, datetime.min.time()) + timedelta(hours=hour, minutes=minute)
+            if slot_time > now + buffer:
+                candidates.append(slot_time)
+        day_offset += 1
+
+    candidates = candidates[:count]
+    return [t + timedelta(minutes=random.randint(-jitter_minutes, jitter_minutes)) for t in candidates]
+
+
 def set_schedule_datetime(page, target_time: datetime):
     """投稿予約の日時ピッカーで日時を設定する。
 
@@ -127,7 +163,7 @@ def schedule_post_on_socialdog(page, text: str, target_time: datetime):
     time.sleep(2.5)
 
 
-def process_batch_scheduling(base_interval_hours: int = 3, limit: int = None):
+def process_batch_scheduling(limit: int = None):
     os.makedirs(ARCHIVE_DIR, exist_ok=True)
     file_path = get_latest_x_post_file()
     if not file_path:
@@ -163,14 +199,15 @@ def process_batch_scheduling(base_interval_hours: int = 3, limit: int = None):
     page.goto(QUEUE_URL, timeout=60000)
     time.sleep(3.0)
 
-    current_schedule_time = datetime.now() + timedelta(minutes=30)
+    schedule_times = compute_schedule_times(len(posts))
+    print("🗓️ Target schedule times:")
+    for t in schedule_times:
+        print(f"   - {t.strftime('%Y-%m-%d (%a) %H:%M')}")
 
-    for idx, post_text in enumerate(posts, start=1):
+    for idx, (post_text, target_time) in enumerate(zip(posts, schedule_times), start=1):
         print(f"\n--- Processing Post {idx}/{len(posts)} ---")
         try:
-            schedule_post_on_socialdog(page, post_text, current_schedule_time)
-            jitter_minutes = random.randint(-40, 40)
-            current_schedule_time += timedelta(hours=base_interval_hours, minutes=jitter_minutes)
+            schedule_post_on_socialdog(page, post_text, target_time)
             time.sleep(random.uniform(2.0, 4.0))
         except Exception as e:
             print(f"⚠️ Aborting batch due to error on post {idx}: {e}")
@@ -192,4 +229,4 @@ def process_batch_scheduling(base_interval_hours: int = 3, limit: int = None):
 
 if __name__ == "__main__":
     test_limit = 1 if "--test" in sys.argv else None
-    process_batch_scheduling(base_interval_hours=3, limit=test_limit)
+    process_batch_scheduling(limit=test_limit)

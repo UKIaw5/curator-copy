@@ -140,7 +140,7 @@ def main():
       print("ℹ️ No new items to process. Exiting.")
       return
 
-    curated_items = select_best_items(candidate_items, max_select=8)
+    curated_items = select_best_items(candidate_items, max_select=6)
     print(f"🎯 Curated {len(curated_items)} items for output.")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
