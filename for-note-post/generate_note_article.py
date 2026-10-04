@@ -124,6 +124,17 @@ def strip_duplicate_intro(draft_body: str) -> str:
         return draft_body[match.start():].strip()
     return draft_body
 
+def strip_duplicate_heading(text: str, keywords: list) -> str:
+    """モデルが、テンプレート側で既に挿入済みの見出しをもう一度自分で
+    書いてしまうことがある(「現場での具体的インパクトと適用場面」が
+    2回連続で出る事故を実例で確認)。先頭行がkeywordsのいずれかを含む
+    短い行(見出しらしきもの)なら取り除く。"""
+    stripped = text.strip()
+    first_line, sep, rest = stripped.partition("\n")
+    if sep and len(first_line) <= 40 and any(k in first_line for k in keywords):
+        return rest.strip()
+    return stripped
+
 def insert_paywall_smartly(text: str) -> str:
     if PAYWALL_MARKER in text:
         return text
@@ -415,6 +426,8 @@ Original paragraph:
     part_insight = call_llm(INSIGHT_MODEL, insight_prompt, num_ctx=16384)
     if not part_insight or not is_japanese_text(part_insight):
         part_insight = "実務における適用価値と今後の展望についての考察。"
+    else:
+        part_insight = strip_duplicate_heading(part_insight, ["現場", "インパクト", "適用場面"])
 
     # --- Step 6: Link Extraction ---
     link_prompt = f"""
