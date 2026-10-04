@@ -67,7 +67,11 @@ def get_active_raw_file():
     for latest_file in raw_files:
         basename = os.path.basename(latest_file)
         with open(latest_file, "r", encoding="utf-8") as f:
-            items = [s.strip() for s in f.read().split("\n\n---\n\n") if s.strip()]
+            items = [
+                s.strip()
+                for s in f.read().split("<<<CURATOR_ITEM_BOUNDARY>>>")
+                if s.strip()
+            ]
         if basename not in status:
             status[basename] = {}
         if any(not status[basename].get(str(i), {}).get("note_used", False) for i in range(len(items))):
