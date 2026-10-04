@@ -11,11 +11,11 @@ from playwright.sync_api import sync_playwright
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 # --- Robust Agent Placement ---
-TOC_MODEL = "qwen3.8:27b"
+TOC_MODEL = "qwen2.5-coder:14b"
 WRITER_MODEL = "gemma4:12b"
-REVIEWER_MODEL = "qwen3.8:27b"
-HOOK_MODEL = "qwen3.8:27b"
-INSIGHT_MODEL = "qwen3.8:27b"
+REVIEWER_MODEL = "qwen2.5-coder:14b"
+HOOK_MODEL = "qwen2.5-coder:14b"
+INSIGHT_MODEL = "qwen2.5-coder:14b"
 LINK_MODEL = "qwen2.5-coder:14b"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,8 +27,9 @@ def call_llm(model_name: str, prompt: str, num_predict: int = 4000, num_ctx: int
         "model": model_name,
         "prompt": prompt,
         "stream": False,
+        "think": False,  # 💡 思考トレースがnum_predictを食い尽くすのを防ぐ
         "options": {
-            "temperature": 0.6, 
+            "temperature": 0.6,
             "num_predict": num_predict,
             "num_ctx": num_ctx
         }

@@ -11,11 +11,11 @@ from playwright.sync_api import sync_playwright
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 # --- Robust Agent Placement ---
-TOC_MODEL = "qwen3.8:27b"
+TOC_MODEL = "qwen2.5-coder:14b"
 WRITER_MODEL = "gemma4:12b"
-REVIEWER_MODEL = "qwen3.8:27b"
-HOOK_MODEL = "qwen3.8:27b"
-INSIGHT_MODEL = "qwen3.8:27b"
+REVIEWER_MODEL = "qwen2.5-coder:14b"
+HOOK_MODEL = "qwen2.5-coder:14b"
+INSIGHT_MODEL = "qwen2.5-coder:14b"
 LINK_MODEL = "qwen2.5-coder:14b"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,8 +27,9 @@ def call_llm(model_name: str, prompt: str, num_predict: int = 4000, num_ctx: int
         "model": model_name,
         "prompt": prompt,
         "stream": False,
+        "think": False,  # 💡 思考トレースがnum_predictを食い尽くすのを防ぐ
         "options": {
-            "temperature": 0.6, 
+            "temperature": 0.6,
             "num_predict": num_predict,
             "num_ctx": num_ctx
         }
@@ -248,7 +249,7 @@ def main():
         preview = selected_text.split('\n')[0][:70]
         print(f"\n🚀 Auto Processing: (Item #{orig_idx + 1}) {preview}...")
 
-        # --- Step 1: Specific Title & TOC (qwen3.8:27b -> num_gpu=22でCPUオフロード併用) ---
+        # --- Step 1: Specific Title & TOC (qwen2.5-coder:14b -> num_gpu=22でCPUオフロード併用) ---
         intro_prompt = f"""
 Generate a catchy, specific Japanese technical article title containing proper nouns (tool names, repositories, or frameworks) from the raw data, followed by takeaways and a table of contents.
 [Strict Rules]
@@ -294,7 +295,7 @@ Raw Data:
         draft_body = call_llm(WRITER_MODEL, body_writer_prompt, num_predict=3000)
         if not draft_body: draft_body = selected_text
 
-        # --- Step 3: Review (qwen3.8:27b -> num_gpu=22) ---
+        # --- Step 3: Review (qwen2.5-coder:14b -> num_gpu=22) ---
         reviewer_prompt = f"""
 Refine the following Japanese technical article draft for professional tone and grammar.
 [Strict Rules]
@@ -311,7 +312,7 @@ Draft:
         
         part_body = insert_paywall_smartly(part_body)
 
-        # --- Step 4: Hook Optimizer (qwen3.8:27b -> num_gpu=22) ---
+        # --- Step 4: Hook Optimizer (qwen2.5-coder:14b -> num_gpu=22) ---
         print(f"🪝 Step 4: Optimizing Paywall Cliffhanger with {HOOK_MODEL}...")
         parts = part_body.split(PAYWALL_MARKER)
         free_text = parts[0].strip()
@@ -334,7 +335,7 @@ Original paragraph:
                 free_paragraphs[-1] = optimized_hook
                 free_text = "\n\n".join(free_paragraphs)
 
-        # --- Step 5: Field Impact (qwen3.8:27b -> num_gpu=22) ---
+        # --- Step 5: Field Impact (qwen2.5-coder:14b -> num_gpu=22) ---
         insight_prompt = f"""
 Write an advanced analytical subsection about concrete production-level insights and field impact based on the raw data.
 Output ONLY the body paragraphs and bullet points in professional Japanese. Do not use Markdown headers.
