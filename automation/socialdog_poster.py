@@ -12,6 +12,7 @@ from cloakbrowser import launch_persistent_context
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 COOKIE_FILE = os.path.join(BASE_DIR, "socialdog_cookies.json")
 USER_DATA_DIR = os.path.join(BASE_DIR, "socialdog_user_data")
+SCHEDULE_STATE_FILE = os.path.join(BASE_DIR, "socialdog_schedule_state.json")
 
 # 💡 チームIDを含む固定URL。アカウント構成が変わったら要更新
 QUEUE_URL = "https://web.social-dog.net/teams/1418529/publish/queue/list"
@@ -89,24 +90,48 @@ def parse_posts_from_file(file_path):
     return [p.strip() for p in content.split("\n\n---\n\n") if p.strip()]
 
 
+def load_last_scheduled_time():
+    """前回実行までに予約した最後の枠の時刻を読み込む。無ければNone。"""
+    if not os.path.exists(SCHEDULE_STATE_FILE):
+        return None
+    try:
+        with open(SCHEDULE_STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return datetime.fromisoformat(data["last_scheduled_time"])
+    except Exception as e:
+        print(f"⚠️ Failed to read schedule state: {e}")
+        return None
+
+
+def save_last_scheduled_time(dt: datetime):
+    """予約成功のたびに呼び、最後に使った枠の時刻を記録する。
+    次回実行時はこの続きのゴールデンタイムから予約を始められる。"""
+    with open(SCHEDULE_STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump({"last_scheduled_time": dt.isoformat()}, f, ensure_ascii=False, indent=2)
+
+
 def compute_schedule_times(count: int, jitter_minutes: int = 15) -> list:
     """TARGET_TIME_SLOTSを基準に、予約時刻をcount件分算出する。
 
-    実行時刻から見て直近すぎる(10分以内の)枠は使わず、今日の残り枠→
-    翌日以降の同じ枠、という順で埋めていく。これにより「いつパイプラインを
-    走らせるか」に関わらず、狙った時間帯に投稿が着地する。機械的な規則性を
-    避けるため±jitter_minutes分のゆらぎも加える。
+    前回実行で最後に予約した枠(socialdog_schedule_state.json)が未来に
+    残っていれば、その続きのゴールデンタイムから予約を始める(同じ枠への
+    二重予約を防ぐ)。記録が無い、または過去の時刻なら現在時刻を起点にする。
+    実行時刻(起点)から見て直近すぎる(10分以内の)枠は使わず、起点日の
+    残り枠→翌日以降の同じ枠、という順で埋めていく。機械的な規則性を避ける
+    ため±jitter_minutes分のゆらぎも加える。
     """
     now = datetime.now()
+    last_scheduled = load_last_scheduled_time()
+    reference = max(now, last_scheduled) if last_scheduled else now
     buffer = timedelta(minutes=10)
 
     candidates = []
     day_offset = 0
     while len(candidates) < count and day_offset <= 14:
-        base_date = now.date() + timedelta(days=day_offset)
+        base_date = reference.date() + timedelta(days=day_offset)
         for hour, minute in TARGET_TIME_SLOTS:
             slot_time = datetime.combine(base_date, datetime.min.time()) + timedelta(hours=hour, minutes=minute)
-            if slot_time > now + buffer:
+            if slot_time > reference + buffer:
                 candidates.append(slot_time)
         day_offset += 1
 
@@ -208,6 +233,9 @@ def process_batch_scheduling(limit: int = None):
         print(f"\n--- Processing Post {idx}/{len(posts)} ---")
         try:
             schedule_post_on_socialdog(page, post_text, target_time)
+            if limit is None:
+                # 💡 テスト実行(--test)ではゴールデンタイムの枠を消費させない
+                save_last_scheduled_time(target_time)
             time.sleep(random.uniform(2.0, 4.0))
         except Exception as e:
             print(f"⚠️ Aborting batch due to error on post {idx}: {e}")
