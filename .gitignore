@@ -19,6 +19,9 @@ cookies.json
 x_user_data/
 for-note-post/note_cookies.json
 note_cookies.json
+automation/socialdog_cookies.json
+socialdog_cookies.json
+socialdog_user_data/
 *.Identifier
 
 # Mac/Windows system files
