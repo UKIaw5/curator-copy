@@ -30,7 +30,7 @@ Stage1の複数要約は `<<<CURATOR_ITEM_BOUNDARY>>>` という専用トーク�
 
 | ディレクトリ | 役割 |
 |---|---|
-| `fetchers/` | ソース別の取得処理。`arxiv.py`, `hacker_news.py`, `github_trending.py`, `huggingface.py`。`arxiv.py`は2026-10-04に検索API(`export.arxiv.org/api/query`)方式へ変更済み(旧: 日次RSSフィードで土日は`skipDays`のため0件になっていた)。投稿日の新しい順に`limit`件(デフォルト30)を取得するため、土日でも直前の配信日まで自動的に遡る |
+| `fetchers/` | ソース別の取得処理。`arxiv.py`, `hacker_news.py`, `github_trending.py`, `huggingface.py`。`arxiv.py`は2026-10-04に検索API(`export.arxiv.org/api/query`)方式へ変更済み(旧: 日次RSSフィードで土日は`skipDays`のため0件になっていた)。投稿日の新しい順に`limit`件(デフォルト15)を取得するため、土日でも直前の配信日まで自動的に遡る |
 | `generators/` | `curator.py`(Qwenで上位記事を選別) / `generate_x_posts.py`(Stage1: Qwenで英語詳細要約) / `refiner.py`(Stage2: Gemmaで日本語Xポストに精製) / `reviewer.py`(Stage3: Qwenによる校正。`run_today_pipeline_parta.py`から呼ばれる本番ステージ) |
 | `automation/` | `x_poster.py`(CloakBrowserでXに予約投稿) / `import_cookies.py`(cookie-editorで取得したcookieをPlaywright用に変換) / `save_session.py` |
 | `for-note-post/` | note.com向けの記事生成(`generate_note_article.py`, `autogenerate_note_article*.py`)・画像生成(`generate_eyecatch.py`)・公開(`publish_to_note*.py`)。Xパイプラインとは別のモデル割り当て・状態管理(`note_status.json`)を持つ独立系 |
