@@ -78,6 +78,14 @@ def get_active_raw_file():
             return latest_file, items, status
     return None, [], status
 
+def is_japanese_text(text: str, min_ratio: float = 0.3) -> bool:
+    """モデルが日本語化の指示を無視し、英語のまま(または丸ごと英訳して)
+    返すケースを検出する。"""
+    if not text:
+        return False
+    japanese_chars = re.findall(r"[぀-ヿ一-鿿]", text)
+    return (len(japanese_chars) / len(text)) >= min_ratio
+
 def strip_duplicate_intro(draft_body: str) -> str:
     """Gemmaが「タイトル/目次を繰り返すな」という指示を無視し、本文冒頭に
     TOCと同じタイトル・目次・得られることリストを再掲することがある。
@@ -287,7 +295,8 @@ Raw Data:
 """
         print(f"💡 Step 1: Generating specific title and TOC with {TOC_MODEL}...")
         part_intro = call_llm(TOC_MODEL, intro_prompt)
-        if not part_intro: part_intro = "# 技術解説記事\n\n## この記事で得られること\n- 最新ツールの解説\n- アーキテクチャの理解\n- 実装への応用\n\n## 目次\n1. 概要\n2. 仕組み\n3. まとめ"
+        if not part_intro or not is_japanese_text(part_intro):
+            part_intro = "# 技術解説記事\n\n## この記事で得られること\n- 最新ツールの解説\n- アーキテクチャの理解\n- 実装への応用\n\n## 目次\n1. 概要\n2. 仕組み\n3. まとめ"
 
         # --- Step 2: Body Generation ---
         body_writer_prompt = f"""
@@ -306,7 +315,8 @@ Raw Data:
 """
         print(f"🤖 Step 2: Generating deep-dive body matching TOC with {WRITER_MODEL}...")
         draft_body = call_llm(WRITER_MODEL, body_writer_prompt, num_predict=3000)
-        if not draft_body: draft_body = selected_text
+        if not draft_body or not is_japanese_text(draft_body):
+            draft_body = selected_text
         draft_body = strip_duplicate_intro(draft_body)
 
         # --- Step 3: Review ---
@@ -322,7 +332,8 @@ Draft:
 """
         print(f"🧐 Step 3: Reviewing with {REVIEWER_MODEL}...")
         part_body = call_llm(REVIEWER_MODEL, reviewer_prompt, num_predict=3000)
-        if not part_body: part_body = draft_body
+        if not part_body or not is_japanese_text(part_body):
+            part_body = draft_body
         
         part_body = insert_paywall_smartly(part_body)
 
@@ -345,7 +356,7 @@ Original paragraph:
 {target_paragraph}
 """
             optimized_hook = call_llm(HOOK_MODEL, hook_prompt, num_predict=1000)
-            if optimized_hook:
+            if optimized_hook and is_japanese_text(optimized_hook):
                 free_paragraphs[-1] = optimized_hook
                 free_text = "\n\n".join(free_paragraphs)
 
@@ -359,7 +370,8 @@ Raw Data:
 """
         print(f"💡 Step 5: Generating field impact with {INSIGHT_MODEL}...")
         part_insight = call_llm(INSIGHT_MODEL, insight_prompt)
-        if not part_insight: part_insight = "実務における適用価値と今後の展望についての考察。"
+        if not part_insight or not is_japanese_text(part_insight):
+            part_insight = "実務における適用価値と今後の展望についての考察。"
 
         # --- Step 6: Link Extraction ---
         link_prompt = f"""
