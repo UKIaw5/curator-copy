@@ -24,16 +24,18 @@ note.com向けには `for-note-post/` 配下に独立した並行パイプライ
 重複排除は `output/history.json`(公開済みURL)と `output/seen_urls.json`(Stage1処理済みURL)で行う。
 どちらも更新直前に `.bak` を作成し、`run_today_pipeline_parta_rb.py` でロールバックできる。
 
+Stage1の複数要約は `<<<CURATOR_ITEM_BOUNDARY>>>` という専用トークンで連結・分割している(`generate_x_posts.py`で書き込み、`run_today_pipeline_parta.py`等で読み込み)。**`---`のような自然言語に出現しうる文字列を区切りに使わないこと** — Qwenが要約本文の末尾に`---`区切りの「Source:」フッターを自然に出力し、1件の要約が誤って2分割された実例がある(空の断片をGemmaが別内容で「捏造」し、無関係なURLに紐付けて投稿する事故につながった)。
+
 ## 2. ディレクトリ構成
 
 | ディレクトリ | 役割 |
 |---|---|
-| `fetchers/` | ソース別の取得処理。`arxiv.py`, `hacker_news.py`, `github_trending.py`, `huggingface.py` (`fetch_*.py` という別名ファイルは旧版/重複、使用箇所を要確認) |
-| `generators/` | `curator.py`(Qwenで上位記事を選別) / `generate_x_posts.py`(Stage1: Qwenで英語詳細要約) / `refiner.py`(Stage2: Gemmaで日本語Xポストに精製) / `reviewer.py`(Gemmaによる校正、現状どこから呼ばれているか要確認) |
+| `fetchers/` | ソース別の取得処理。`arxiv.py`, `hacker_news.py`, `github_trending.py`, `huggingface.py` |
+| `generators/` | `curator.py`(Qwenで上位記事を選別) / `generate_x_posts.py`(Stage1: Qwenで英語詳細要約) / `refiner.py`(Stage2: Gemmaで日本語Xポストに精製) / `reviewer.py`(Stage3: Qwenによる校正。`run_today_pipeline_parta.py`から呼ばれる本番ステージ) |
 | `automation/` | `x_poster.py`(CloakBrowserでXに予約投稿) / `import_cookies.py`(cookie-editorで取得したcookieをPlaywright用に変換) / `save_session.py` |
 | `for-note-post/` | note.com向けの記事生成(`generate_note_article.py`, `autogenerate_note_article*.py`)・画像生成(`generate_eyecatch.py`)・公開(`publish_to_note*.py`)。Xパイプラインとは別のモデル割り当て・状態管理(`note_status.json`)を持つ独立系 |
-| `output/` | `raw/`(Stage1出力) / ルート直下(Stage2出力、未投稿) / `archive/`(投稿済みファイル) / `history.json`, `seen_urls.json`(重複排除用履歴) |
-| `tests/` | pytest(`tests/pytest/`)・CloakBrowser関連の動作確認スクリプト |
+| `output/` | `raw/`(Stage1出力) / ルート直下(Stage2出力、未投稿) / `archive/`(投稿済みファイル) / `history.json`, `seen_urls.json`(重複排除用履歴) / `dry_run/`(検証用サンドボックス、gitignore対象、8章参照) |
+| `tests/` | CloakBrowser動作確認・Stage2/4の手動再実行用アドホックスクリプト中心。CIで網羅的に走る正式なテストスイートではない |
 
 ## 3. 実行コマンド(日常運用)
 
@@ -72,10 +74,13 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 | Stage1 詳細要約(英語) | `generators/generate_x_posts.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
 | Stage2 投稿文精製(日本語) | `generators/refiner.py` | `gemma4:12b` | `GEMMA_MODEL` |
 | 主語補完(Gemma出力の救済) | `generators/refiner.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
-| 投稿文の校正(未結線の可能性あり) | `generators/reviewer.py` | `gemma4:12b` | `GEMMA_REVIEWER_MODEL` |
+| 日本語フォールバック圧縮(最終救済) | `generators/refiner.py` (`generate_safe_japanese_fallback`) | `qwen2.5-coder:14b` | `QWEN_MODEL` |
+| Stage3 投稿文の校正 | `generators/reviewer.py` | `gemma4:12b` | `GEMMA_REVIEWER_MODEL` |
 | note記事生成(TOC/本文/校正/フック/インサイト/リンク) | `for-note-post/*.py` | すべて `qwen2.5-coder:14b` or `gemma4:12b` 固定(環境変数非対応、コード内直書き) | なし |
 
 **注意:** `curator.py`のQwenデフォルトだけ`qwen3.8:27b`で、他は`qwen2.5-coder:14b`。同じ`QWEN_MODEL`変数を共有しているため、環境変数で上書きすると全箇所に影響する。モデルを個別に変えたい場合は環境変数を分けるかコードを直接変更する必要がある。
+
+**⚠️ 思考(reasoning)モデルを使う場合は必ず`"think": False`をペイロードに付けること。** `qwen3.8:27b`や`gemma4:12b`はOllama上で内部思考トレース(`thinking`/`reasoning`フィールド)を出力する設定になっており、`think`を指定しないと`num_predict`の枠を思考だけで使い切り、本来の出力(`content`/`response`)が空文字・尻切れになる(`finish_reason/done_reason: "length"`で判別できる)。本プロジェクトでは2026-10-04に`curator.py`(AI選別が常にフォールバック)・`refiner.py`(リトライ多発)・`reviewer.py`(校正が常に空)の3箇所でこれが実際に発生し、全箇所に`think: False`を追加して解決した。**新しいOllama呼び出しを追加する際は、まずそのモデルがthinking対応かどうかを`curl http://localhost:11434/api/tags`等で確認し、思考トレースの有無を疑うこと。**
 
 モデル/プロンプトを変更したら、この表を更新すること。
 
@@ -95,16 +100,25 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
   - ドロップダウン要素は非表示スタイルのため`state="attached"`で待機する(`state="visible"`では失敗する)
   - これらを安易に「効率化」すると、Xのシャドウバン/アカウントロックのリスクが上がる。変更する場合は意図を理解した上で行うこと
 - `output/history.json` / `seen_urls.json`の重複排除ロジックと`.bak`によるロールバック機構(壊すと同じ記事が再投稿される恐れ)
+- Stage1要約の連結・分割に使う`<<<CURATOR_ITEM_BOUNDARY>>>`境界トークン(1章参照)。`---`等の自然言語に出現しうる文字列に戻さないこと
+- Ollama呼び出しの`"think": False`指定(4章参照)。外したり新しい呼び出しで付け忘れると、該当ステージが静かに機能不全になる(エラーは出ず、ただ空文字が返るだけなので発見しづらい)
 
 ## 6. 認証情報の取り扱い
 
-以下は**絶対にコミットしない**(`.gitignore`で除外済みのものもあるが要確認):
+以下は**絶対にコミットしない**(`.gitignore`で除外済み):
 - `cookies.json`, `automation/cookies.json`, `x_user_data/`(X用セッション)
-- `for-note-post/note_cookies.json`(note.com用セッション)
-
-> ⚠️ **既知の問題:** `for-note-post/note_cookies.json`は現在git管理下に入っている(`.gitignore`は`cookies.json`のみを除外しており`note_cookies.json`は対象外)。認証情報が含まれる可能性があるため、`git rm --cached`と`.gitignore`追記での対応が別途必要。
+- `for-note-post/note_cookies.json`, `note_cookies.json`(note.com用セッション)
 
 ## 7. その他
 
 - Gitへの自動コミット/プッシュをパイプラインスクリプト自身が行う(`run_today_pipeline_parta.py`の`git pull`、`partb*.py`の`git add/commit/push`)。手動での変更作業中に自動実行すると競合する可能性があるので注意
 - `tests/`配下はCloakBrowserのステルス機能検証や履行移行(`test_migrate_history.py`)用のアドホックスクリプトが中心で、CIでの網羅的なテストスイートではない
+
+## 8. 動作検証・デバッグ時の運用ルール
+
+**本番の状態ファイル(`output/raw/seen_urls.json`, `output/history.json`)や本番の出力先(`output/`, `output/raw/`)を、動作確認のためだけに汚さないこと。** 過去に実データでPart Aを検証目的で直接実行し、`seen_urls.json`に試験的に処理したURLが書き込まれてしまい、本番運用に使えるよう手動で巻き戻す対応が必要になったことがある。
+
+- **Part Aの動作確認には必ず`python3 run_today_pipeline_parta.py --dry-run`を使うこと。** 出力は`output/dry_run/`(gitignore対象)に隔離され、`seen_urls.json`等の本番履歴ファイルには一切書き込まれない。Part B/`x_poster.py`は`output/`直下しかglobしないため、dry-runの出力が誤って投稿されることもない
+- 確認が終わったら`output/dry_run/`は削除してよい(gitignoreされているため残しても実害はないが、紛れるので消すほうが安全)
+- `generators/`配下の個々の関数(`refine_to_x_post`, `review_and_edit_post`, `generate_detailed_summary`等)を単体で素のPythonから直接呼ぶ検証は、ファイルへの書き込みが発生しないため安全(このセッションでもバグ調査に多用した)
+- 新しくファイル書き込み・履歴更新を伴うステージを追加する場合は、同じく`--dry-run`で書き込み先を切り替えられるようにしておくこと
