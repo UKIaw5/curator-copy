@@ -13,6 +13,25 @@ from playwright.sync_api import sync_playwright
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATUS_FILE = os.path.join(BASE_DIR, "note_status.json")
 
+def type_with_link_detection(page, text: str):
+    """本文を入力する。通常のテキストはinsert_text(貼り付け相当)で高速・
+    安全に入力しつつ、URL部分だけは1文字ずつtype()で入力してnote.com側の
+    自動リンク化を発火させ、スペースで確定してからリンクカード生成を待つ。
+    insert_textだけだとURLはクリックできないただの文字列のままになり、
+    type()だけだと本文中でURLが壊れる("[]()" 表示になる)ため、両方の
+    問題を避けるハイブリッド方式。"""
+    url_pattern = re.compile(r'https?://[^\s]+')
+    last_end = 0
+    for m in url_pattern.finditer(text):
+        if m.start() > last_end:
+            page.keyboard.insert_text(text[last_end:m.start()])
+        page.keyboard.type(m.group(0), delay=20)
+        page.keyboard.insert_text(" ")
+        page.wait_for_timeout(1500)
+        last_end = m.end()
+    if last_end < len(text):
+        page.keyboard.insert_text(text[last_end:])
+
 def load_cookies_to_context(context):
     cookie_path = os.path.join(BASE_DIR, "note_cookies.json")
     if not os.path.exists(cookie_path):
@@ -175,14 +194,10 @@ def main():
         title_input.fill(title)
         
         # 2. Input Free Section
-        # 💡 1文字ずつのtype()だと、本文中のURLをnote.com側がタイピング中に
-        # リンクカード化しようとして崩れる事故を確認(実例: 参考URLが
-        # "[]()" というプレースホルダーのまま表示される)。貼り付け相当の
-        # insert_text()に変更
         print("✍️ Typing free section...")
         body_editor = page.locator("div.ProseMirror").first
         body_editor.click()
-        page.keyboard.insert_text(free_section)
+        type_with_link_detection(page, free_section)
         
         page.wait_for_timeout(1000)
 
@@ -222,7 +237,7 @@ def main():
 
             # 4. Input Paid Section
             print("✍️ Typing paid section into the paid area...")
-            page.keyboard.insert_text(paid_section)
+            type_with_link_detection(page, paid_section)
             page.wait_for_timeout(1000)
 
         # 5. Click "公開に進む"
