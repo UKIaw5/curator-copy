@@ -76,7 +76,7 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 | 主語補完(Gemma出力の救済) | `generators/refiner.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
 | 日本語フォールバック圧縮(最終救済) | `generators/refiner.py` (`generate_safe_japanese_fallback`) | `qwen2.5-coder:14b` | `QWEN_MODEL` |
 | Stage3 投稿文の校正 | `generators/reviewer.py` | `gemma4:12b` | `GEMMA_REVIEWER_MODEL` |
-| note記事生成(TOC/本文/校正/フック/インサイト/リンク) | `for-note-post/*.py` | すべて `qwen2.5-coder:14b` or `gemma4:12b` 固定(環境変数非対応、コード内直書き)。`think: False`は適用済みだが、Xパイプラインほど検証していない | なし |
+| note記事生成(TOC/本文/校正/フック/インサイト/リンク) | `for-note-post/*.py` | すべて `qwen2.5-coder:14b` or `gemma4:12b` 固定(環境変数非対応、コード内直書き)。`think: False`適用済み、Xパイプラインと同様に日本語チェックも導入済み(2026-10-04) | なし |
 
 **注意:** `curator.py`と`generate_x_posts.py`は`qwen3.8:27b`、`refiner.py`の補助呼び出し(主語補完・フォールバック)は`qwen2.5-coder:14b`。同じ`QWEN_MODEL`環境変数を複数箇所で共有しているため、環境変数で上書きすると全箇所に影響する。モデルを個別に変えたい場合は環境変数を分けるかコードを直接変更する必要がある。
 
@@ -102,8 +102,10 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
   - ドロップダウン要素は非表示スタイルのため`state="attached"`で待機する(`state="visible"`では失敗する)
   - これらを安易に「効率化」すると、Xのシャドウバン/アカウントロックのリスクが上がる。変更する場合は意図を理解した上で行うこと
 - `output/history.json` / `seen_urls.json`の重複排除ロジックと`.bak`によるロールバック機構(壊すと同じ記事が再投稿される恐れ)
-- Stage1要約の連結・分割に使う`<<<CURATOR_ITEM_BOUNDARY>>>`境界トークン(1章参照)。`---`等の自然言語に出現しうる文字列に戻さないこと
+- Stage1要約の連結・分割に使う`<<<CURATOR_ITEM_BOUNDARY>>>`境界トークン(1章参照)。`---`等の自然言語に出現しうる文字列に戻さないこと。**`for-note-post/generate_note_article.py`・`autogenerate_note_article.py`・`autogenerate_note_article_2.py`の`get_active_raw_file()`も同じ生データファイルをこのトークンで分割している** — Stage1側のdelimiterを変更したら必ずこの3ファイルも同時に直すこと(2026-10-04に一度ズレて修正済み)
 - Ollama呼び出しの`"think": False`指定(4章参照)。外したり新しい呼び出しで付け忘れると、該当ステージが静かに機能不全になる(エラーは出ず、ただ空文字が返るだけなので発見しづらい)
+- note.com記事生成の各LLMステップの日本語チェック(`is_japanese_text`、`for-note-post/*.py`)。実データで校正ステップが記事全文を英訳してしまう事例を確認済み。外すと英語の記事がそのまま本文になるリスクがある
+- `for-note-post/publish_to_note*.py`のタイトル行除去。位置ベース(先頭行のみ除去)で実装すること。文字列一致(`str.replace(title, "")`等)に戻すと、タイトルと同じ文言が本文中に再出現した箇所まで誤って消えるバグが再発する
 
 ## 6. 認証情報の取り扱い
 
