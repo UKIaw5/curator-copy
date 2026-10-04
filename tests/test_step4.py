@@ -1,5 +1,6 @@
 import os
 import glob
+import re
 from generators.refiner import refine_to_x_post
 
 # Qwenレビューを有効化（Falseにするとレビューを実行します）
@@ -44,9 +45,12 @@ def main():
     with open(latest_file, "r", encoding="utf-8") as f:
         content = f.read()
 
-    summaries = [
-        s.strip() for s in content.split("<<<CURATOR_ITEM_BOUNDARY>>>") if s.strip()
-    ]
+    # 旧形式("---"区切り)のファイルにも対応
+    if "<<<CURATOR_ITEM_BOUNDARY>>>" in content:
+        raw_parts = content.split("<<<CURATOR_ITEM_BOUNDARY>>>")
+    else:
+        raw_parts = re.split(r"\n+\s*---\s*\n+", content)
+    summaries = [s.strip() for s in raw_parts if s.strip()]
     print(f"🎯 Summaries detected: {len(summaries)}\n")
 
     final_posts = []

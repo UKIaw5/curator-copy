@@ -160,12 +160,15 @@ def main():
       raw_content = f.read()
 
   # 💡 "---"ではなく専用の境界文字列で分割する(Qwenが要約内で"---"を
-  # 区切り線として自然に使い、1件の要約が誤って複数件に分割されるのを防ぐ)
-  summaries = [
-      s.strip()
-      for s in raw_content.strip().split("<<<CURATOR_ITEM_BOUNDARY>>>")
-      if s.strip()
-  ]
+  # 区切り線として自然に使い、1件の要約が誤って複数件に分割されるのを防ぐ)。
+  # 2026-10-04より前に生成された既存ファイルは旧形式("---"区切り)のままの
+  # ため、新トークンが見つからない場合は旧形式にフォールバックする
+  stripped_content = raw_content.strip()
+  if "<<<CURATOR_ITEM_BOUNDARY>>>" in stripped_content:
+    raw_parts = stripped_content.split("<<<CURATOR_ITEM_BOUNDARY>>>")
+  else:
+    raw_parts = re.split(r"\n+\s*---\s*\n+", stripped_content)
+  summaries = [s.strip() for s in raw_parts if s.strip()]
 
   print(
       f"\nStep 4: Refining {len(summaries)} summaries into professional X"

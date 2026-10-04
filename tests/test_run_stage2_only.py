@@ -1,5 +1,6 @@
 import os
 import glob
+import re
 from datetime import datetime
 from generators.refiner import refine_to_x_post
 from generators.reviewer import review_and_edit_post
@@ -25,12 +26,12 @@ def main():
     with open(latest_raw_file, "r", encoding="utf-8") as f:
         raw_content = f.read()
 
-    # サマリーの分割
-    summaries = [
-        s.strip()
-        for s in raw_content.split("<<<CURATOR_ITEM_BOUNDARY>>>")
-        if s.strip()
-    ]
+    # サマリーの分割(旧形式の"---"区切りファイルにも対応)
+    if "<<<CURATOR_ITEM_BOUNDARY>>>" in raw_content:
+        raw_parts = raw_content.split("<<<CURATOR_ITEM_BOUNDARY>>>")
+    else:
+        raw_parts = re.split(r"\n+\s*---\s*\n+", raw_content)
+    summaries = [s.strip() for s in raw_parts if s.strip()]
 
     if not summaries:
         print("ℹ️ No content summaries detected in the file.")
