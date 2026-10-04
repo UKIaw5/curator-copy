@@ -37,6 +37,8 @@ Selected Indices (comma-separated numbers only):
         "model": MODEL_NAME,
         "prompt": prompt,
         "stream": False,
+        "think": False,  # 💡 Qwen3の思考トレースがnum_predictを食い尽くし、
+                          # responseが空になるのを防ぐ
         "keep_alive": 0,
         "options": {"num_ctx": 2048, "num_predict": 512, "temperature": 0.5}
     }

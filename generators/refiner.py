@@ -202,6 +202,7 @@ Given a Technical Summary and a Draft X Post, extract the primary Product/Paper/
       "model": QWEN_MODEL,
       "messages": [{"role": "user", "content": prompt}],
       "stream": False,
+      "think": False,  # 💡 思考トレースがnum_predictを食い尽くすのを防ぐ
       "keep_alive": 0,  # 💡 QwenのVRAM残留を防止
       "options": {
           "temperature": 0.2,
@@ -242,6 +243,7 @@ Summary:
       "model": QWEN_MODEL,
       "messages": [{"role": "user", "content": prompt}],
       "stream": False,
+      "think": False,
       "keep_alive": 0,
       "options": {"temperature": 0.3, "num_ctx": 2048, "num_predict": 200},
   }
@@ -297,6 +299,8 @@ Summary:
             {"role": "user", "content": base_prompt},
         ],
         "stream": False,
+        "think": False,  # 💡 思考トレースがnum_predictを食い尽くし、
+                         # contentが空になる/尻切れになるのを防ぐ
         "keep_alive": 0,
         "options": {
             "temperature": 0.7,
