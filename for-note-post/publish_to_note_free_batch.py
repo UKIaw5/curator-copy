@@ -81,9 +81,10 @@ def parse_article_content_as_free(raw_content):
     cleaned_content = cleaned_content.replace("<!-- PAYWALL -->", "")
     cleaned_content = cleaned_content.replace("--- [NOTE PAID BOUNDARY] ---", "")
     
-    # タイトル行を除いた残りの本文部分を取得
-    body_lines = [line for line in cleaned_content.splitlines() if line.strip() != lines[0].strip()]
-    full_body = "\n".join(body_lines).strip()
+    # 💡 先頭行(タイトル)だけを除去する。本文中にタイトルと一致する行が
+    # 他にもあった場合に誤って削除してしまうため、位置ベースで除去する
+    body_lines = cleaned_content.splitlines()
+    full_body = "\n".join(body_lines[1:]).strip() if body_lines else ""
     
     return title, full_body
 

@@ -76,9 +76,12 @@ def parse_article_content(raw_content):
     title = lines[0].replace("#", "").replace("■", "").strip() if lines else "無題のタイトル"
     
     boundary_marker = "<!-- PAYWALL -->"
-    
+
     parts = raw_content.split(boundary_marker)
-    free_section = parts[0].replace(lines[0], "").strip() if len(parts) > 0 else raw_content
+    # 💡 先頭行(タイトル)だけを除去する。文字列全体へのreplace()は、本文中に
+    # タイトルと同じ文言が再出現した場合そこも誤って削除してしまうため使わない
+    free_lines = parts[0].splitlines() if len(parts) > 0 else raw_content.splitlines()
+    free_section = "\n".join(free_lines[1:]).strip() if free_lines else ""
     paid_section = parts[1].strip() if len(parts) > 1 else ""
     return title, free_section, paid_section
 
