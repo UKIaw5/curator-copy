@@ -4,6 +4,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
 
 from fetchers.arxiv import fetch_arxiv
@@ -76,10 +77,21 @@ def git_pull():
 
 
 def main():
+  dry_run = "--dry-run" in sys.argv
+
   print("=== Starting Daily Curation Pipeline (Part A: Fetch & Refine) ===")
+  if dry_run:
+    print(
+        "🧪 DRY RUN MODE: output goes to `output/dry_run/`, and"
+        " `seen_urls.json`/history files are NOT touched. Nothing here is"
+        " picked up by Part B or x_poster.py."
+    )
   git_pull()
 
-  output_dir = "output"
+  # 💡 dry-runでは本番の output/ ではなく output/dry_run/ に書き込む。
+  # これにより seen_urls.json や下書きファイルなど、本番の状態を一切汚さずに
+  # パイプラインの動作・出力品質を確認できる。
+  output_dir = "output/dry_run" if dry_run else "output"
   raw_dir = os.path.join(output_dir, "raw")
   os.makedirs(raw_dir, exist_ok=True)
 
@@ -209,6 +221,12 @@ def main():
       f"💾 Saved Stage 2 x posts to `{timestamped_file}` (Total"
       f" {len(refined_posts)} posts)"
   )
+  if dry_run:
+    print(
+        "\n🧪 Dry run complete. Review the output above/in `output/dry_run/`,"
+        " then delete that folder when done - it's gitignored and never"
+        " touched by production runs."
+    )
   print("\n✅ Part A completed successfully!")
 
 

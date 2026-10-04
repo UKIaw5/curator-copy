@@ -27,3 +27,6 @@ Thumbs.db
 
 # etc
 memo.txt
+
+# Dry-run sandbox output (see run_today_pipeline_parta.py --dry-run)
+output/dry_run/
