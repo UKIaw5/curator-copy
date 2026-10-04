@@ -117,6 +117,7 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 - `for-note-post/*.py`の`call_llm`内`REFUSAL_MARKERS`。モデルが「データが空/不十分」と判断した際、Qwen系は英語で("Please provide...")、Gemma系は**日本語で**("申し訳ございません...")拒否することを実例で確認済み。英語パターンだけに戻すと、日本語の拒否文がそのまま記事本文として使われてしまう
 - `for-note-post/*.py`の`lint_markdown`内、Markdown見出し(`#+`)→`■`変換の正規表現は`^#+\s+`(スペース必須)にすること。`\s*`(0文字可)に戻すと、ハッシュタグ行(`#LLM #Python`、#の直後にスペースが無い)の先頭`#`まで誤って消してしまうバグが再発する(実例で確認済み)
 - `for-note-post/*.py`のStep5(`insight_prompt`)は本文(`part_body`)を踏まえて「本文にはない新しい切り口」を書かせる設計にしてあること。生データだけから独立生成する方式に戻すと、本文とほぼ同じ内容の重複セクションになる(実例で確認済み)
+- `for-note-post/publish_to_note*.py`の`BASE_DIR`アンカー。`STATUS_FILE`/cookie/archiveパスを裸の相対パス(`"note_status.json"`等)に戻すと、リポジトリルートから`python3 for-note-post/publish_to_note_batch.py`のように実行した際に**エラーも出さず静かに「何も処理せず完了」と表示する**(実際に本番で発生し、記事が1件も公開されないのに成功表示が出た)。`for-note-post/`に`cd`してから実行する運用だけに頼らないこと
 
 ## 6. 認証情報の取り扱い
 
