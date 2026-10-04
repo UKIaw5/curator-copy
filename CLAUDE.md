@@ -15,7 +15,7 @@ fetch (fetchers/)
   → curate 選別 (generators/curator.py)
   → Stage1 詳細要約・英語 (generators/generate_x_posts.py)   → output/raw/output_prex_posts_*.md
   → Stage2 Xポスト精製・日本語 (generators/refiner.py)        → output/output_x_posts_*.md
-  → (手動確認) → 予約投稿 (automation/x_poster.py, CloakBrowser)
+  → (手動確認) → 予約投稿 (automation/socialdog_poster.py, CloakBrowser経由でSocialDogのUIを操作)
   → archive + Git同期
 ```
 
@@ -34,7 +34,7 @@ Stage1の複数要約は `<<<CURATOR_ITEM_BOUNDARY>>>` という専用トーク�
 |---|---|
 | `fetchers/` | ソース別の取得処理。`arxiv.py`, `hacker_news.py`, `github_trending.py`, `huggingface.py`。`arxiv.py`は2026-10-04に検索API(`export.arxiv.org/api/query`)方式へ変更済み(旧: 日次RSSフィードで土日は`skipDays`のため0件になっていた)。投稿日の新しい順に`limit`件(デフォルト15)を取得するため、土日でも直前の配信日まで自動的に遡る |
 | `generators/` | `curator.py`(Qwenで上位記事を選別) / `generate_x_posts.py`(Stage1: Qwenで英語詳細要約) / `refiner.py`(Stage2: Gemmaで日本語Xポストに精製) / `reviewer.py`(Stage3: Qwenによる校正。`run_today_pipeline_parta.py`から呼ばれる本番ステージ) |
-| `automation/` | `x_poster.py`(CloakBrowserでXに予約投稿) / `import_cookies.py`(cookie-editorで取得したcookieをPlaywright用に変換) / `save_session.py` |
+| `automation/` | `socialdog_poster.py`(本番の予約投稿経路。SocialDogのWeb UIをCloakBrowserで操作し、正規のEnterprise API経由でXに投稿。2026-10-04導入) / `x_poster.py`(旧経路。Xに直接CloakBrowserで予約投稿、Bot検知警告が出るため現在は未使用・参考用に残置) / `import_cookies.py`(X用、cookie-editorで取得したcookieをPlaywright用に変換) / `save_session.py` |
 | `for-note-post/` | note.com向けの記事生成(`generate_note_article.py`, `autogenerate_note_article*.py`)・画像生成(`generate_eyecatch.py`)・公開(`publish_to_note*.py`)。Xパイプラインとは別のモデル割り当て・状態管理(`note_status.json`)を持つ独立系 |
 | `output/` | `raw/`(Stage1出力) / ルート直下(Stage2出力、未投稿) / `archive/`(投稿済みファイル) / `history.json`, `seen_urls.json`(重複排除用履歴) / `dry_run/`(検証用サンドボックス、gitignore対象、8章参照) |
 | `tests/` | CloakBrowser動作確認・Stage2/4の手動再実行用アドホックスクリプト中心。CIで網羅的に走る正式なテストスイートではない |
@@ -63,8 +63,12 @@ python3 generate_note_article.py        # または autogenerate_note_article.py
 python3 publish_to_note.py              # または publish_to_note_batch.py / publish_to_note_free_batch.py
 ```
 
-X用cookie取得: ブラウザ拡張「cookie-editor」でログイン状態のcookieを取得 → `cookies.json`として配置
+X用cookie取得(旧経路・現在未使用): ブラウザ拡張「cookie-editor」でログイン状態のcookieを取得 → `cookies.json`として配置
 → `python3 automation/import_cookies.py` で一度だけ変換(Playwright用contextとして`x_user_data/`に保存)。
+
+SocialDog用cookie取得(現在の本番経路): cookie-editorで`web.social-dog.net`のcookieを取得し、
+`automation/socialdog_cookies.json`としてそのまま配置するだけ(変換スクリプト不要、`socialdog_poster.py`が
+実行時に直接読み込む)。セッション有効期限(`expirationDate`)が切れたら取り直すこと。
 
 ## 4. LLM / Ollama 構成(現状のベースライン・変更対象)
 
@@ -94,15 +98,17 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 - Xポストの文字数判定: `refiner.py`の`60 <= effective_len <= 135`、`reviewer.py`の`50〜135`。URL有りの場合は実効文字数に+25文字加算(`get_x_effective_length`)
 - `refiner.py`のプロンプト文言。2026-10-04に、固定の煽り文句プール(`RAW_HOOK_POOL`/`RAW_CLOSING_POOL`/`RAW_EMOJI_POOL`、全投稿が「が熱い」「が凄すぎる」等の同じ表現になる原因だった)を廃止し、「要約内の具体的事実を1つ以上盛り込む」ことを必須化する方式に変更済み。絵文字は任意・モデルが自由に選ぶ方式
 - 各段のモデル割り当て(4章参照)、`temperature`, `num_ctx`, `num_predict`などのOllamaオプション
-- `curator.py`の`max_select`(選別件数)
+- `curator.py`の`max_select`(選別件数。2026-10-04に8→6へ変更。量より質重視のアカウント運用方針のため、エンゲージメントを見ながら再調整してよい)
+- `automation/socialdog_poster.py`の`TARGET_TIME_SLOTS`(狙いたい投稿時間帯)。現状は個人開発者/エンジニア層を想定した仮置き(07:30/09:30/12:15/15:30/19:00/22:00)。実際のエンゲージメントデータを見て調整すべき対象
 
 ### 変えると実害が出る(慎重に扱う)
-- `automation/x_poster.py`のBot検知回避ロジック:
+- `automation/x_poster.py`のBot検知回避ロジック(現在は未使用の旧経路だが、参考用に残置。復活させる場合は要注意):
   - 予約投稿機能を使い、投稿間隔は「3時間 ± 40分のゆらぎ」で分散させる(機械的な規則性を避ける)
   - テキスト入力はキー1文字ずつではなく`page.keyboard.insert_text`で貼り付け相当の操作をする
   - スケジュールモーダルのクリックは通常クリックが弾かれるため`evaluate("node => node.click()")`でJS経由の強制クリックを使う
   - ドロップダウン要素は非表示スタイルのため`state="attached"`で待機する(`state="visible"`では失敗する)
   - これらを安易に「効率化」すると、Xのシャドウバン/アカウントロックのリスクが上がる。変更する場合は意図を理解した上で行うこと
+- `automation/socialdog_poster.py`のセレクタ。全て実際のDevTools検証済み: 投稿欄は`<textarea placeholder="投稿内容を入力">`(本物のplaceholder属性、contenteditableではない)、日時ピッカーは`.datetime_picker_blueprint .bp3-popover-target`で開き、中の`aria-label="日付"`なBlueprint.js DateInput(`YYYY/MM/DD H:mm`形式)に直接文字列を入力するだけでよい(カレンダー日付セルや時/分スピンボックスの個別操作は不要)。SocialDog側のUI更新で壊れた場合は同じ手順(DevToolsでElementsパネルをスクショ)で再特定すること
 - `output/history.json` / `seen_urls.json`の重複排除ロジックと`.bak`によるロールバック機構(壊すと同じ記事が再投稿される恐れ)
 - Stage1要約の連結・分割に使う`<<<CURATOR_ITEM_BOUNDARY>>>`境界トークン(1章参照)。`---`等の自然言語に出現しうる文字列に戻さないこと。**`for-note-post/generate_note_article.py`・`autogenerate_note_article.py`・`autogenerate_note_article_2.py`の`get_active_raw_file()`も同じ生データファイルをこのトークンで分割している** — Stage1側のdelimiterを変更したら必ずこの3ファイルも同時に直すこと(2026-10-04に一度ズレて修正済み)
 - Ollama呼び出しの`"think": False`指定(4章参照)。外したり新しい呼び出しで付け忘れると、該当ステージが静かに機能不全になる(エラーは出ず、ただ空文字が返るだけなので発見しづらい)
@@ -113,8 +119,9 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 ## 6. 認証情報の取り扱い
 
 以下は**絶対にコミットしない**(`.gitignore`で除外済み):
-- `cookies.json`, `automation/cookies.json`, `x_user_data/`(X用セッション)
+- `cookies.json`, `automation/cookies.json`, `x_user_data/`(X用セッション、旧経路)
 - `for-note-post/note_cookies.json`, `note_cookies.json`(note.com用セッション)
+- `automation/socialdog_cookies.json`, `socialdog_cookies.json`, `automation/socialdog_user_data/`(SocialDog用セッション、現在の本番経路)
 
 ## 7. その他
 
