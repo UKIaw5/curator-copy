@@ -240,7 +240,16 @@ def process_batch_scheduling(limit: int = None):
         except Exception as e:
             print(f"⚠️ Aborting batch due to error on post {idx}: {e}")
             print("🔍 Leaving the browser open for inspection. Close it manually when done.")
-            input("Press Enter to close the browser...")
+            # 💡 バックグラウンド実行(標準入力がTTYでない)場合、input()は
+            # EOFErrorで例外を投げて異常終了してしまう(実例で確認: 実際には
+            # 投稿・アーカイブ移動まで完了していたのに、この後のinput()失敗で
+            # run_today_pipeline_partb.py側がプロセス全体を失敗と誤判定し、
+            # 本来走るはずのgit commit/pushがスキップされた)。TTYが無い場合は
+            # 確認待ちをスキップしてそのままブラウザを閉じる
+            try:
+                input("Press Enter to close the browser...")
+            except EOFError:
+                pass
             context.close()
             return
 
