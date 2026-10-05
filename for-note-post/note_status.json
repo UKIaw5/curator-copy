@@ -1155,5 +1155,69 @@
             "published_to_note": true,
             "published_at": "2026-10-05 12:32:08"
         }
+    },
+    "output_prex_posts_20261005_193018.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261005_201733",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_201733.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "現場インパクトセクションが元データにない医療/教育分野等への応用を創作"
+            ],
+            "audit_at": "2026-10-05 20:37:48"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261005_202016",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_202016.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "監査AIが元データidx#0と誤って比較したことによる指摘。実際はidx1=feder-cr/dotsで内容と一致、重複セクションの疑いは残るため要目視確認"
+            ],
+            "audit_at": "2026-10-05 20:37:48"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261005_202328",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_202328.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "記事の66%が元データにない創作(現場インパクトセクション)、簡体字混入(自动)、GitHubリンクの重複"
+            ],
+            "audit_at": "2026-10-05 20:37:48"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261005_202642",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_202642.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データにない技術的限界の記述を創作、誤字(逆方向ダイナワークス→逆方向ダイナミクス)"
+            ],
+            "audit_at": "2026-10-05 20:37:48"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261005_203001",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_203001.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "現場インパクトセクション全体(コスト/工数/競合比較)が元データに存在しない創作"
+            ],
+            "audit_at": "2026-10-05 20:37:48"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261005_203407",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_203407.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "元データから合理的に導出可能、言語混入なし、フォーマット正常"
+            ],
+            "audit_at": "2026-10-05 20:37:48",
+            "published_to_note": true,
+            "published_at": "2026-10-05 20:38:18"
+        }
     }
 }
