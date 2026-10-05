@@ -150,7 +150,17 @@ def update_status_and_archive(file_path, raw_file, idx, status_data):
         print(f"📝 Updated {STATUS_FILE} with published record.")
 
 def extract_urls(text):
-    return re.findall(r'https?://[^\s)]+', text)
+    # 💡 同じURLが本文中に複数回出現すると、1回目のリンク化成功後に
+    # 2回目以降は既にリンクカード化されていて見つからずタイムアウトする
+    # (実例で確認: 30秒のムダ待ちになるだけで実害はないが非効率)。
+    # 重複を除去して1URLにつき1回だけ処理する
+    seen = set()
+    urls = []
+    for u in re.findall(r'https?://[^\s)]+', text):
+        if u not in seen:
+            seen.add(u)
+            urls.append(u)
+    return urls
 
 def main(draft_only=False):
     print("=== Starting Note Free Batch Auto-Publisher == Selector Loop ===")

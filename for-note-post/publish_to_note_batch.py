@@ -122,7 +122,17 @@ def relink_urls_in_editor(page, urls: list):
             print(f"⚠️ Failed to relink URL {url}: {e}")
 
 def extract_urls(text):
-    return re.findall(r'https?://[^\s)]+', text)
+    # 💡 同じURLが本文中に複数回出現すると、1回目のリンク化成功後に
+    # 2回目以降は既にリンクカード化されていて見つからずタイムアウトする
+    # (実例で確認: 30秒のムダ待ちになるだけで実害はないが非効率)。
+    # 重複を除去して1URLにつき1回だけ処理する
+    seen = set()
+    urls = []
+    for u in re.findall(r'https?://[^\s)]+', text):
+        if u not in seen:
+            seen.add(u)
+            urls.append(u)
+    return urls
 
 def update_status_and_archive(file_path, raw_file, idx, status_data):
     filename = os.path.basename(file_path)
@@ -237,7 +247,7 @@ def main(draft_only=False):
                     page.wait_for_timeout(1000)
 
                 # --- URLをクリック可能なリンクに変換(本文編集の最後の操作) ---
-                urls = extract_urls(free_section) + extract_urls(paid_section)
+                urls = extract_urls(free_section + "\n" + paid_section)
                 if urls:
                     print(f"🔗 Relinking {len(urls)} URL(s) in editor...")
                     relink_urls_in_editor(page, urls)
