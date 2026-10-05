@@ -107,10 +107,27 @@ def get_active_raw_file():
             return latest_file, items, status
     return None, [], status
 
+# 💡 簡体字中国語でしか使われない(日本語の漢字としては存在しない)文字の一部。
+# 網羅的ではなく、実際に生成記事で混入が確認された文字を中心にした経験的リスト。
+# 新しい混入パターンが見つかったら追加すること(QUBO記事で"扩散"を確認、2026-10-05)
+SIMPLIFIED_CHINESE_ONLY_CHARS = "扩这们还没很什传"
+
+def has_foreign_script_mixed(text: str) -> bool:
+    """日本語の文章に韓国語(ハングル)や簡体字中国語の単語が混入していないか検出する。
+    実例: Gemmaが「にもかかわらず」の代わりに韓国語"불구하고"を、
+    「拡散」の代わりに簡体字"扩散"を出力した事故が確認されている。"""
+    if re.search(r"[가-힣]", text):  # ハングル
+        return True
+    if any(ch in text for ch in SIMPLIFIED_CHINESE_ONLY_CHARS):
+        return True
+    return False
+
 def is_japanese_text(text: str, min_ratio: float = 0.3) -> bool:
     """モデルが日本語化の指示を無視し、英語のまま(または丸ごと英訳して)
-    返すケースを検出する。"""
+    返すケースを検出する。韓国語・簡体字中国語の単語混入も不合格にする。"""
     if not text:
+        return False
+    if has_foreign_script_mixed(text):
         return False
     japanese_chars = re.findall(r"[぀-ヿ一-鿿]", text)
     return (len(japanese_chars) / len(text)) >= min_ratio
@@ -175,10 +192,18 @@ def lint_markdown(text: str) -> str:
         # 💡 "#"の直後にスペースが無い行("#LLM #Python"等のハッシュタグ行)は
         # 見出しではないので変換しない。\s*だと0文字にもマッチしてしまい、
         # ハッシュタグ1つ目の"#"まで誤って消してしまう事故があったため\s+に変更
+        # 💡 さらに、```で囲まれたコードブロック内は変換対象から除外する。
+        # モデルがPythonの"# コメント"を含むコード例をコードフェンス無しで
+        # 出力した場合、この除外がないとコメント行が全部■に変換され、
+        # コード例が壊れる事故が実際に発生した(QUBO記事で確認)
         lines = t.splitlines()
         processed_lines = []
+        in_code_fence = False
         for line in lines:
-            if re.match(r'^#+\s+', line):
+            if line.strip().startswith('```'):
+                in_code_fence = not in_code_fence
+                processed_lines.append(line)
+            elif not in_code_fence and re.match(r'^#+\s+', line):
                 processed_lines.append(re.sub(r'^#+\s+', '■ ', line))
             else:
                 processed_lines.append(line)
@@ -202,7 +227,25 @@ def lint_markdown(text: str) -> str:
 
     result = f"\n\n{PAYWALL_MARKER}\n\n".join(sanitized_parts)
     result = re.sub(r'\n{3,}', '\n\n', result)
+    result = dedupe_repeated_headings(result)
     return result.strip()
+
+def dedupe_repeated_headings(text: str) -> str:
+    """同じ見出し行(■ ...)が記事内に2回以上出現したら、2回目以降の見出し行だけを
+    削除する(見出しの下の本文はそのまま残す)。strip_duplicate_heading()は
+    「セクション先頭行」だけを対象にしているため、モデルが見出しの前に
+    導入文を書いてから同じ見出しを繰り返すケース(先頭行ではない)を
+    検出できない事故が実際に発生した(anything2explainer記事で確認、2026-10-05)。"""
+    seen = set()
+    out_lines = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith('■ ') and len(stripped) <= 60:
+            if stripped in seen:
+                continue
+            seen.add(stripped)
+        out_lines.append(line)
+    return "\n".join(out_lines)
 
 def generate_eyecatch(title: str, output_image_path: str):
     """推奨サイズ 1920x1006px でダークモード風のアイキャッチ画像を自動生成する"""
@@ -344,10 +387,11 @@ Raw Data:
     body_writer_prompt = f"""
 Write a comprehensive, deep-dive Japanese technical article based on the raw data.
 [Strict Rules]
-1. Professional engineering Japanese only. No English sentences.
+1. Professional engineering Japanese only. No English sentences. Do NOT mix in Korean, Chinese, or any other non-Japanese language words or characters, even for a single word.
 2. CRITICAL: You MUST use the exact section headings defined in the [Target Table of Contents] below. Do NOT invent your own headings.
 3. Do NOT repeat the Title or Table of Contents. Output ONLY the body sections starting directly from the first heading.
 4. Provide deep explanations for every section. Ensure high volume and detail.
+5. If you include any code, command, or config snippet, wrap it in a triple-backtick fenced code block (e.g. ```python ... ```). Never start a line inside such a snippet with "# " as a section heading — that line-start pattern is reserved for real Markdown headings elsewhere in the article.
 
 [Target Table of Contents]
 {part_intro}
