@@ -88,6 +88,13 @@ def relink_urls_in_editor(page, urls: list):
     1文字ずつ再入力することでクリック可能なリンクに変換する。
     本文編集の最後の操作として行い、この後は何も挿入しない
     (以前URLをtype()で混在入力して事故を起こした教訓を踏まえた設計)。
+
+    💡 URLを再入力するだけではリンク化(自動カード生成)は発火しない
+    (実例で確認: ドラフト保存後もプレーンテキストのままだった)。
+    note.comのリンク自動検出はEnter入力をトリガーにしており、スペース
+    よりEnterの方がきれいにリンク化されることをユーザーが実機で確認済み。
+    再入力の直後にEnterを押して確定させる(これが本文編集の最後の
+    操作であることは変わらないので安全)。
     """
     for url in urls:
         try:
@@ -97,6 +104,7 @@ def relink_urls_in_editor(page, urls: list):
             page.keyboard.press("Backspace")
             page.wait_for_timeout(300)
             page.keyboard.type(url, delay=20)
+            page.keyboard.press("Enter")  # リンク自動検出のトリガー
             page.wait_for_timeout(1500)
             print(f"🔗 Relinked URL: {url}")
         except Exception as e:

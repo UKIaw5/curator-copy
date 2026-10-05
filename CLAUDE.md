@@ -120,7 +120,7 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 - `for-note-post/publish_to_note*.py`の`BASE_DIR`アンカー。`STATUS_FILE`/cookie/archiveパスを裸の相対パス(`"note_status.json"`等)に戻すと、リポジトリルートから`python3 for-note-post/publish_to_note_batch.py`のように実行した際に**エラーも出さず静かに「何も処理せず完了」と表示する**(実際に本番で発生し、記事が1件も公開されないのに成功表示が出た)。`for-note-post/`に`cd`してから実行する運用だけに頼らないこと
 - `for-note-post/publish_to_note*.py`の`parse_article_content`系のタイトル抽出。`#`/`■`だけでなくバッククォート(`` ` ``)と`**`も除去すること。TOC生成がツール名をMarkdownのコード書式で装飾することがあり、除去しないとnote.comのタイトル欄にバッククォートがそのまま表示される(過去公開済み記事3件で実例を確認)
 - `for-note-post/publish_to_note*.py`の本文入力は本文全体を**`page.keyboard.insert_text()`一発で**流し込むこと。これ自体は変更しない(安全な基準点)。URLをクリック可能にしようとして「URL部分だけ1文字ずつtype()→スペースで確定→カード生成を待つ」を本文入力と同じ流れに混ぜるハイブリッド方式を試したところ、note.comのリンクカード生成とPlaywrightのカーソル位置がずれ、**本文の途中にURL/ハッシュタグが割り込んで文章が破損する重大な事故が実際の公開記事で発生した**(2026-10-04)
-- 上記の教訓を踏まえ、現在の実装(`relink_urls_in_editor()`、3スクリプトすべてに実装済み)は**本文のinsert_text()が完全に終わった後、完全に独立した最後の編集操作として**URLだけを`get_by_text(url, exact=True).click(click_count=3)`で選択→Backspaceで削除→`page.keyboard.type(url, delay=20)`で1文字ずつ再入力する。「URL再入力の後に何かを挿入する」操作を一切発生させないのが事故を避ける肝。この関数より後に本文へ挿入する処理を追加しないこと
+- 上記の教訓を踏まえ、現在の実装(`relink_urls_in_editor()`、3スクリプトすべてに実装済み)は**本文のinsert_text()が完全に終わった後、完全に独立した最後の編集操作として**URLだけを`get_by_text(url, exact=True).click(click_count=3)`で選択→Backspaceで削除→`page.keyboard.type(url, delay=20)`で1文字ずつ再入力→**`page.keyboard.press("Enter")`でリンク自動検出を確定**させる(Spaceでは試したがEnterの方がきれいにリンク化されることをユーザーが実機で確認済み)。「URL再入力の後に何かを挿入する」操作を一切発生させないのが事故を避ける肝。この関数より後に本文へ挿入する処理を追加しないこと
 - 上記のような凝った改善は本番ループにいきなり投入せず、まず`--draft-only`フラグ(3スクリプト共通で実装済み、「公開に進む」の代わりに「下書き保存」で止めて`input()`で一時停止する)で壊れていないか・クリック可能になっているかをブラウザで目視確認してから本番公開に進めること([[feedback-live-publish-automation-caution]]参照)
 
 ## 6. 認証情報の取り扱い
