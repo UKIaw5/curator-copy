@@ -86,7 +86,7 @@ def parse_article_content_as_free(raw_content):
     # で装飾することがあり、#/■だけ除去してもバッククォートがタイトルに残ってしまう
     # (実例: "■ `universal-modder`: ..." → note.comのタイトル欄にバッククォートが
     # そのまま表示される事故を確認)
-    title = lines[0].replace("#", "").replace("■", "").replace("`", "").replace("**", "").strip() if lines else "無題のタイトル"
+    title = lines[0].replace("#", "").replace("■", "").replace("`", "").replace("**", "").replace("[", "").replace("]", "").strip() if lines else "無題のタイトル"
     
     # ペイウォールマーカー（<!-- PAYWALL --> または --- [NOTE PAID BOUNDARY] ---）をすべて除去する
     cleaned_content = raw_content

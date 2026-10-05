@@ -441,10 +441,17 @@ Draft:
         free_paragraphs = free_text.split("\n\n")
         if len(free_paragraphs) > 0:
             target_paragraph = free_paragraphs[-1]
+            # 💡 以前は「重大な技術的ボトルネックや未解決の謎を強調しろ」と
+            # 指示していたが、元のパラグラフにそのような記述が無い場合、
+            # モデルが「クリティカルなボトルネックが発見されました」等を
+            # 断定的に創作する事故が実データで確認された(2026-10-05)。
+            # 新規の主張を作らせず、既存の内容を言い切らずに終わらせる
+            # (サスペンス)だけに絞ることでハルシネーションを防ぐ
             hook_prompt = f"""
-Rewrite the following paragraph to be a powerful cliffhanger right before a paywall in a technical article.
-- Highlight a critical technical bottleneck or unsolved mystery.
-- End with a dramatic transition like "なぜなら——" or "そのアーキテクチャの全貌は──".
+Rewrite the following paragraph to end on a suspenseful, unfinished note right before a paywall in a technical article, so the reader wants to keep reading.
+[Strict Rules]
+- Do NOT invent any new fact, problem, "bottleneck", or "discovery" that is not already stated in the original paragraph below. Only rephrase or trim the EXISTING content.
+- End with a dramatic but factually-empty transition like "なぜなら——" or "そのアーキテクチャの全貌は──", cutting off right after restating something already true in the paragraph (never introducing anything new).
 - Output ONLY the rewritten Japanese paragraph.
 
 Original paragraph:
