@@ -1189,7 +1189,14 @@
         "3": {
             "note_used": true,
             "generated_at": "20261005_202642",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_202642.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_202642.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "誤字修正・ヘッジ化後、ハルシネーション・日本語品質・フォーマットすべて合格"
+            ],
+            "audit_at": "2026-10-05 22:01:34",
+            "published_to_note": true,
+            "published_at": "2026-10-05 22:01:58"
         },
         "4": {
             "note_used": true,
