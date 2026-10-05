@@ -64,13 +64,16 @@ def load_cookies_to_context(context):
         return False
 
 def get_next_unpublished_article():
-    """note_status.json を走査して、未投稿の記事ファイルを1つ見つけて返す"""
+    """note_status.json を走査して、未投稿かつ監査通過済みの記事ファイルを1つ見つけて返す。
+    💡 audit_passedがTrueのものだけを対象にする(監査ゲート)。未監査(キー無し)や
+    不合格(False)の記事は、ハルシネーション等が未確認のまま自動公開されてしまう
+    事故を防ぐため、ここでは返さない。監査は`/audit-drafts`Skillで事前に実行すること"""
     status_data = load_status()
     for raw_file, items in status_data.items():
         if not isinstance(items, dict):
             continue
         for idx, info in items.items():
-            if isinstance(info, dict) and not info.get("published_to_note", False):
+            if isinstance(info, dict) and not info.get("published_to_note", False) and info.get("audit_passed") is True:
                 md_path = info.get("generated_file")
                 if md_path and os.path.exists(md_path):
                     return raw_file, idx, md_path, status_data
