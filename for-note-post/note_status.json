@@ -1246,27 +1246,62 @@
         "1": {
             "note_used": true,
             "generated_at": "20261006_215837",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_215837.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_215837.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "監査合格"
+            ],
+            "audit_at": "2026-10-06 22:31:59",
+            "published_to_note": true,
+            "published_at": "2026-10-06 22:32:31"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261006_220138",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_220138.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_220138.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "監査合格"
+            ],
+            "audit_at": "2026-10-06 22:33:37",
+            "published_to_note": true,
+            "published_at": "2026-10-06 22:34:11"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261006_220423",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_220423.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_220423.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "誤字修正後、全セクション合格"
+            ],
+            "audit_at": "2026-10-06 22:35:52",
+            "published_to_note": true,
+            "published_at": "2026-10-06 22:38:12"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261006_220706",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_220706.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_220706.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "監査合格"
+            ],
+            "audit_at": "2026-10-06 22:33:37",
+            "published_to_note": true,
+            "published_at": "2026-10-06 22:34:38"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261006_221000",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_221000.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261006_221000.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "監査合格"
+            ],
+            "audit_at": "2026-10-06 22:31:59",
+            "published_to_note": true,
+            "published_at": "2026-10-06 22:32:58"
         }
     }
 }

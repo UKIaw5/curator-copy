@@ -173,7 +173,7 @@ def strip_duplicate_intro(draft_body: str) -> str:
         j = toc_idx + 1
         while j < len(lines):
             s = lines[j].strip()
-            if not s or re.match(r'^\d+[\.\、]', s):
+            if not s or s.startswith('・') or re.match(r'^\d+[\.\、]', s):
                 j += 1
                 continue
             break

@@ -314,7 +314,11 @@ def main(draft_only=False):
                 print("🚀 Clicking '公開に進む' button...")
                 publish_btn = page.get_by_role("button", name=re.compile("公開に進む"))
                 publish_btn.click()
-                page.wait_for_timeout(4000)
+                # 💡 4秒だと稀に公開設定画面の読み込みが間に合わず、最終投稿
+                # ボタンが見つからないことがある(実例で確認、2026-10-06。
+                # 再試行では成功したため、ネットワーク起因の一時的な遅延と
+                # 推測される)。念のため少し余裕を持たせる
+                page.wait_for_timeout(6000)
 
                 # （※有料設定や金額設定の処理は一切行わず、無料のまま進める）
 
@@ -328,7 +332,12 @@ def main(draft_only=False):
                     page.wait_for_timeout(5000)
                     publish_success = True
                 else:
-                    print("⚠️ 最終的な '投稿' ボタンが見つかりませんでした。")
+                    print("⚠️ 最終的な '投稿' ボタンが見つかりませんでした。診断中...")
+                    import tempfile as _tempfile
+                    shot_path = _tempfile.gettempdir() + "/note_publish_fail_debug.png"
+                    page.screenshot(path=shot_path)
+                    print(f"📸 Screenshot saved to: {shot_path}")
+                    print(f"🔎 Visible buttons: {page.get_by_role('button').all_text_contents()}")
 
             except Exception as e:
                 print(f"⚠️ Error during automation process: {e}")
