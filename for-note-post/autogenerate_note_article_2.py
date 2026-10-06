@@ -139,10 +139,30 @@ def strip_duplicate_intro(draft_body: str) -> str:
     """Gemmaが「タイトル/目次を繰り返すな」という指示を無視し、本文冒頭に
     TOCと同じタイトル・目次・得られることリストを再掲することがある。
     最初の番号付き見出し(例: "## 1. ...")より前の部分を取り除く。"""
+    stripped = draft_body.strip()
+    # すでに見出し(#/■)から始まっている場合は想定通りなので何もしない
+    if stripped.startswith('#') or stripped.startswith('■'):
+        return stripped
     match = re.search(r'^#{1,3}\s*\d+[\.\、]', draft_body, flags=re.MULTILINE)
     if match and match.start() > 0:
         return draft_body[match.start():].strip()
-    return draft_body
+    # 💡 見出し記号(#/■)が一切無い、素の箇条書き(・)や番号リストだけの行が
+    # 先頭から続くケースも重複イントロとして検出する(実例: feder-cr/dots
+    # 記事で「・」「1.」から始まる行が、正式な見出し付きセクションの直前に
+    # 見出し無しで出現していた、2026-10-05)。プロンプトで「最初の見出しから
+    # 出力せよ」と指示しているため、見出しより前に現れるこの種の行は
+    # 常に不要な重複イントロと判断してよい
+    lines = stripped.splitlines()
+    cut_idx = None
+    for i, line in enumerate(lines):
+        s = line.strip()
+        if not s or s.startswith('・') or re.match(r'^\d+[\.\、]', s):
+            continue
+        cut_idx = i
+        break
+    if cut_idx and cut_idx > 0:
+        return '\n'.join(lines[cut_idx:]).strip()
+    return stripped
 
 def strip_duplicate_heading(text: str, keywords: list) -> str:
     """モデルが、テンプレート側で既に挿入済みの見出しをもう一度自分で
@@ -411,7 +431,25 @@ Raw Data:
         print(f"🤖 Step 2: Generating deep-dive body matching TOC with {WRITER_MODEL}...")
         draft_body = call_llm(WRITER_MODEL, body_writer_prompt, num_predict=3000)
         if not draft_body or not is_japanese_text(draft_body):
-            draft_body = selected_text
+            # 💡 以前はここで生の英語ソース(selected_text)にフォールバックして
+            # いたため、記事本文の半分が未翻訳の英語のまま公開される事故が
+            # 実際に発生した(2026-10-05、Answer Me with HTML記事)。
+            # 「とりあえず何か返す」ではなく、まず専用の翻訳プロンプトで
+            # 救済を試み、それも失敗した場合のみ安全な日本語の定型文に
+            # フォールバックする(生英語を返す経路を完全に廃止)
+            print("⚠️ Step 2 output failed Japanese check. Retrying with a dedicated translation fallback...")
+            translate_prompt = f"""
+Translate the following English technical text into natural, professional Japanese.
+[Strict Rules]
+1. Output ONLY the Japanese translation. No English sentences.
+2. Do not summarize or omit content; translate the full text.
+
+Text:
+{selected_text}
+"""
+            draft_body = call_llm(REVIEWER_MODEL, translate_prompt, num_predict=3000)
+            if not draft_body or not is_japanese_text(draft_body):
+                draft_body = "この記事の自動生成に失敗しました。元データを日本語化できなかったため、本文は省略しています。"
         draft_body = strip_duplicate_intro(draft_body)
 
         # --- Step 3: Review (qwen2.5-coder:14b -> num_gpu=22) ---
