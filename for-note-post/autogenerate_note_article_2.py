@@ -138,30 +138,52 @@ def is_japanese_text(text: str, min_ratio: float = 0.3) -> bool:
 def strip_duplicate_intro(draft_body: str) -> str:
     """Gemmaが「タイトル/目次を繰り返すな」という指示を無視し、本文冒頭に
     TOCと同じタイトル・目次・得られることリストを再掲することがある。
-    最初の番号付き見出し(例: "## 1. ...")より前の部分を取り除く。"""
+    見出し記号(#)が無い箇条書きだけのケース(feder-cr/dots記事、2026-10-05)、
+    見出し付きのタイトル+目次を丸ごと2回繰り返すケース(SkyCraft記事、
+    2026-10-06)の両方に対応する汎用的な重複検出。
+
+    Step A: 1行目とまったく同じ行が先頭60行以内に再度現れる限り、そこまでを
+    繰り返し取り除く(タイトルが2回・3回と連続して繰り返されるケースに対応)。
+    Step B: 残った1コピー分の「タイトル+目次」ブロックも、本当の最初の
+    本文セクション見出しまでスキップする("目次"という文字列を手がかりに、
+    その後に続く番号付きリストの終わりまでをイントロとみなす)。"""
     stripped = draft_body.strip()
-    # すでに見出し(#/■)から始まっている場合は想定通りなので何もしない
-    if stripped.startswith('#') or stripped.startswith('■'):
+    if not stripped:
         return stripped
-    match = re.search(r'^#{1,3}\s*\d+[\.\、]', draft_body, flags=re.MULTILINE)
-    if match and match.start() > 0:
-        return draft_body[match.start():].strip()
-    # 💡 見出し記号(#/■)が一切無い、素の箇条書き(・)や番号リストだけの行が
-    # 先頭から続くケースも重複イントロとして検出する(実例: feder-cr/dots
-    # 記事で「・」「1.」から始まる行が、正式な見出し付きセクションの直前に
-    # 見出し無しで出現していた、2026-10-05)。プロンプトで「最初の見出しから
-    # 出力せよ」と指示しているため、見出しより前に現れるこの種の行は
-    # 常に不要な重複イントロと判断してよい
+
+    while True:
+        lines = stripped.splitlines()
+        if not lines:
+            break
+        first_line = lines[0].strip()
+        if not first_line:
+            break
+        dup_idx = None
+        for i in range(1, min(len(lines), 60)):
+            if lines[i].strip() == first_line:
+                dup_idx = i
+                break
+        if dup_idx is None:
+            break
+        stripped = "\n".join(lines[dup_idx:]).strip()
+
     lines = stripped.splitlines()
-    cut_idx = None
-    for i, line in enumerate(lines):
-        s = line.strip()
-        if not s or s.startswith('・') or re.match(r'^\d+[\.\、]', s):
-            continue
-        cut_idx = i
-        break
-    if cut_idx and cut_idx > 0:
-        return '\n'.join(lines[cut_idx:]).strip()
+    toc_idx = None
+    for i, line in enumerate(lines[:15]):
+        if "目次" in line:
+            toc_idx = i
+            break
+    if toc_idx is not None:
+        j = toc_idx + 1
+        while j < len(lines):
+            s = lines[j].strip()
+            if not s or re.match(r'^\d+[\.\、]', s):
+                j += 1
+                continue
+            break
+        if 0 < j < len(lines):
+            stripped = "\n".join(lines[j:]).strip()
+
     return stripped
 
 def strip_duplicate_heading(text: str, keywords: list) -> str:
