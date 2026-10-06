@@ -187,7 +187,7 @@ def attach_eyecatch_image(page, image_path):
             page.get_by_text("画像をアップロード").click()
         fc_info.value.set_files(image_path)
         # アップロード処理が落ち着くまで少し待つ
-        page.wait_for_timeout(3000)
+        page.wait_for_timeout(2000)
         # クロップ/確認ダイアログが出た場合のベストエフォート対応
         for label in ["保存", "完了", "適用"]:
             btn = page.get_by_role("button", name=re.compile(label))
