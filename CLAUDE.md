@@ -125,6 +125,8 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 - `for-note-post/*.py`の`is_japanese_text`は韓国語(ハングル)・簡体字中国語の単語混入も不合格にする(`has_foreign_script_mixed`)。Gemmaが「にもかかわらず」の代わりに韓国語`불구하고`を、「拡散」の代わりに簡体字`扩散`を出力する事故を実例で確認済み(2026-10-05、QUBO記事)。`SIMPLIFIED_CHINESE_ONLY_CHARS`は網羅的ではない経験的ブロックリストなので、新しい混入文字が見つかったら追加すること(同日`传`(伝)も追加)
 - `for-note-post/*.py`の`lint_markdown`内、見出し(`#+`)→`■`変換は \`\`\` で囲まれたコードフェンス内では行わないこと。モデルがPythonのコード例を**コードフェンス無しで**出力すると、`# コメント`行が全部`■`に変換されコード例が壊れる事故が実際に発生した(QUBO記事で確認)。恒久対応として、本文生成プロンプト側にも「コード例は必ずコードフェンスで囲むこと」という指示を追加済み
 - `for-note-post/*.py`の`lint_markdown`に`dedupe_repeated_headings`を追加し、同じ見出し行(`■ ...`)が記事内に2回以上出現したら2回目以降を削除する。既存の`strip_duplicate_heading`はセクション「先頭行」だけが対象のため、モデルが見出しの前に導入文を書いてから同じ見出しをもう一度書くケース(先頭行ではない)を検出できていなかった(anything2explainer記事で確認、2026-10-05)
+- `for-note-post/publish_to_note*.py`の`input("Press Enter here to close the browser...")`は必ず`try/except EOFError`で囲むこと。`!`モード等、標準入力がTTYでない状態で実行すると`EOFError`でプロセスが即座に落ち、`run_today_pipeline_partb.py`等の呼び出し元が「実際には投稿/アーカイブ移動まで成功していたのに失敗」と誤判定してgit commitをスキップする事故が実際に発生した(socialdog_poster.pyで確認、2026-10-05)。EOFErrorを捕まえて数秒待つだけに倒すこと
+- アイキャッチ画像自動アップロード(`attach_eyecatch_image()`、2026-10-06導入): `for-note-post/generate_eyecatch.py`の`generate_eyecatch_image()`(HTML+CSSをPlaywrightでスクショしてPNG化、1920×1006px≒note.com推奨1280×670pxと同アスペクト比)で画像を生成し、本文編集(`insert_text`/`relink_urls_in_editor`)が完全に終わった後の独立した最後のステップとしてnote.comの「見出し画像」欄にアップロードする。セレクタは`aria-label="画像を追加"`(DevToolsで確認済み、アイコンのみでテキストが無いため`get_by_label`で特定)。**画像生成(`generate_eyecatch_image`)はnote.com操作用の`sync_playwright()`セッションの外側(ブラウザ起動前)で呼ぶこと** — 内部で別のPlaywrightコンテキストを起動するため、既存セッションの中で呼ぶと入れ子になり動作しない(sync APIは入れ子非対応)。`for-note-post/test_eyecatch_live.py`で本番の記事・状態ファイルに触れずに単体ライブテストできる
 
 ## 6. 認証情報の取り扱い
 

@@ -261,7 +261,13 @@ def main(draft_only=False):
                     draft_btn.click()
                     page.wait_for_timeout(3000)
                     print("🧪 Saved as draft. Check note.com now to confirm no corruption and that the link is clickable.")
-                    input("Press Enter here to close the browser (this will NOT publish anything)...")
+                    # 💡 `!`モード等、標準入力がTTYでない場合はinput()がEOFErrorで
+                    # 落ちる(socialdog_poster.pyで実例あり)。ここで落ちると目視
+                    # 確認の前にブラウザが強制終了してしまうので握りつぶす
+                    try:
+                        input("Press Enter here to close the browser (this will NOT publish anything)...")
+                    except EOFError:
+                        page.wait_for_timeout(5000)
                     browser.close()
                     print("✅ Draft-only test finished (not published, status/archive untouched).")
                     return

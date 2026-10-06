@@ -2,8 +2,10 @@ import os
 import re
 import json
 import shutil
+import tempfile
 from datetime import datetime
 from playwright.sync_api import sync_playwright
+from generate_eyecatch import generate_eyecatch_image
 
 # 💡 カレントディレクトリに依存する相対パスだと、リポジトリルートから
 # `python3 for-note-post/publish_to_note_free_batch.py` のように実行された際に
@@ -165,6 +167,34 @@ def extract_urls(text):
             urls.append(u)
     return urls
 
+def attach_eyecatch_image(page, image_path):
+    """タイトルから生成済みのアイキャッチ画像を、note.comの見出し画像として
+    アップロードする。本文編集(insert_text/URLリンク化)が完全に終わった後の、
+    独立した最後のステップとして呼ぶこと(本文編集後に何かを挿入する操作を
+    増やさない、というこれまでの事故防止ルールに合わせる)。
+    画像生成自体(generate_eyecatch_image)は内部でPlaywrightを別途起動するため、
+    note.com操作用のPlaywrightセッションの外側(呼び出し前)で済ませておき、
+    ここでは生成済みのファイルパスをアップロードするだけにすること。
+    セレクタはDevToolsで実際に確認したaria-label="画像を追加"を使用
+    (アイコンのみのボタンで視覚的なテキストが無いため)。"""
+    try:
+        page.get_by_label("画像を追加").click()
+        page.wait_for_timeout(500)
+        with page.expect_file_chooser() as fc_info:
+            page.get_by_text("画像をアップロード").click()
+        fc_info.value.set_files(image_path)
+        page.wait_for_timeout(3000)
+        # クロップ/確認ダイアログが出た場合のベストエフォート対応
+        for label in ["保存", "完了", "適用"]:
+            btn = page.get_by_role("button", name=re.compile(label))
+            if btn.count() > 0 and btn.first.is_visible():
+                btn.first.click()
+                page.wait_for_timeout(1000)
+                break
+        print("🖼️ Eyecatch image attached")
+    except Exception as e:
+        print(f"⚠️ Failed to attach eyecatch image (continuing without it): {e}")
+
 def main(draft_only=False):
     print("=== Starting Note Free Batch Auto-Publisher == Selector Loop ===")
     if draft_only:
@@ -188,6 +218,17 @@ def main(draft_only=False):
         print(f"==============================================")
 
         publish_success = False
+
+        # 💡 アイキャッチ画像生成はnote.com操作用のPlaywrightセッションの
+        # 「外側」で行う。generate_eyecatch_imageは内部で独自にPlaywrightを
+        # 起動するため、既に開いているsync_playwright()コンテキストの中で
+        # 呼ぶと入れ子になってしまう(sync APIは入れ子をサポートしない)
+        eyecatch_path = os.path.join(tempfile.gettempdir(), f"eyecatch_{os.getpid()}.png")
+        try:
+            generate_eyecatch_image(title, eyecatch_path)
+        except Exception as e:
+            print(f"⚠️ Eyecatch image generation failed (continuing without it): {e}")
+            eyecatch_path = None
 
         with sync_playwright() as p:
             print("🌐 Launching browser for this article...")
@@ -235,6 +276,14 @@ def main(draft_only=False):
                     print(f"🔗 Relinking {len(urls)} URL(s) in editor...")
                     relink_urls_in_editor(page, urls)
 
+                # --- 2.6. アイキャッチ画像のアップロード ---
+                # 💡 本文(ProseMirror)への操作ではなく、別のUI要素(見出し画像欄)への
+                # 操作なので、relink_urls_in_editorの「本文編集はこれで最後」という
+                # ルールとは独立。本文のカーソル位置に影響しないため安全
+                if eyecatch_path:
+                    print("🖼️ Attaching eyecatch image...")
+                    attach_eyecatch_image(page, eyecatch_path)
+
                 if draft_only:
                     # --- 下書き保存で停止し、本公開はしない ---
                     print("🧪 Clicking '下書き保存' (draft-only mode, will NOT publish)...")
@@ -242,7 +291,13 @@ def main(draft_only=False):
                     draft_btn.click()
                     page.wait_for_timeout(3000)
                     print("🧪 Saved as draft. Check note.com now to confirm no corruption and that the link is clickable.")
-                    input("Press Enter here to close the browser (this will NOT publish anything)...")
+                    # 💡 `!`モード等、標準入力がTTYでない場合はinput()がEOFErrorで
+                    # 落ちる(socialdog_poster.pyで実例あり)。ここで落ちると目視
+                    # 確認の前にブラウザが強制終了してしまうので握りつぶす
+                    try:
+                        input("Press Enter here to close the browser (this will NOT publish anything)...")
+                    except EOFError:
+                        page.wait_for_timeout(5000)
                     browser.close()
                     print("✅ Draft-only test finished (not published, status/archive untouched).")
                     return
@@ -272,6 +327,9 @@ def main(draft_only=False):
 
             print("🔒 Closing browser session for this article...")
             browser.close()
+
+        if eyecatch_path and os.path.exists(eyecatch_path):
+            os.remove(eyecatch_path)
 
         # 投稿成功したらステータスを更新してアーカイブし、次のループへ
         if publish_success:
