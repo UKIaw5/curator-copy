@@ -168,10 +168,13 @@ def extract_urls(text):
     return urls
 
 def attach_eyecatch_image(page, image_path):
-    """タイトルから生成済みのアイキャッチ画像を、note.comの見出し画像として
-    アップロードする。本文編集(insert_text/URLリンク化)が完全に終わった後の、
-    独立した最後のステップとして呼ぶこと(本文編集後に何かを挿入する操作を
-    増やさない、というこれまでの事故防止ルールに合わせる)。
+    """生成済みのアイキャッチ画像を、note.comの見出し画像としてアップロードする。
+    💡 **必ずタイトル/本文を入力する前に呼ぶこと。** 逆(タイトル/本文を書いた後に
+    画像をアップロード)の順番で試したところ、画像アップロード操作がnote.com側の
+    タイトル/本文の内部状態を壊し、「公開に進む」操作時に画面上は正しく入力されて
+    いるのに「タイトル、本文を入力してください」という誤ったバリデーションエラーが
+    出て公開できない事故を実機で確認した(2026-10-06)。画像を先にアップロードして
+    からタイトル/本文を書く順番にすると再現しない。
     画像生成自体(generate_eyecatch_image)は内部でPlaywrightを別途起動するため、
     note.com操作用のPlaywrightセッションの外側(呼び出し前)で済ませておき、
     ここでは生成済みのファイルパスをアップロードするだけにすること。
@@ -183,13 +186,14 @@ def attach_eyecatch_image(page, image_path):
         with page.expect_file_chooser() as fc_info:
             page.get_by_text("画像をアップロード").click()
         fc_info.value.set_files(image_path)
+        # アップロード処理が落ち着くまで少し待つ
         page.wait_for_timeout(3000)
         # クロップ/確認ダイアログが出た場合のベストエフォート対応
         for label in ["保存", "完了", "適用"]:
             btn = page.get_by_role("button", name=re.compile(label))
             if btn.count() > 0 and btn.first.is_visible():
                 btn.first.click()
-                page.wait_for_timeout(1000)
+                page.wait_for_timeout(2000)
                 break
         print("🖼️ Eyecatch image attached")
     except Exception as e:
@@ -252,13 +256,25 @@ def main(draft_only=False):
                 page.wait_for_selector("textarea, div[contenteditable='true']", timeout=30000)
                 print("✅ Editor loaded successfully!")
 
-                # --- 1. タイトル入力 ---
+                # --- 1. アイキャッチ画像のアップロード(タイトル/本文入力より前に行う) ---
+                # 💡 「タイトル/本文を書いた後に画像をアップロード」する順番だと、
+                # 画像アップロード操作がnote.com側のタイトル/本文の内部状態を壊し、
+                # 「公開に進む」操作時に(画面上は正しく入力されているのに)
+                # 「タイトル、本文を入力してください」という誤ったバリデーション
+                # エラーが出て公開できない事故を実機で確認した(2026-10-06)。
+                # 画像を先にアップロードしてからタイトル/本文を入力する順番に
+                # すると再現しないことを確認済み。この順番を変えないこと
+                if eyecatch_path:
+                    print("🖼️ Attaching eyecatch image...")
+                    attach_eyecatch_image(page, eyecatch_path)
+
+                # --- 2. タイトル入力 ---
                 print("✍️ Typing title...")
                 title_input = page.locator("textarea.p-editor__titleInput, textarea").first
                 title_input.click()
                 title_input.fill(title)
-                
-                # --- 2. 本文一括入力（すべて無料エリアとして流し込む） ---
+
+                # --- 3. 本文一括入力（すべて無料エリアとして流し込む） ---
                 print("✍️ Typing full free body content...")
                 body_editor = page.locator("div.ProseMirror").first
                 body_editor.click()
@@ -270,19 +286,11 @@ def main(draft_only=False):
                 page.keyboard.insert_text(full_body)
                 page.wait_for_timeout(1500)
 
-                # --- 2.5. URLをクリック可能なリンクに変換(本文編集の最後の操作) ---
+                # --- 3.5. URLをクリック可能なリンクに変換(本文編集の最後の操作) ---
                 urls = extract_urls(full_body)
                 if urls:
                     print(f"🔗 Relinking {len(urls)} URL(s) in editor...")
                     relink_urls_in_editor(page, urls)
-
-                # --- 2.6. アイキャッチ画像のアップロード ---
-                # 💡 本文(ProseMirror)への操作ではなく、別のUI要素(見出し画像欄)への
-                # 操作なので、relink_urls_in_editorの「本文編集はこれで最後」という
-                # ルールとは独立。本文のカーソル位置に影響しないため安全
-                if eyecatch_path:
-                    print("🖼️ Attaching eyecatch image...")
-                    attach_eyecatch_image(page, eyecatch_path)
 
                 if draft_only:
                     # --- 下書き保存で停止し、本公開はしない ---
