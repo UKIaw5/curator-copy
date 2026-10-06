@@ -1184,7 +1184,14 @@
         "2": {
             "note_used": true,
             "generated_at": "20261005_202328",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_202328.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261005_202328.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "翻訳フォールバック修正後、全セクション合格"
+            ],
+            "audit_at": "2026-10-06 13:37:12",
+            "published_to_note": true,
+            "published_at": "2026-10-06 13:37:41"
         },
         "3": {
             "note_used": true,
