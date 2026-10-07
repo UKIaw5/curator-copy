@@ -5,7 +5,6 @@ import os
 import re
 import subprocess
 import sys
-import time
 
 from fetchers.arxiv import fetch_arxiv
 from fetchers.github_trending import fetch_github_trending
@@ -13,8 +12,9 @@ from fetchers.hacker_news import fetch_hacker_news
 from fetchers.huggingface import fetch_huggingface_papers
 from generators.curator import select_best_items
 from generators.generate_x_posts import run_stage1
-from generators.refiner import refine_to_x_post
-from generators.reviewer import review_and_edit_post
+# 💡 2026-10-07: Stage2(refiner.py)/Stage3(reviewer.py)のGemma/Qwen本番呼び出しを
+# 廃止し、Claude自身が精製する /refine-x-posts Skillに置き換えた(daily_auto_run.sh参照)。
+# refiner.py/reviewer.py自体は手動比較・検証用に残してあるため削除しない。
 
 HISTORY_FILE = "output/history.json"
 
@@ -170,59 +170,17 @@ def main():
     raw_parts = re.split(r"\n+\s*---\s*\n+", stripped_content)
   summaries = [s.strip() for s in raw_parts if s.strip()]
 
-  print(
-      f"\nStep 4: Refining {len(summaries)} summaries into professional X"
-      " posts (Gemma 12B + Qwen review)..."
-  )
+  print(f"\n📊 Extracted {len(summaries)} summaries from Raw content.")
 
   if not summaries:
     print("ℹ️ No summaries extracted from Raw content. Exiting.")
     print(f"🔍 [DEBUG Raw Text Preview]\n{raw_content[:300]}\n...")
     return
 
-  refined_posts = []
-
-  for i, summary in enumerate(summaries, 1):
-    print(f"\n--- [{i}/{len(summaries)}] Processing Item ---")
-    preview_in = summary.replace("\n", " ")[:70]
-    print(f"📥 Input Preview: {preview_in}...")
-
-    try:
-      post = refine_to_x_post(summary)
-      if post:
-        preview_out = post.replace("\n", " ")[:70]
-        print(f"✨ Refined Output: {preview_out}...")
-
-        post = review_and_edit_post(post, summary)
-        preview_reviewed = post.replace("\n", " ")[:70]
-        print(f"🔍 Reviewed Output: {preview_reviewed}...")
-
-        refined_posts.append(post)
-      else:
-        print("⚠️ Refine returned empty string. (Check Ollama connection)")
-    except Exception as e:
-      print(f"❌ Error in refine_to_x_post: {e}")
-
-    if i < len(summaries):
-      time.sleep(4)
-
-  if not refined_posts:
-    print(
-        "\n❌ No posts generated. Check if Ollama is running or returning"
-        " valid text."
-    )
-    return
-
-  final_content = "\n\n---\n\n".join(refined_posts)
-  timestamped_file = os.path.join(output_dir, f"output_x_posts_{timestamp}.md")
-
-  with open(timestamped_file, "w", encoding="utf-8") as f:
-    f.write(final_content)
-
   print(f"\n💾 Saved Stage 1 prex to `{pending_raw_path}`")
   print(
-      f"💾 Saved Stage 2 x posts to `{timestamped_file}` (Total"
-      f" {len(refined_posts)} posts)"
+      "\nStage2/3(Xポスト精製・校正)はClaude側の /refine-x-posts Skillで"
+      " 行う設計に変更済み(daily_auto_run.sh参照)。このスクリプトはここで終了する。"
   )
   if dry_run:
     print(
@@ -230,7 +188,7 @@ def main():
         " then delete that folder when done - it's gitignored and never"
         " touched by production runs."
     )
-  print("\n✅ Part A completed successfully!")
+  print("\n✅ Part A (Stage 1) completed successfully!")
 
 
 if __name__ == "__main__":

@@ -14,10 +14,12 @@ AI技術トレンド(arXiv / Hacker News / GitHub Trending / Hugging Face Papers
 fetch (fetchers/)
   → curate 選別 (generators/curator.py)
   → Stage1 詳細要約・英語 (generators/generate_x_posts.py)   → output/raw/output_prex_posts_*.md
-  → Stage2 Xポスト精製・日本語 (generators/refiner.py)        → output/output_x_posts_*.md
-  → (手動確認) → 予約投稿 (automation/socialdog_poster.py, CloakBrowser経由でSocialDogのUIを操作)
+  → Stage2+3 Xポスト精製・校正・日本語 (Claude, /refine-x-posts Skill)  → output/output_x_posts_*.md
+  → (無人実行で自動予約) 予約投稿 (automation/socialdog_poster.py, CloakBrowser経由でSocialDogのUIを操作)
   → archive + Git同期
 ```
+
+Stage2+3は2026-10-07にGemma4:12b/Qwen(`generators/refiner.py`/`reviewer.py`)からClaude自身(`.claude/skills/refine-x-posts/`、Haiku経由)に置き換えた。`refiner.py`/`reviewer.py`は削除せず手動比較用に残っている(5章参照)。
 
 note.com向けには `for-note-post/` 配下に独立した並行パイプライン(記事生成→公開)がある。
 
@@ -33,7 +35,7 @@ Stage1の複数要約は `<<<CURATOR_ITEM_BOUNDARY>>>` という専用トーク�
 | ディレクトリ | 役割 |
 |---|---|
 | `fetchers/` | ソース別の取得処理。`arxiv.py`, `hacker_news.py`, `github_trending.py`, `huggingface.py`。`arxiv.py`は2026-10-04に検索API(`export.arxiv.org/api/query`)方式へ変更済み(旧: 日次RSSフィードで土日は`skipDays`のため0件になっていた)。投稿日の新しい順に`limit`件(デフォルト15)を取得するため、土日でも直前の配信日まで自動的に遡る |
-| `generators/` | `curator.py`(Qwenで上位記事を選別) / `generate_x_posts.py`(Stage1: Qwenで英語詳細要約) / `refiner.py`(Stage2: Gemmaで日本語Xポストに精製) / `reviewer.py`(Stage3: Qwenによる校正。`run_today_pipeline_parta.py`から呼ばれる本番ステージ) |
+| `generators/` | `curator.py`(Qwenで上位記事を選別) / `generate_x_posts.py`(Stage1: Qwenで英語詳細要約、`run_today_pipeline_parta.py`から呼ばれる本番ステージ) / `refiner.py`(旧Stage2: Gemmaで日本語Xポストに精製) / `reviewer.py`(旧Stage3: Qwenによる校正)。`refiner.py`/`reviewer.py`は2026-10-07にClaude(`.claude/skills/refine-x-posts/`)へ本番経路を置き換え済みで、現在は手動比較用 |
 | `automation/` | `socialdog_poster.py`(本番の予約投稿経路。SocialDogのWeb UIをCloakBrowserで操作し、正規のEnterprise API経由でXに投稿。2026-10-04導入) / `x_poster.py`(旧経路。Xに直接CloakBrowserで予約投稿、Bot検知警告が出るため現在は未使用・参考用に残置) / `import_cookies.py`(X用、cookie-editorで取得したcookieをPlaywright用に変換) / `save_session.py` |
 | `for-note-post/` | note.com向けの記事生成(`generate_note_article.py`, `autogenerate_note_article*.py`)・画像生成(`generate_eyecatch.py`)・公開(`publish_to_note*.py`)。Xパイプラインとは別のモデル割り当て・状態管理(`note_status.json`)を持つ独立系 |
 | `output/` | `raw/`(Stage1出力) / ルート直下(Stage2出力、未投稿) / `archive/`(投稿済みファイル) / `history.json`, `seen_urls.json`(重複排除用履歴) / `dry_run/`(検証用サンドボックス、gitignore対象、8章参照) |
@@ -49,7 +51,9 @@ pip install -r requirements.txt
 playwright install
 
 # 日次パイプライン
-python3 run_today_pipeline_parta.py          # Step1-4: 収集→選別→要約→Xポスト精製
+python3 run_today_pipeline_parta.py          # Step1-3: 収集→選別→Stage1英語詳細要約まで
+# note.com記事生成と同じく、Xポストの精製(Stage2+3)はClaude Code側のSkillで行う
+claude -p "/refine-x-posts" --permission-mode bypassPermissions   # output/output_x_posts_*.md を生成
 # (ここで output/output_x_posts_*.md の内容を目視確認)
 python3 run_today_pipeline_partb.py          # Xに予約投稿 → Git push
 python3 run_today_pipeline_partb_manual.py   # 手動投稿後のアーカイブ&Git同期のみ行う場合
@@ -78,10 +82,11 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 |---|---|---|---|
 | 記事選別(キュレーション) | `generators/curator.py` | `qwen3.8:27b` | `QWEN_MODEL` |
 | Stage1 詳細要約(英語) | `generators/generate_x_posts.py` | `qwen3.8:27b`(旧: `qwen2.5-coder:14b`) | `QWEN_MODEL` |
-| Stage2 投稿文精製(日本語) | `generators/refiner.py` | `gemma4:12b` | `GEMMA_MODEL` |
-| 主語補完(Gemma出力の救済) | `generators/refiner.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
-| 日本語フォールバック圧縮(最終救済) | `generators/refiner.py` (`generate_safe_japanese_fallback`) | `qwen2.5-coder:14b` | `QWEN_MODEL` |
-| Stage3 投稿文の校正 | `generators/reviewer.py` | `gemma4:12b` | `GEMMA_REVIEWER_MODEL` |
+| Stage2+3 投稿文精製・校正(日本語、**本番**) | `.claude/skills/refine-x-posts/` → `.claude/workflows/refine-x-posts.js` | Claude Haiku(Workflowの`agent()`経由) | なし |
+| Stage2 投稿文精製(日本語、旧・手動比較用) | `generators/refiner.py` | `gemma4:12b` | `GEMMA_MODEL` |
+| 主語補完(Gemma出力の救済、旧) | `generators/refiner.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
+| 日本語フォールバック圧縮(最終救済、旧) | `generators/refiner.py` (`generate_safe_japanese_fallback`) | `qwen2.5-coder:14b` | `QWEN_MODEL` |
+| Stage3 投稿文の校正(旧・手動比較用) | `generators/reviewer.py` | `gemma4:12b` | `GEMMA_REVIEWER_MODEL` |
 | note記事生成(TOC/本文/校正/フック/インサイト/リンク) | `for-note-post/*.py` | すべて `qwen2.5-coder:14b` or `gemma4:12b` 固定(環境変数非対応、コード内直書き)。`think: False`適用済み、Xパイプラインと同様に日本語チェックも導入済み(2026-10-04) | なし |
 
 **注意:** `curator.py`と`generate_x_posts.py`は`qwen3.8:27b`、`refiner.py`の補助呼び出し(主語補完・フォールバック)は`qwen2.5-coder:14b`。同じ`QWEN_MODEL`環境変数を複数箇所で共有しているため、環境変数で上書きすると全箇所に影響する。モデルを個別に変えたい場合は環境変数を分けるかコードを直接変更する必要がある。
@@ -110,7 +115,7 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
   - これらを安易に「効率化」すると、Xのシャドウバン/アカウントロックのリスクが上がる。変更する場合は意図を理解した上で行うこと
 - `automation/socialdog_poster.py`のセレクタ。全て実際のDevTools検証済み: 投稿欄は`<textarea placeholder="投稿内容を入力">`(本物のplaceholder属性、contenteditableではない)、日時ピッカーは`.datetime_picker_blueprint .bp3-popover-target`で開き、中の`aria-label="日付"`なBlueprint.js DateInput(`YYYY/MM/DD H:mm`形式)に直接文字列を入力するだけでよい(カレンダー日付セルや時/分スピンボックスの個別操作は不要)。SocialDog側のUI更新で壊れた場合は同じ手順(DevToolsでElementsパネルをスクショ)で再特定すること
 - `output/history.json` / `seen_urls.json`の重複排除ロジックと`.bak`によるロールバック機構(壊すと同じ記事が再投稿される恐れ)
-- Stage1要約の連結・分割に使う`<<<CURATOR_ITEM_BOUNDARY>>>`境界トークン(1章参照)。`---`等の自然言語に出現しうる文字列に戻さないこと。**`for-note-post/generate_note_article.py`・`autogenerate_note_article.py`・`autogenerate_note_article_2.py`の`get_active_raw_file()`も同じ生データファイルをこのトークンで分割している** — Stage1側のdelimiterを変更したら必ずこの3ファイルも同時に直すこと(2026-10-04に一度ズレて修正済み)
+- Stage1要約の連結・分割に使う`<<<CURATOR_ITEM_BOUNDARY>>>`境界トークン(1章参照)。`---`等の自然言語に出現しうる文字列に戻さないこと。**`for-note-post/generate_note_article.py`・`autogenerate_note_article.py`・`autogenerate_note_article_2.py`の`get_active_raw_file()`、および`.claude/workflows/refine-x-posts.js`のプロンプトも同じ生データファイルをこのトークンで分割している** — Stage1側のdelimiterを変更したら必ずこの4箇所も同時に直すこと(2026-10-04に一度ズレて修正済み)
 - Ollama呼び出しの`"think": False`指定(4章参照)。外したり新しい呼び出しで付け忘れると、該当ステージが静かに機能不全になる(エラーは出ず、ただ空文字が返るだけなので発見しづらい)
 - note.com記事生成の各LLMステップの日本語チェック(`is_japanese_text`、`for-note-post/*.py`)。実データで校正ステップが記事全文を英訳してしまう事例を確認済み。外すと英語の記事がそのまま本文になるリスクがある
 - `for-note-post/publish_to_note*.py`のタイトル行除去。位置ベース(先頭行のみ除去)で実装すること。文字列一致(`str.replace(title, "")`等)に戻すと、タイトルと同じ文言が本文中に再出現した箇所まで誤って消えるバグが再発する
@@ -143,8 +148,9 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 - Gitへの自動コミット/プッシュをパイプラインスクリプト自身が行う(`run_today_pipeline_parta.py`の`git pull`、`partb*.py`の`git add/commit/push`)。手動での変更作業中に自動実行すると競合する可能性があるので注意
 - `tests/`配下はCloakBrowserのステルス機能検証や履行移行(`test_migrate_history.py`)用のアドホックスクリプトが中心で、CIでの網羅的なテストスイートではない
 - `.claude/workflows/audit-note-drafts.js`: note.com下書き記事の**公開前監査**用Workflow(Claude Code, Haikuモデル使用、2026-10-05導入)。生成記事と元データ(raw file + idx)のファイルパスだけを渡し、サブエージェント自身がファイルを読んで、ハルシネーション(元データにない事実の創作)・日本語品質(韓国語/簡体字中国語の混入)・フォーマット崩れ(見出し重複・コード破損)を判定する。note.comパイプラインの`<!-- PAYWALL -->`マーカー・ペイウォール・クリフハンガー(「なぜなら——」で文が切れる)・末尾ハッシュタグは**意図的な仕様**であり、監査プロンプト内で誤検知しないよう明記済み。`publish_to_note_free_batch.py`の`get_next_unpublished_article()`は`audit_passed is True`の記事だけを対象にするゲートを実装済み(2026-10-06)。監査結果の書き込みは`/audit-drafts`Skillが行う
-- `scripts/daily_auto_run.sh`(2026-10-07導入、通称「プランB」): 日次パイプラインを無人化するオーケストレーションスクリプト。Windowsタスクスケジューラ(タスク名`CuratorCopyDailyAutoRun`、毎日12:00、`schtasks.exe`で登録済み、ログオン状態が必要)から`wsl.exe`経由で呼ばれる想定。Part A→note.com記事生成→`claude -p "/audit-drafts" --permission-mode bypassPermissions`(Claude Code非対話モード、サブスクリプション使用量内で完結、追加課金なし)→note.com公開(`publish_to_note_free_batch.py`、`audit_passed is True`の記事のみ)→X投稿(`run_today_pipeline_partb.py`、SocialDog予約+Git push)の順で実行し、ログを`output/daily_auto_logs/`に残す。最後に、監査不合格のまま未公開で残っている記事があれば一覧表示する(原因調査→コード修正→該当idxだけ再生成→再監査→再公開、というサイクルを日々回す想定)。
-  - 💡 設計変更の経緯(2026-10-07): 導入当初は「生成・監査」までで止め、公開はユーザーが結果を見てから手動で行う設計だった(公開系自動化には過去に複数の事故実例があったため)。その後、監査ゲート(audit_passed)がハルシネーション・重複・簡体字混入等を実際に検知できることが実運用で確認できたため、合格分は公開まで自動で完了させ、不合格分だけ人間が見て直す運用に変更した。X投稿には現時点でnote.comのような個別audit_passedゲートが無いため、生成された分は全件予約される(Xパイプライン側に監査を追加する場合はこの前提も合わせて見直すこと)
+- `.claude/workflows/refine-x-posts.js` + `.claude/skills/refine-x-posts/`: Xポストの**Stage2+3(精製・校正)**をGemma/Qwenのローカルモデルの代わりにClaudeが直接行うWorkflow/Skill(Haikuモデル、2026-10-07導入)。`audit-note-drafts.js`と同じ設計(ファイルパスと位置情報だけを渡し、サブエージェント自身が生データを読んで分割・URL抽出・本文生成を行う)。文字数等のスタイル規則(5章参照)は`refiner.py`のプロンプトをそのまま移植してある。`generators/refiner.py`/`reviewer.py`は削除せず手動比較用に残っているが、本番経路(`run_today_pipeline_parta.py`)からは呼ばれなくなった
+- `scripts/daily_auto_run.sh`(2026-10-07導入、通称「プランB」): 日次パイプラインを無人化するオーケストレーションスクリプト。Windowsタスクスケジューラ(タスク名`CuratorCopyDailyAutoRun`、毎日11:00、`schtasks.exe`で登録済み、ログオン状態が必要)から`wsl.exe`経由で呼ばれる想定。`StartWhenAvailable`を有効化済み(2026-10-07)なので、11:00にPCがオフ/再起動中だった場合も次にログオンした時点で自動的に実行される。Active Hours(10:00〜翌4:00、Windows側の設定)が既にこの時間帯のWindows Update自動再起動を抑制している。Part A(Stage1まで)→note.com記事生成→`claude -p "まず /audit-drafts を実行して。完了したら、続けて /refine-x-posts を実行して。" --permission-mode bypassPermissions`(Claude Code非対話モード、サブスクリプション使用量内で完結、追加課金なし。監査とXポスト精製を1つのセッションにまとめ、セッション起動時の固定コンテキストコストを2回払わないようにしている)→note.com公開(`publish_to_note_free_batch.py`、`audit_passed is True`の記事のみ)→X投稿(`run_today_pipeline_partb.py`、SocialDog予約+Git push)の順で実行し、ログを`output/daily_auto_logs/`に残す。最後に、監査不合格のまま未公開で残っている記事があれば一覧表示する(原因調査→コード修正→該当idxだけ再生成→再監査→再公開、というサイクルを日々回す想定)。
+  - 💡 設計変更の経緯(2026-10-07): 導入当初は「生成・監査」までで止め、公開はユーザーが結果を見てから手動で行う設計だった(公開系自動化には過去に複数の事故実例があったため)。その後、監査ゲート(audit_passed)がハルシネーション・重複・簡体字混入等を実際に検知できることが実運用で確認できたため、合格分は公開まで自動で完了させ、不合格分だけ人間が見て直す運用に変更した。同日さらに、Xポストの精製自体もClaude(/refine-x-posts)に置き換えた。X投稿には現時点でnote.comのような個別audit_passedゲートが無いため、精製された分は全件予約される(Xパイプライン側に監査を追加する場合はこの前提も合わせて見直すこと)
 
 ## 8. 動作検証・デバッグ時の運用ルール
 
