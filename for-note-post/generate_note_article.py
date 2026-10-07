@@ -110,7 +110,7 @@ def get_active_raw_file():
 # 💡 簡体字中国語でしか使われない(日本語の漢字としては存在しない)文字の一部。
 # 網羅的ではなく、実際に生成記事で混入が確認された文字を中心にした経験的リスト。
 # 新しい混入パターンが見つかったら追加すること(QUBO記事で"扩散"を確認、2026-10-05)
-SIMPLIFIED_CHINESE_ONLY_CHARS = "扩这们还没很什传"
+SIMPLIFIED_CHINESE_ONLY_CHARS = "扩这们还没很什传审"
 
 def has_foreign_script_mixed(text: str) -> bool:
     """日本語の文章に韓国語(ハングル)や簡体字中国語の単語が混入していないか検出する。
@@ -143,7 +143,16 @@ def strip_duplicate_intro(draft_body: str) -> str:
     繰り返し取り除く(タイトルが2回・3回と連続して繰り返されるケースに対応)。
     Step B: 残った1コピー分の「タイトル+目次」ブロックも、本当の最初の
     本文セクション見出しまでスキップする("目次"という文字列を手がかりに、
-    その後に続く番号付きリストの終わりまでをイントロとみなす)。"""
+    その後に続く番号付きリストの終わりまでをイントロとみなす)。
+    Step C: 上記どちらにも引っかからないケース(タイトルの2回出現も"目次"
+    という文字列も無く、「この記事で得られること」相当の箇条書きだけが
+    本文冒頭に漏れて残るケース、Backburner/POLAR記事、2026-10-07)への
+    フォールバック。本文の正しい開始位置は必ず番号付きセクション見出しで
+    ある不変条件を使い、それより前の行を種類を問わず(タイトル/目次/
+    箇条書き)すべて切り落とす。この関数はlint_markdown()より前(見出しが
+    まだ"#"/"##"のMarkdown形式のまま、"■"に変換される前)に呼ばれるため、
+    検出パターンは"#+"と"■"の両方を許容する(2026-10-07、初版は"■"のみを
+    見ていたため常に素通りしていた)。"""
     stripped = draft_body.strip()
     if not stripped:
         return stripped
@@ -180,6 +189,15 @@ def strip_duplicate_intro(draft_body: str) -> str:
             break
         if 0 < j < len(lines):
             stripped = "\n".join(lines[j:]).strip()
+
+    lines = stripped.splitlines()
+    section_idx = None
+    for i, line in enumerate(lines[:30]):
+        if re.match(r'^(?:#+|■)\s*\d+[\.\、]', line.strip()):
+            section_idx = i
+            break
+    if section_idx is not None and section_idx > 0:
+        stripped = "\n".join(lines[section_idx:]).strip()
 
     return stripped
 
