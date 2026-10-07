@@ -32,6 +32,18 @@ TARGET_TIME_SLOTS = [
 ]
 
 
+def has_valid_session_cookie(context, cookie_name):
+    """💡 常駐プロファイル(USER_DATA_DIR)は既に自分でcookieを保持・延長できる。
+    有効なセッションが残っているのに毎回socialdog_cookies.jsonの静止
+    スナップショットで上書きすると、サイト側が延長した新しい値を古い値で
+    潰してしまい、常駐プロファイルの意味が無くなる(2026-10-07)。"""
+    now = time.time()
+    for c in context.cookies():
+        if c.get("name") == cookie_name and c.get("expires", -1) > now:
+            return True
+    return False
+
+
 def load_cookies_to_context(context):
     if not os.path.exists(COOKIE_FILE):
         print(f"⚠️ {COOKIE_FILE} not found. Run the cookie export first.")
@@ -215,7 +227,9 @@ def process_batch_scheduling(limit: int = None):
         viewport={"width": 1280, "height": 900}
     )
 
-    if not load_cookies_to_context(context):
+    if has_valid_session_cookie(context, "socialdogSessionV2"):
+        print("✅ Persistent profile already has a valid SocialDog session, skipping cookie re-injection.")
+    elif not load_cookies_to_context(context):
         context.close()
         return
 

@@ -14,6 +14,21 @@ from generate_eyecatch import generate_eyecatch_image
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATUS_FILE = os.path.join(BASE_DIR, "note_status.json")
 ARCHIVE_DIR = os.path.join(BASE_DIR, "output", "archive_published")
+# 💡 常駐プロファイル(2026-10-07導入)。毎回フレッシュなcontextにnote_cookies.json
+# の静止スナップショットを注入するだけだと、note.com側がセッションを延長しても
+# ファイル側のトークンは取得時点のまま固定され、いずれ元の有効期限で切れる。
+# 常駐プロファイルなら、ブラウザが自分でcookieを保存し続けるので、延長が
+# 自動的に効く(有効なセッションが既にあるときはnote_cookies.jsonを
+# 再注入しない、下のhas_valid_session_cookieで判定)
+USER_DATA_DIR = os.path.join(BASE_DIR, "note_user_data")
+
+def has_valid_session_cookie(context, cookie_name):
+    import time as _time
+    now = _time.time()
+    for c in context.cookies():
+        if c.get("name") == cookie_name and c.get("expires", -1) > now:
+            return True
+    return False
 
 def load_status():
     if os.path.exists(STATUS_FILE):
@@ -236,16 +251,19 @@ def main(draft_only=False):
 
         with sync_playwright() as p:
             print("🌐 Launching browser for this article...")
-            browser = p.chromium.launch(
+            context = p.chromium.launch_persistent_context(
+                user_data_dir=USER_DATA_DIR,
                 headless=False,  # 動作確認のためFalse。安定したらTrueにしてもOK
-                slow_mo=100, 
+                slow_mo=100,
+                viewport={"width": 1024, "height": 720},
                 args=["--window-size=1024,720"]
             )
-            context = browser.new_context(viewport={"width": 1024, "height": 720})
-            
-            if not load_cookies_to_context(context):
+
+            if has_valid_session_cookie(context, "_note_session_v5"):
+                print("✅ Persistent profile already has a valid note.com session, skipping cookie re-injection.")
+            elif not load_cookies_to_context(context):
                 print("❌ Failed to load cookies. Aborting batch.")
-                browser.close()
+                context.close()
                 break
             
             page = context.new_page()
@@ -306,7 +324,7 @@ def main(draft_only=False):
                         input("Press Enter here to close the browser (this will NOT publish anything)...")
                     except EOFError:
                         page.wait_for_timeout(5000)
-                    browser.close()
+                    context.close()
                     print("✅ Draft-only test finished (not published, status/archive untouched).")
                     return
 
@@ -343,7 +361,7 @@ def main(draft_only=False):
                 print(f"⚠️ Error during automation process: {e}")
 
             print("🔒 Closing browser session for this article...")
-            browser.close()
+            context.close()
 
         if eyecatch_path and os.path.exists(eyecatch_path):
             os.remove(eyecatch_path)

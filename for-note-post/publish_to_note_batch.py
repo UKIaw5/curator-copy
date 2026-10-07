@@ -12,6 +12,16 @@ from playwright.sync_api import sync_playwright
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATUS_FILE = os.path.join(BASE_DIR, "note_status.json")
 ARCHIVE_DIR = os.path.join(BASE_DIR, "output", "archive_published")
+# 💡 常駐プロファイル(2026-10-07導入、publish_to_note_free_batch.pyと同じ理由)
+USER_DATA_DIR = os.path.join(BASE_DIR, "note_user_data")
+
+def has_valid_session_cookie(context, cookie_name):
+    import time as _time
+    now = _time.time()
+    for c in context.cookies():
+        if c.get("name") == cookie_name and c.get("expires", -1) > now:
+            return True
+    return False
 
 def load_status():
     if os.path.exists(STATUS_FILE):
@@ -185,16 +195,19 @@ def main(draft_only=False):
         # 2. 1記事ごとにブラウザを新規起動
         with sync_playwright() as p:
             print("🌐 Launching browser for this article...")
-            browser = p.chromium.launch(
+            context = p.chromium.launch_persistent_context(
+                user_data_dir=USER_DATA_DIR,
                 headless=False,  # 動作確認のため一旦False。安定したらTrueでもOK
-                slow_mo=100, 
+                slow_mo=100,
+                viewport={"width": 1024, "height": 720},
                 args=["--window-size=1024,720"]
             )
-            context = browser.new_context(viewport={"width": 1024, "height": 720})
-            
-            if not load_cookies_to_context(context):
+
+            if has_valid_session_cookie(context, "_note_session_v5"):
+                print("✅ Persistent profile already has a valid note.com session, skipping cookie re-injection.")
+            elif not load_cookies_to_context(context):
                 print("❌ Failed to load cookies. Aborting batch.")
-                browser.close()
+                context.close()
                 break
             
             page = context.new_page()
@@ -268,7 +281,7 @@ def main(draft_only=False):
                         input("Press Enter here to close the browser (this will NOT publish anything)...")
                     except EOFError:
                         page.wait_for_timeout(5000)
-                    browser.close()
+                    context.close()
                     print("✅ Draft-only test finished (not published, status/archive untouched).")
                     return
 
@@ -315,7 +328,7 @@ def main(draft_only=False):
                 print(f"⚠️ Error during automation process: {e}")
 
             print("🔒 Closing browser session for this article...")
-            browser.close()
+            context.close()
 
         # 3. 投稿成功したらステータスを更新してファイルを移動し、次のループへ
         if publish_success:

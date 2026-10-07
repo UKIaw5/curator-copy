@@ -1,5 +1,7 @@
 # Environments
 .env
+.env.*
+!.env.example
 .venv/
 env/
 venv/
@@ -14,6 +16,15 @@ __pycache__/
 *.so
 
 # Automation / Credentials
+# 💡 個別列挙ではなく広めのパターンにしてある(2026-10-07)。新しい
+# cookie/user_dataファイルが増えても、命名規則さえ合っていれば自動的に
+# 捕捉される。既存の個別エントリ(cookies.json等)も重複して残してあるが、
+# 下のパターンと両方マッチするだけで実害は無い
+*cookies*.json
+*_user_data/
+*.pem
+*.p12
+*.pfx
 automation/cookies.json
 cookies.json
 x_user_data/
@@ -22,6 +33,7 @@ note_cookies.json
 automation/socialdog_cookies.json
 socialdog_cookies.json
 socialdog_user_data/
+for-note-post/note_user_data/
 *.Identifier
 
 # Mac/Windows system files

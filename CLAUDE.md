@@ -138,10 +138,17 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 
 ## 6. 認証情報の取り扱い
 
-以下は**絶対にコミットしない**(`.gitignore`で除外済み):
+以下は**絶対にコミットしない**(`.gitignore`で除外済み、2026-10-07に個別列挙に加えて`*cookies*.json`/`*_user_data/`等の広いパターンも追加済み):
 - `cookies.json`, `automation/cookies.json`, `x_user_data/`(X用セッション、旧経路)
 - `for-note-post/note_cookies.json`, `note_cookies.json`(note.com用セッション)
 - `automation/socialdog_cookies.json`, `socialdog_cookies.json`, `automation/socialdog_user_data/`(SocialDog用セッション、現在の本番経路)
+- `for-note-post/note_user_data/`(note.com用の常駐Playwrightプロファイル、下記参照)
+
+**過去の実例:** 2026-08-17に`cookies.json`(Xの`auth_token`含む)と`x_user_data/`、2026-08-23に`for-note-post/note_cookies.json`が、削除コミットを挟みつつも一度git履歴に入ってしまったことがある(2026-10-07に発覚、該当セッションは即座にログアウトして無効化済み)。**`git rm`や削除コミットは過去の履歴からは消えない**ことに注意(`git log --all --diff-filter=A`で全履歴を横断検索すれば検出できる)。
+
+**pre-commitでのシークレットスキャン(2026-10-07導入):** `detect-secrets`(`requirements-dev.txt`、`.pre-commit-config.yaml`)を`pre-commit install`でgit hookとして登録してある。コミット前に高エントロピー文字列やAPIキーらしきパターンを検知して自動的にブロックする(実機でダミーのhex文字列を使い、ブロックされることを確認済み)。初回セットアップ時は`pip install -r requirements-dev.txt && pre-commit install`を実行すること(このリポジトリをcloneした人は各自実行が必要、`.git/hooks/`はgit管理対象外なので自動では付いてこない)。誤検知した場合は該当行末に`# pragma: allowlist secret`を付けるか、`.secrets.baseline`を`detect-secrets scan`で更新する。
+
+**note.com/SocialDogの常駐プロファイル化(2026-10-07):** 以前は毎回フレッシュなPlaywright contextに`note_cookies.json`の静止スナップショットを注入するだけだったため、note.com側がセッションを延長しても反映されず、ファイル作成時点の固定の有効期限でいずれ切れていた。`for-note-post/publish_to_note*.py`を`launch_persistent_context(user_data_dir=.../note_user_data)`に変更し、`has_valid_session_cookie()`で「常駐プロファイルに有効なセッションが既にあればnote_cookies.jsonを再注入しない」ようにした。これにより、note.com側がセッションを延長する仕様であれば、日次の自動実行だけで有効期限が自然に伸び続け、手動でのcookie取り直し頻度が減る見込み。`automation/socialdog_poster.py`(元々`launch_persistent_context`を使用済み)にも同じガードを追加した。
 
 ## 7. その他
 
