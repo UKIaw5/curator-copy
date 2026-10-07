@@ -142,7 +142,8 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 
 - Gitへの自動コミット/プッシュをパイプラインスクリプト自身が行う(`run_today_pipeline_parta.py`の`git pull`、`partb*.py`の`git add/commit/push`)。手動での変更作業中に自動実行すると競合する可能性があるので注意
 - `tests/`配下はCloakBrowserのステルス機能検証や履行移行(`test_migrate_history.py`)用のアドホックスクリプトが中心で、CIでの網羅的なテストスイートではない
-- `.claude/workflows/audit-note-drafts.js`: note.com下書き記事の**公開前監査**用Workflow(Claude Code, Haikuモデル使用、2026-10-05導入)。生成記事と元データ(raw file + idx)のファイルパスだけを渡し、サブエージェント自身がファイルを読んで、ハルシネーション(元データにない事実の創作)・日本語品質(韓国語/簡体字中国語の混入)・フォーマット崩れ(見出し重複・コード破損)を判定する。note.comパイプラインの`<!-- PAYWALL -->`マーカー・ペイウォール・クリフハンガー(「なぜなら——」で文が切れる)・末尾ハッシュタグは**意図的な仕様**であり、監査プロンプト内で誤検知しないよう明記済み。まだ`publish_to_note*.py`への自動ゲート組み込みは未実装(現状は手動でWorkflowを呼んで結果を見る運用)
+- `.claude/workflows/audit-note-drafts.js`: note.com下書き記事の**公開前監査**用Workflow(Claude Code, Haikuモデル使用、2026-10-05導入)。生成記事と元データ(raw file + idx)のファイルパスだけを渡し、サブエージェント自身がファイルを読んで、ハルシネーション(元データにない事実の創作)・日本語品質(韓国語/簡体字中国語の混入)・フォーマット崩れ(見出し重複・コード破損)を判定する。note.comパイプラインの`<!-- PAYWALL -->`マーカー・ペイウォール・クリフハンガー(「なぜなら——」で文が切れる)・末尾ハッシュタグは**意図的な仕様**であり、監査プロンプト内で誤検知しないよう明記済み。`publish_to_note_free_batch.py`の`get_next_unpublished_article()`は`audit_passed is True`の記事だけを対象にするゲートを実装済み(2026-10-06)。監査結果の書き込みは`/audit-drafts`Skillが行う
+- `scripts/daily_auto_run.sh`(2026-10-07導入、通称「プランB」): 日次パイプラインのうち「生成・監査」だけを無人化するオーケストレーションスクリプト。Windowsタスクスケジューラ(タスク名`CuratorCopyDailyAutoRun`、毎日12:00、`schtasks.exe`で登録済み、ログオン状態が必要)から`wsl.exe`経由で呼ばれる想定。Part A→note.com記事生成→`claude -p "/audit-drafts" --permission-mode bypassPermissions`(Claude Code非対話モード、サブスクリプション使用量内で完結、追加課金なし)の順で実行し、ログを`output/daily_auto_logs/`に残す。**実際の公開(X投稿・note.com公開)はこのスクリプトに含めない** — 公開系の自動化には実際に事故の実例が複数あるため、生成・監査までを無人化し、公開はユーザーが結果を見てから手動で`run_today_pipeline_partb.py`/`publish_to_note_free_batch.py`を実行する設計にしている
 
 ## 8. 動作検証・デバッグ時の運用ルール
 
