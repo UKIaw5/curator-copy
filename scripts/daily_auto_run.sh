@@ -1,19 +1,25 @@
 #!/bin/bash
 # プランB: 日次自動実行スクリプト(Windowsタスクスケジューラ等から呼び出す想定)
 #
-# 自動化する範囲(無人実行):
+# 自動化する範囲(無人実行、2026-10-07にPart A/note生成/監査のみから拡張):
 #   1. Part A (新規ネタ取得・Xポスト案生成)
 #   2. note.com記事生成
 #   3. 監査(Claude Code非対話モードで /audit-drafts Skillを実行)
+#   4. note.com公開(audit_passed=trueの記事のみ。ゲートはpublish_to_note_free_batch.py
+#      側の get_next_unpublished_article() に実装済みなので、このスクリプトからは
+#      単に呼ぶだけでよい)
+#   5. X投稿(SocialDog予約投稿 + Git push)。Xポストには現時点でnote.comのような
+#      個別audit_passedゲートが無いため、生成された分は全件予約される
+#   6. 最終レポート: audit不合格で未公開のまま残っている記事を一覧表示
 #
-# 手動のまま残す範囲(実際に世に出る操作、このスクリプトではやらない):
-#   - X投稿: python3 run_today_pipeline_partb.py
-#   - note.com公開: cd for-note-post && python3 publish_to_note_free_batch.py
-#
-# 💡 公開系の自動化には実際に事故の実例がある(CLAUDE.md参照)ため、
-# 生成・監査までを無人化し、実際の公開はユーザーの確認を経てから
-# 手動で行う設計にしている。
-
+# 💡 設計変更の経緯(2026-10-07): 導入当初はここで無人実行を止め、公開は
+# ユーザーが結果を見てから手動で行う設計だった(公開系自動化には過去に
+# 複数の事故実例があったため)。その後、監査ゲート(audit_passed)が
+# ハルシネーション・重複・簡体字混入等を実際に検知できることが実運用で
+# 確認できたため、「合格したものはそのまま公開まで自動で終わらせ、
+# 不合格のものだけ人間が見てバグを直し、再生成→再監査→再公開する」
+# という日次サイクルに変更した。公開オペレーション自体(note.com UI操作、
+# SocialDog予約)は従来どおり壊さず、変更していない。
 set -e
 
 cd "$(dirname "$0")/.."
@@ -43,9 +49,65 @@ echo "--- Step 3: Audit via Claude Code (/audit-drafts) ---"
 # 公開等の不可逆操作は一切行わない設計なので許容できる
 claude -p "/audit-drafts" --permission-mode bypassPermissions
 
+# 💡 ここから先は「公開」なので、個々のステップが失敗しても
+# スクリプト全体を止めず(set -eを解除)、必ず最後のレポートまで到達させる
+set +e
+
+echo ""
+echo "--- Step 4: note.com publish (audit_passed articles only) ---"
+cd "$REPO_ROOT/for-note-post"
+python3 publish_to_note_free_batch.py
+NOTE_PUBLISH_STATUS=$?
+cd "$REPO_ROOT"
+if [ $NOTE_PUBLISH_STATUS -ne 0 ]; then
+    echo "⚠️ note.com publish exited with status $NOTE_PUBLISH_STATUS. Continuing to Step 5."
+fi
+
+echo ""
+echo "--- Step 5: X post scheduling (SocialDog) + Git sync ---"
+python3 run_today_pipeline_partb.py
+X_PUBLISH_STATUS=$?
+if [ $X_PUBLISH_STATUS -ne 0 ]; then
+    echo "⚠️ X post scheduling exited with status $X_PUBLISH_STATUS."
+fi
+
+echo ""
+echo "--- Step 6: Final report (audit-failed articles still awaiting a fix) ---"
+python3 - <<'PYEOF'
+import json
+import os
+
+status_path = "for-note-post/note_status.json"
+status = json.load(open(status_path, encoding="utf-8"))
+
+pending_failures = []
+for raw_file, entries in status.items():
+    if not isinstance(entries, dict):
+        continue
+    for idx, info in entries.items():
+        if not isinstance(info, dict):
+            continue
+        if info.get("audit_passed") is not False:
+            continue
+        if info.get("published_to_note") is True:
+            continue
+        gen = info.get("generated_file")
+        if not gen or not os.path.exists(gen):
+            continue
+        pending_failures.append((raw_file, idx, gen, info.get("audit_reasons", [])))
+
+if not pending_failures:
+    print("✅ 監査不合格のまま残っている記事はありません。")
+else:
+    print(f"⚠️ 監査不合格で未公開のまま残っている記事が{len(pending_failures)}件あります:")
+    for raw_file, idx, gen, reasons in pending_failures:
+        print(f"\n- {os.path.basename(gen)} (raw: {raw_file}, idx: {idx})")
+        for r in reasons:
+            print(f"    理由: {r}")
+    print("\n次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成")
+    print("(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査")
+    print("→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開")
+PYEOF
+
 echo ""
 echo "=== Daily Auto Run finished: $(date) ==="
-echo ""
-echo "次の手動ステップ(確認の上、実行してください):"
-echo "  X投稿:      python3 run_today_pipeline_partb.py"
-echo "  note.com公開: cd for-note-post && python3 publish_to_note_free_batch.py"
