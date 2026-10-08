@@ -119,4 +119,16 @@ else:
 PYEOF
 
 echo ""
+echo "--- Step 7: Notify (Discord + Notepad) ---"
+# 💡 .envに書いたDISCORD_WEBHOOK_URLを読み込む(.envはgitignore対象)。
+# このステップ自体が失敗しても(Webhook未設定、Windows側呼び出し失敗等)
+# daily_auto_run.sh全体の成否には影響させない
+if [ -f .env ]; then
+    set -a
+    source .env
+    set +a
+fi
+python3 scripts/notify_daily_result.py
+
+echo ""
 echo "=== Daily Auto Run finished: $(date) ==="
