@@ -260,10 +260,17 @@ def process_batch_scheduling(limit: int = None):
             # run_today_pipeline_partb.py側がプロセス全体を失敗と誤判定し、
             # 本来走るはずのgit commit/pushがスキップされた)。TTYが無い場合は
             # 確認待ちをスキップしてそのままブラウザを閉じる
-            try:
-                input("Press Enter to close the browser...")
-            except EOFError:
-                pass
+            # 💡 2026-10-08: EOFErrorは「標準入力が閉じている」場合にしか
+            # 発生しない。Windowsタスクスケジューラ経由のwsl.exe実行では、
+            # 標準入力が閉じてはいないが誰も入力しない状態になり、
+            # input()がEOFErrorを投げずに無期限にハングする実例が発生した
+            # (3時間以上ブラウザが起動しっぱなしになった)。isatty()で
+            # 事前にTTYかどうかを判定し、非対話時はinput()自体を呼ばない
+            if sys.stdin.isatty():
+                try:
+                    input("Press Enter to close the browser...")
+                except EOFError:
+                    pass
             context.close()
             return
 
@@ -280,10 +287,17 @@ def process_batch_scheduling(limit: int = None):
     # run_today_pipeline_partb.py側がプロセス全体を失敗と誤判定し、
     # 本来走るはずのgit commit/pushがスキップされた)。TTYが無い場合は
     # 確認待ちをスキップしてそのままブラウザを閉じる
-    try:
-        input("Press Enter to close the browser...")
-    except EOFError:
-        pass
+    # 💡 2026-10-08: EOFErrorは「標準入力が閉じている」場合にしか発生しない。
+    # Windowsタスクスケジューラ経由のwsl.exe実行では、標準入力が閉じては
+    # いないが誰も入力しない状態になり、input()がEOFErrorを投げずに無期限に
+    # ハングする実例が発生した(3時間以上ブラウザが起動しっぱなしになり、
+    # git commit/pushも実行されないまま止まっていた)。isatty()で事前に
+    # TTYかどうかを判定し、非対話時はinput()自体を呼ばない
+    if sys.stdin.isatty():
+        try:
+            input("Press Enter to close the browser...")
+        except EOFError:
+            pass
     context.close()
 
 
