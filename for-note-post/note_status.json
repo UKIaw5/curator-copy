@@ -1365,5 +1365,77 @@
             "published_to_note": true,
             "published_at": "2026-10-07 13:51:40"
         }
+    },
+    "output_prex_posts_20261008_110039.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261008_111841",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_111841.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "元データの数値・事実(222タスク、18データセット、2.9倍/1.2倍、158件中14件8.8%)に忠実。筆者の視点もヘッジ表現で仕様通り"
+            ],
+            "audit_at": "2026-10-08 11:34:01",
+            "published_to_note": true,
+            "published_at": "2026-10-08 11:36:36"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261008_112103",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_112103.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "元データの数値(10M/82Mパラメータ、92.5%/75%、71.2%/4.1%)に忠実。フォーマット・日本語品質とも問題なし"
+            ],
+            "audit_at": "2026-10-08 11:34:01",
+            "published_to_note": true,
+            "published_at": "2026-10-08 11:37:05"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261008_112322",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_112322.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "元データに忠実、11種のスキル・4フェーズのワークフローも一致。筆者の視点もヘッジ表現で仕様通り"
+            ],
+            "audit_at": "2026-10-08 11:34:01",
+            "published_to_note": true,
+            "published_at": "2026-10-08 11:37:34"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261008_112544",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_112544.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "元データのアーキテクチャ・ユースケース記述に忠実。フォーマット・日本語品質とも問題なし"
+            ],
+            "audit_at": "2026-10-08 11:34:01",
+            "published_to_note": true,
+            "published_at": "2026-10-08 11:38:02"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261008_112857",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_112857.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データ(Stage1要約)ではPhone HandとSentinelの動作メカニズムが\"likely\"(推測)としてヘッジされているが、生成記事本文(■2セクション)ではそのヘッジを落として断定的な事実として記述している(例:「アクセシビリティサービスや画面への直接的な操作を通じてUI操作を実行する」「検証、権限の確認、および安全性のフィルタリングを行います」)。本文中の断定的記述であり■筆者の視点のヘッジ対象外ルールは適用されない"
+            ],
+            "audit_at": "2026-10-08 11:34:01"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261008_113150",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_113150.md",
+            "audit_passed": true,
+            "audit_reasons": [
+                "元データの数値(220万件/490万件)に忠実。筆者の視点もヘッジ表現で仕様通り"
+            ],
+            "audit_at": "2026-10-08 11:34:01",
+            "published_to_note": true,
+            "published_at": "2026-10-08 11:38:31"
+        }
     }
 }
