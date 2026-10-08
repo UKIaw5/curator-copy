@@ -1415,16 +1415,6 @@
             "published_to_note": true,
             "published_at": "2026-10-08 11:38:02"
         },
-        "4": {
-            "note_used": true,
-            "generated_at": "20261008_112857",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_112857.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "元データ(Stage1要約)ではPhone HandとSentinelの動作メカニズムが\"likely\"(推測)としてヘッジされているが、生成記事本文(■2セクション)ではそのヘッジを落として断定的な事実として記述している(例:「アクセシビリティサービスや画面への直接的な操作を通じてUI操作を実行する」「検証、権限の確認、および安全性のフィルタリングを行います」)。本文中の断定的記述であり■筆者の視点のヘッジ対象外ルールは適用されない"
-            ],
-            "audit_at": "2026-10-08 11:34:01"
-        },
         "5": {
             "note_used": true,
             "generated_at": "20261008_113150",
@@ -1436,6 +1426,16 @@
             "audit_at": "2026-10-08 11:34:01",
             "published_to_note": true,
             "published_at": "2026-10-08 11:38:31"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261008_154326",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261008_154326.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-08 15:44:06",
+            "published_to_note": true,
+            "published_at": "2026-10-08 15:44:35"
         }
     }
 }
