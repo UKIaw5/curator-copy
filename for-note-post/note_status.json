@@ -1437,5 +1437,47 @@
             "published_to_note": true,
             "published_at": "2026-10-08 15:44:35"
         }
+    },
+    "output_prex_posts_20261009_101551.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261009_102957",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261009_102957.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-09 10:41:10",
+            "published_to_note": true,
+            "published_at": "2026-10-09 10:45:44"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261009_103226",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261009_103226.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-09 10:41:10",
+            "published_to_note": true,
+            "published_at": "2026-10-09 10:46:12"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261009_103444",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261009_103444.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "32行目に誤字『60秒のロールオート』。正しくは『60秒のロールアウト』(元データ: 60-Second Rollouts)"
+            ],
+            "audit_at": "2026-10-09 10:41:10"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261009_103706",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261009_103706.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-09 10:41:10",
+            "published_to_note": true,
+            "published_at": "2026-10-09 10:46:41"
+        }
     }
 }
