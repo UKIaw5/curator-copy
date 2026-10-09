@@ -60,7 +60,7 @@ cd "$REPO_ROOT"
 echo ""
 echo "--- Step 3: Audit (/audit-drafts) + X post refine (/refine-x-posts), one session ---"
 # 💡 bypassPermissions: 無人実行なので、ツール実行の都度の確認待ちで
-# 止まらないようにする。両Skillともファイル読み書きとWorkflow呼び出しのみで、
+# 止まらないようにする。両Skillともファイル読み書きとAgentツール呼び出しのみで、
 # 公開等の不可逆操作は一切行わない設計なので許容できる。
 # 💡 2つのSkillを1つのclaude -pセッションにまとめているのは、セッション起動時に
 # 読み込まれる固定コンテキスト(システムプロンプト等)のコストを2回払わないため。

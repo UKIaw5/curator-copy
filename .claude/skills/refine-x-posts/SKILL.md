@@ -5,6 +5,11 @@ description: Part A(Stage1)が生成した英語詳細要約を、Claudeが直�
 
 このSkillは、curator-copyプロジェクトのXポスト生成パイプラインにおける「Stage2+3(精製・校正)」を、Gemma/Qwenのローカルモデルの代わりにClaude自身が行う。
 
+## 重要な注意(2026-10-09訂正)
+
+旧バージョンはこの手順を「`Workflow`ツール」経由で実行する設計だったが、**`Workflow`という名前のツールはこの環境に存在しない**(対話セッション・`claude -p`非対話セッションの両方で確認済み)。存在しないツールを呼ぼうとすると、実行するClaude自身がその場で代替手段を即興で作ることになり、2026-10-09の実行で実際に「idxの取り違え」事故(2件のXポストが誤った元データに基づいて生成された。幸い元データと照合して自己検出・修正できたが、保証されない)が発生した。
+**このSkillは必ず下記手順の通り、実在する`Agent`ツール(`model: "haiku"`)を使うこと。** `Workflow`やscriptPath指定のツールを探したり、見つからないからといって独自の代替処理を即興で作ったりしないこと。
+
 ## 手順
 
 1. `output/raw/output_prex_posts_*.md` を新しい順に並べ、各候補について以下をチェックし、**最初に見つかった「まだ精製されていない」ファイル**を対象とする:
@@ -12,19 +17,46 @@ description: Part A(Stage1)が生成した英語詳細要約を、Claudeが直�
    - かつ `output/archive/output_x_posts_<timestamp>.md` も存在しない
    (`<timestamp>` は raw ファイル名の `output_prex_posts_` と `.md` を除いた部分。この判定ロジックは `run_today_pipeline_parta.py` の `get_pending_raw_info()` と同じもの)
 2. 対象が無ければ「精製対象なし」と報告して終了する。
-3. 対象のraw fileを読み、区切りトークン`<<<CURATOR_ITEM_BOUNDARY>>>`で分割する(見つからない場合のみ`"---"`区切りの旧形式として扱う)。分割後の要素数を `N` とする。
-4. `raw_path` を対象ファイルの絶対パスとして、`[{idx: 0, raw_path}, {idx: 1, raw_path}, ..., {idx: N-1, raw_path}]` の配列を作る。
-5. `Workflow` ツールを `scriptPath: "/home/uk/Vault/curator-copy/.claude/workflows/refine-x-posts.js"` で呼び、上記配列を `args` として渡す(1回のWorkflow呼び出しで全件まとめてよい、内部で並列実行される)。
-6. Workflowの結果(`[{idx, body_text, url}, ...]`)を `idx` の昇順に並べ替える。各要素について:
+3. 対象のraw fileを読み、区切りトークン`<<<CURATOR_ITEM_BOUNDARY>>>`で分割する(見つからない場合のみ`"---"`区切りの旧形式として扱う)。分割後の要素数を `N` とする。この時点で、各idx(0〜N-1)の元データの出だし(最初の1〜2行)を自分の目でメモしておくこと(後で取り違えが無いか照合するため)。
+4. **idxごとに1回、`Agent`ツールを `model: "haiku"` で呼ぶ**(1つのメッセージの中でidx=0からN-1まで全部まとめて並列発行してよい)。各呼び出しのプロンプトは以下のテンプレートに、その`raw_path`(対象ファイルの絶対パス)と`idx`の実際の値を直接埋め込んだもの(プレースホルダのまま渡さないこと):
+
+   ```
+   あなたはXのTech系投稿を書くシャープで信頼できる日本語ライターです。
+
+   まず以下を実行してください:
+   1. {raw_path} を読む。
+   2. 中身を区切りトークン"<<<CURATOR_ITEM_BOUNDARY>>>"で分割する(このトークンが見つからない場合のみ、"---"で分割する旧形式として扱う)。分割した配列の{idx}番目(0始まり)の要素が「元データ」(英語の技術要約)。
+   3. 元データ内に"Source: https://..."のような行があれば、そのURLを抽出する(無ければurlは空文字)。
+   4. 他のファイルは読まないこと。
+
+   元データを元に、以下のルールに従って日本語のXポスト本文(URLは含めない)を書いてください:
+
+   1. 書き出しは、最もインパクトのある具体的な事実(数値・結果)から入り、読み手の注意を引いてください。製品名・論文名・ライブラリ名は、その直後の自然な流れの中で明かしてください(例: 「Rank-8のLoRAを当てるだけで精度が15.5%から99%に跳ね上がる。その手法の名はEarly-Layer LoRA。」のように、事実→名前の順)。
+   2. 「神」「ヤバい」「エグい」のような中身のない誇張表現だけに頼らず、元データの中にある**具体的な事実を1つ以上**(数値、手法名、ベンチマーク結果、仕組みなど)を必ず盛り込んでください。元データに無い具体的な数値・事例を創作しないこと。
+   3. 文字数に余裕がある場合のみ、この情報が読み手(個人開発者・エンジニア)にとってどう役立つかを一言添えてください。文字数を超過するくらいなら、この一言は省略してください。
+   4. 絵文字は任意です。使う場合は1つだけ、文末付近に自然に置いてください(句読点の直後は避ける)。
+   5. だ・である調(タメ語)で書き、です・ます調は使わないこと。
+   6. 日本語のみで書くこと。英語・韓国語・簡体字中国語の単語や文字を混入させないこと。
+   7. 本文の文字数は、URLがある場合は実効文字数(本文の文字数+25)が60〜135文字に収まるように、無い場合は本文の文字数が60〜135文字に収まるようにしてください。目安は80〜110文字です(最優先事項、超過厳禁)。
+
+   最後に、必ず次の形式で結果を出力してください(これ以外の形式では出力しないこと、本文に改行を含めないこと):
+   BODY: <本文のみ、URLは含めない>
+   URL: <抽出したURL、無ければ空>
+   ```
+
+5. 各`Agent`呼び出しの最終応答から`BODY:`行と`URL:`行をパースする。パースできない場合はその対象を失敗として扱い、全体の処理は止めずに警告として記録する。
+6. **取り違え防止の照合**: 各idxの結果(`BODY:`の内容)が、手順3でメモした該当idxの元データの話題と一致しているか目視で確認する。明らかに違う話題(例: idx0の結果なのにidx1の固有名詞が出てくる等)が混ざっていたら、そのidxだけ`Agent`を再実行し、プロンプト中の{idx}の値を再確認すること。
+7. 結果を`idx`の昇順に並べ替え、各要素について:
    - `effective_length = len(body_text) + (25 if url else 0)` を計算する。
    - `effective_length` が135を超える場合、句点(。！？)の位置で切り詰める(文の途中で不自然に切れないように、末尾から最も近い句点までを残す。適切な句点が見つからない場合のみ文字単位で切り、末尾に"..."を付ける)。
    - `effective_length` が60未満、または`body_text`が空、または日本語の文字(ひらがな・カタカナ・漢字)が明らかに少ない場合は、その項目だけ警告として記録する(全体の処理は止めない)。
-7. 各要素を `{body_text}\n\n{url}` の形式(urlが空文字の場合は`{body_text}`のみ)に組み立て、`\n\n---\n\n` で連結して1つのテキストにする。`run_today_pipeline_parta.py`が従来`refine_to_x_post`+`review_and_edit_post`で書いていた`output/output_x_posts_<timestamp>.md`と同じ形式・同じパスに保存する。
-8. 最後に、件数・各件の実効文字数・警告があった項目を日本語で簡潔に報告する。
+8. 各要素を `{body_text}\n\n{url}` の形式(urlが空文字の場合は`{body_text}`のみ)に組み立て、`\n\n---\n\n` で連結して1つのテキストにする。`run_today_pipeline_parta.py`が従来`refine_to_x_post`+`review_and_edit_post`で書いていた`output/output_x_posts_<timestamp>.md`と同じ形式・同じパスに保存する。
+9. 最後に、件数・各件の実効文字数・警告があった項目を日本語で簡潔に報告する。
 
 ## 注意
 
-- `output_x_posts_<timestamp>.md`の読み書きは直接Pythonで行ってよい(このSkill自体はPythonスクリプトではなく、Claude自身がこの手順に従ってファイル操作とWorkflow呼び出しを行う)。
+- `output_x_posts_<timestamp>.md`の読み書きは直接Pythonで行ってよい(このSkill自体はPythonスクリプトではなく、Claude自身がこの手順に従ってファイル操作と`Agent`呼び出しを行う)。
 - このSkillは`run_today_pipeline_parta.py`のStage2(`generators/refiner.py`)・Stage3(`generators/reviewer.py`)を本番経路から置き換えるものである。`refiner.py`/`reviewer.py`自体は削除せず、手動比較・検証用に残してある。
-- 区切りトークン`<<<CURATOR_ITEM_BOUNDARY>>>`を変更する場合は、`run_today_pipeline_parta.py`・note.com側の3ファイル(`for-note-post/generate_note_article.py`等)に加えて、この`refine-x-posts.js`内のプロンプトも同時に直すこと(CLAUDE.md参照)。
+- 区切りトークン`<<<CURATOR_ITEM_BOUNDARY>>>`を変更する場合は、`run_today_pipeline_parta.py`・note.com側の3ファイル(`for-note-post/generate_note_article.py`等)に加えて、このSkill内のプロンプトも同時に直すこと(CLAUDE.md参照)。
 - 出力ファイル名(タイムスタンプ)は対象raw fileの命名規則(`output_prex_posts_<timestamp>.md` → `output_x_posts_<timestamp>.md`)に正確に合わせること。ずれると`run_today_pipeline_partb.py`/`automation/socialdog_poster.py`がファイルを見つけられない。
+- `.claude/workflows/`配下の`.js`ファイルは2026-10-09時点で**使われていない**(存在しない`Workflow`ツールを前提にした設計の名残)。参照しないこと。
