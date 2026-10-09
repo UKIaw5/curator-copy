@@ -29,6 +29,14 @@
 # refiner.py/reviewer.py自体は削除せず、手動比較用に残してある。
 set -e
 
+# 💡 2026-10-09: Windowsタスクスケジューラの「ログオン時のみ実行」設定だと、
+# 無人実行でも実際に疑似端末(tty)付きのコンソールウィンドウが開くため、
+# automation/socialdog_poster.py内のisatty()判定だけでは「無人実行かどうか」
+# を正しく検出できない(人間が座っていなくてもisatty()==Trueになる)。
+# ここで明示的にCURATOR_UNATTENDED=1を立て、各スクリプト側で
+# isatty()より優先させることで、input()の無期限ハングを確実に防ぐ
+export CURATOR_UNATTENDED=1
+
 cd "$(dirname "$0")/.."
 REPO_ROOT="$(pwd)"
 

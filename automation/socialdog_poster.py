@@ -261,12 +261,17 @@ def process_batch_scheduling(limit: int = None):
             # 本来走るはずのgit commit/pushがスキップされた)。TTYが無い場合は
             # 確認待ちをスキップしてそのままブラウザを閉じる
             # 💡 2026-10-08: EOFErrorは「標準入力が閉じている」場合にしか
-            # 発生しない。Windowsタスクスケジューラ経由のwsl.exe実行では、
-            # 標準入力が閉じてはいないが誰も入力しない状態になり、
-            # input()がEOFErrorを投げずに無期限にハングする実例が発生した
-            # (3時間以上ブラウザが起動しっぱなしになった)。isatty()で
-            # 事前にTTYかどうかを判定し、非対話時はinput()自体を呼ばない
-            if sys.stdin.isatty():
+            # 発生しない。isatty()で非対話時はinput()をスキップする対策を
+            # 入れたが、2026-10-09に同じハングが再発した。原因は、Windows
+            # タスクスケジューラの「ログオン時のみ実行」設定だと、無人実行
+            # でも実際に目に見える疑似端末(tty)付きのコンソールウィンドウが
+            # 開くため、isatty()がTrueを返してしまうこと(/proc/<pid>/fd/0が
+            # /dev/pts/Nを指していることを実機で確認)。isatty()だけでは
+            # 「人間が本当にそこにいるか」は判定できないため、
+            # daily_auto_run.shが明示的に立てるCURATOR_UNATTENDED環境変数を
+            # 優先的なシグナルとして使う(手動でターミナルから実行する場合は
+            # 未設定なので、isatty()の判定がそのまま活きる)
+            if sys.stdin.isatty() and not os.environ.get("CURATOR_UNATTENDED"):
                 try:
                     input("Press Enter to close the browser...")
                 except EOFError:
@@ -281,19 +286,14 @@ def process_batch_scheduling(limit: int = None):
     else:
         print("\n🧪 Test run complete. File left in place (not archived).")
 
-    # 💡 バックグラウンド実行(標準入力がTTYでない)場合、input()は
-    # EOFErrorで例外を投げて異常終了してしまう(実例で確認: 実際には
-    # 投稿・アーカイブ移動まで完了していたのに、この後のinput()失敗で
-    # run_today_pipeline_partb.py側がプロセス全体を失敗と誤判定し、
-    # 本来走るはずのgit commit/pushがスキップされた)。TTYが無い場合は
-    # 確認待ちをスキップしてそのままブラウザを閉じる
     # 💡 2026-10-08: EOFErrorは「標準入力が閉じている」場合にしか発生しない。
-    # Windowsタスクスケジューラ経由のwsl.exe実行では、標準入力が閉じては
-    # いないが誰も入力しない状態になり、input()がEOFErrorを投げずに無期限に
-    # ハングする実例が発生した(3時間以上ブラウザが起動しっぱなしになり、
-    # git commit/pushも実行されないまま止まっていた)。isatty()で事前に
-    # TTYかどうかを判定し、非対話時はinput()自体を呼ばない
-    if sys.stdin.isatty():
+    # isatty()での対策を入れたが、2026-10-09に同じハングが再発した。
+    # Windowsタスクスケジューラの「ログオン時のみ実行」設定だと、無人実行
+    # でも実際に疑似端末(tty)付きのコンソールが開くため、isatty()が
+    # Trueを返してしまう(/proc/<pid>/fd/0が/dev/pts/Nを指すことを確認済み)。
+    # daily_auto_run.shが明示的に立てるCURATOR_UNATTENDED環境変数を
+    # 優先的なシグナルとして使う
+    if sys.stdin.isatty() and not os.environ.get("CURATOR_UNATTENDED"):
         try:
             input("Press Enter to close the browser...")
         except EOFError:
