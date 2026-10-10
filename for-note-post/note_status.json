@@ -1479,5 +1479,69 @@
             "published_to_note": true,
             "published_at": "2026-10-09 10:46:41"
         }
+    },
+    "output_prex_posts_20261010_101536.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261010_103415",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261010_103415.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-10 (audit-drafts skill run)",
+            "published_to_note": true,
+            "published_at": "2026-10-10 10:55:22"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261010_103642",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261010_103642.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-10 (audit-drafts skill run)",
+            "published_to_note": true,
+            "published_at": "2026-10-10 10:55:51"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261010_103937",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261010_103937.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "見出し・本文中に誤字「アリーリ効果」(正しくは「アリー効果」)が複数回出現",
+                "見出し「部署制御とモデル生成リスク」が元データの\"Population Pacing\"の誤訳(「部署」は無関係な訳)"
+            ],
+            "audit_at": "2026-10-10 (audit-drafts skill run)"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261010_104213",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261010_104213.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「■ 筆者の視点」セクション内で1つ目と3つ目の段落がほぼ全文重複(文章破損・重複バグ)"
+            ],
+            "audit_at": "2026-10-10 (audit-drafts skill run)"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261010_104432",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261010_104432.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトルに簡体字中国語「渗透」が混入(正しくは「侵入」)",
+                "本文に誤字「アーキヘアテクチャ」(正しくは「アーキテクチャ」)"
+            ],
+            "audit_at": "2026-10-10 (audit-drafts skill run)"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261010_104702",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261010_104702.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文に異言語(キリル文字)混入「セキュリティアудитingを提供します」"
+            ],
+            "audit_at": "2026-10-10 (audit-drafts skill run)"
+        }
     }
 }
