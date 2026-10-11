@@ -29,7 +29,13 @@ def main():
         print("✅ SocialDog Poster executed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"❌ Error during socialdog_poster.py execution: {e}")
-        return
+        # 💡 2026-10-11: ここで即returnしていたため、socialdog_poster.pyが
+        # 予約投稿自体は完了させた後にSIGTERM等で異常終了した場合でも
+        # git_commit_and_push()が一切呼ばれず、その日のGit同期(アーカイブ移動・
+        # 履歴ファイル更新)がまるごとスキップされる事故が発生した
+        # (2026-10-08・2026-10-09の無人実行ログで確認)。失敗時でも、
+        # そこまでに完了した分の変更は必ずGitに同期を試みるようにする
+        print("⚠️ Continuing to Git sync so any work already done (scheduled posts, archived files) isn't left unsynced.")
 
     git_commit_and_push()
     print("\n✅ Pipeline execution (Part B) completed!")

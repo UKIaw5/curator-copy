@@ -256,14 +256,22 @@ def lint_markdown(text: str) -> str:
         # モデルがPythonの"# コメント"を含むコード例をコードフェンス無しで
         # 出力した場合、この除外がないとコメント行が全部■に変換され、
         # コード例が壊れる事故が実際に発生した(QUBO記事で確認)
+        # 💡 2026-10-11: 閉じられていない(奇数個の)```が1つでもあると、旧来の
+        # 真偽値トグル方式ではそれ以降の行が全部「コードフェンス内」と誤認され、
+        # 残り全ての見出しが■に変換されない事故が発生した(idx3記事で確認)。
+        # マーカー行をペアで数え、閉じていない末尾のマーカーは除外対象にしない
+        # (正しく閉じたペアの内側だけをコードブロックとみなす)方式に変更した
         lines = t.splitlines()
+        fence_line_indices = [i for i, line in enumerate(lines) if line.strip().startswith('```')]
+        if len(fence_line_indices) % 2 == 1:
+            fence_line_indices = fence_line_indices[:-1]
+        in_fence = [False] * len(lines)
+        for i in range(0, len(fence_line_indices), 2):
+            for j in range(fence_line_indices[i], fence_line_indices[i + 1] + 1):
+                in_fence[j] = True
         processed_lines = []
-        in_code_fence = False
-        for line in lines:
-            if line.strip().startswith('```'):
-                in_code_fence = not in_code_fence
-                processed_lines.append(line)
-            elif not in_code_fence and re.match(r'^#+\s+', line):
+        for i, line in enumerate(lines):
+            if not in_fence[i] and re.match(r'^#+\s+', line):
                 processed_lines.append(re.sub(r'^#+\s+', '■ ', line))
             else:
                 processed_lines.append(line)
