@@ -47,3 +47,4 @@ memo.txt
 # and for-note-post/*.py --dry-run)
 output/dry_run/
 for-note-post/output/dry_run/
+digest.md

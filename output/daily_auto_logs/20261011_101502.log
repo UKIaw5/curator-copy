@@ -161,3 +161,71 @@ Update available: cloakbrowser 0.5.8 → 0.6.0. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-12 07:27!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261011_101537.md`!
+To github.com:UKIaw5/curator-copy.git
+   83eccad..363bacb  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が3件あります:
+
+- note_article_20261011_102814.md (raw: output_prex_posts_20261011_101537.md, idx: 0)
+    理由: 本文のセクション3冒頭に文法が破綻した文がある—「本研究は、実務的な開発者および学術的なAI研究者の双方に対して、極めて重要な示唆を与えるです。」(「与える」の後に「もの」等の体言止めが脱落しており、「与えるです」は日本語として成立していない。「与えるものです」等への修正が必要)
+
+- note_article_20261011_103259.md (raw: output_prex_posts_20261011_101537.md, idx: 2)
+    理由: 「GE1よりも65.5%少ないロールアウト数で」は元データの「65.5% fewer rollouts compared to GEPA」の「GEPA」が存在しない名称「GE1」に誤変換されている(存在しない固有名詞の捏造)
+    理由: 「過度な適合（オーバーフィッティング）を防くため」は「防ぐため」の誤字(濁点脱落)
+
+- note_article_20261011_103622.md (raw: output_prex_posts_20261011_101537.md, idx: 3)
+    理由: 結論セクション(■5. 結論)に誤字あり:「学習をモデルの重数から切り離し」の「重数」は誤りで、正しくは「重み」(weights)。記事内の他箇所では正しく「重み」と表記されており、表記が矛盾している
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261011_101502.log
+
+🐦 X投稿: 4件 予約
+   - 2026-10-11 15:26
+   - 2026-10-11 18:46
+   - 2026-10-11 22:00
+   - 2026-10-12 07:27
+
+📝 note.com: 1件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が3件あります:
+
+- note_article_20261011_102814.md (raw: output_prex_posts_20261011_101537.md, idx: 0)
+    理由: 本文のセクション3冒頭に文法が破綻した文がある—「本研究は、実務的な開発者および学術的なAI研究者の双方に対して、極めて重要な示唆を与えるです。」(「与える」の後に「もの」等の体言止めが脱落しており、「与えるです」は日本語として成立していない。「与えるものです」等への修正が必要)
+
+- note_article_20261011_103259.md (raw: output_prex_posts_20261011_101537.md, idx: 2)
+    理由: 「GE1よりも65.5%少ないロールアウト数で」は元データの「65.5% fewer rollouts compared to GEPA」の「GEPA」が存在しない名称「GE1」に誤変換されている(存在しない固有名詞の捏造)
+    理由: 「過度な適合（オーバーフィッティング）を防くため」は「防ぐため」の誤字(濁点脱落)
+
+- note_article_20261011_103622.md (raw: output_prex_posts_20261011_101537.md, idx: 3)
+    理由: 結論セクション(■5. 結論)に誤字あり:「学習をモデルの重数から切り離し」の「重数」は誤りで、正しくは「重み」(weights)。記事内の他箇所では正しく「重み」と表記されており、表記が矛盾している
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Sun Oct 11 10:43:46 JST 2026 ===
