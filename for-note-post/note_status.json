@@ -1541,5 +1541,48 @@
             "published_to_note": true,
             "published_at": "2026-10-10 11:53:23"
         }
+    },
+    "output_prex_posts_20261011_101537.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261011_102814",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261011_102814.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文のセクション3冒頭に文法が破綻した文がある—「本研究は、実務的な開発者および学術的なAI研究者の双方に対して、極めて重要な示唆を与えるです。」(「与える」の後に「もの」等の体言止めが脱落しており、「与えるです」は日本語として成立していない。「与えるものです」等への修正が必要)"
+            ],
+            "audit_at": "2026-10-11 10:38:22"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261011_103035",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261011_103035.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-11 10:38:22",
+            "published_to_note": true,
+            "published_at": "2026-10-11 10:42:20"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261011_103259",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261011_103259.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「GE1よりも65.5%少ないロールアウト数で」は元データの「65.5% fewer rollouts compared to GEPA」の「GEPA」が存在しない名称「GE1」に誤変換されている(存在しない固有名詞の捏造)",
+                "「過度な適合（オーバーフィッティング）を防くため」は「防ぐため」の誤字(濁点脱落)"
+            ],
+            "audit_at": "2026-10-11 10:38:22"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261011_103622",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261011_103622.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "結論セクション(■5. 結論)に誤字あり:「学習をモデルの重数から切り離し」の「重数」は誤りで、正しくは「重み」(weights)。記事内の他箇所では正しく「重み」と表記されており、表記が矛盾している"
+            ],
+            "audit_at": "2026-10-11 10:38:22"
+        }
     }
 }

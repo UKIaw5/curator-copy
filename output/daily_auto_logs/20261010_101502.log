@@ -226,3 +226,81 @@ Update available: cloakbrowser 0.5.8 → 0.6.0. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-11 12:17!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261010_101536.md`!
+To github.com:UKIaw5/curator-copy.git
+   383fbfd..83eccad  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261010_103937.md (raw: output_prex_posts_20261010_101536.md, idx: 2)
+    理由: 見出し・本文中に誤字「アリーリ効果」(正しくは「アリー効果」)が複数回出現
+    理由: 見出し「部署制御とモデル生成リスク」が元データの"Population Pacing"の誤訳(「部署」は無関係な訳)
+
+- note_article_20261010_104213.md (raw: output_prex_posts_20261010_101536.md, idx: 3)
+    理由: 「■ 筆者の視点」セクション内で1つ目と3つ目の段落がほぼ全文重複(文章破損・重複バグ)
+
+- note_article_20261010_104432.md (raw: output_prex_posts_20261010_101536.md, idx: 4)
+    理由: タイトルに簡体字中国語「渗透」が混入(正しくは「侵入」)
+    理由: 本文に誤字「アーキヘアテクチャ」(正しくは「アーキテクチャ」)
+
+- note_article_20261010_104702.md (raw: output_prex_posts_20261010_101536.md, idx: 5)
+    理由: 本文に異言語(キリル文字)混入「セキュリティアудитingを提供します」
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261010_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-10 15:43
+   - 2026-10-10 18:53
+   - 2026-10-10 21:53
+   - 2026-10-11 07:30
+   - 2026-10-11 09:16
+   - 2026-10-11 12:17
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261010_103937.md (raw: output_prex_posts_20261010_101536.md, idx: 2)
+    理由: 見出し・本文中に誤字「アリーリ効果」(正しくは「アリー効果」)が複数回出現
+    理由: 見出し「部署制御とモデル生成リスク」が元データの"Population Pacing"の誤訳(「部署」は無関係な訳)
+
+- note_article_20261010_104213.md (raw: output_prex_posts_20261010_101536.md, idx: 3)
+    理由: 「■ 筆者の視点」セクション内で1つ目と3つ目の段落がほぼ全文重複(文章破損・重複バグ)
+
+- note_article_20261010_104432.md (raw: output_prex_posts_20261010_101536.md, idx: 4)
+    理由: タイトルに簡体字中国語「渗透」が混入(正しくは「侵入」)
+    理由: 本文に誤字「アーキヘアテクチャ」(正しくは「アーキテクチャ」)
+
+- note_article_20261010_104702.md (raw: output_prex_posts_20261010_101536.md, idx: 5)
+    理由: 本文に異言語(キリル文字)混入「セキュリティアудитingを提供します」
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Sat Oct 10 10:57:53 JST 2026 ===
