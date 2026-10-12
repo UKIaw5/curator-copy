@@ -1589,12 +1589,11 @@
             "note_used": true,
             "generated_at": "20261012_103656",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261012_103656.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "本文34行目に「ネイペーン」という意味不明な破綻語がある(おそらく「ネイティブ」の誤り)",
-                "本文複数箇所(storytold/wordcraft、.docx等)にMarkdownのバッククォートが除去されずに残存している"
-            ],
-            "audit_at": "2026-10-12 10:53:47"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-12 11:28:29",
+            "published_to_note": true,
+            "published_at": "2026-10-12 11:28:59"
         },
         "1": {
             "note_used": true,
@@ -1610,11 +1609,11 @@
             "note_used": true,
             "generated_at": "20261012_104212",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261012_104212.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「モジュール式設計」の段落で、元データの推測表現(suggests)が生成記事では断定表現(「分離されています」「可能となります」)に変換されており、ヘッジが失われたハルシネーションに該当する箇所がある"
-            ],
-            "audit_at": "2026-10-12 10:53:47"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-12 11:28:29",
+            "published_to_note": true,
+            "published_at": "2026-10-12 11:29:28"
         },
         "3": {
             "note_used": true,
@@ -1630,22 +1629,21 @@
             "note_used": true,
             "generated_at": "20261012_104831",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261012_104831.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「■ 筆者の視点」セクション内で2段落目と3段落目がほぼ一字一句同一の内容を繰り返しており、生成時の重複崩れが発生している"
-            ],
-            "audit_at": "2026-10-12 10:53:47"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-12 11:28:29",
+            "published_to_note": true,
+            "published_at": "2026-10-12 11:30:00"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261012_105135",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261012_105135.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「この記事で得られること」セクションで元データに存在しない「売上情報の誤認率」という誤った内容を事実として記載している(元データは「世間話の誤認率」であり無関係な概念に置き換わっている)",
-                "本文46行目で正しい用語「二重符号化仮説」が「二重符号感仮説」という誤字になっており、記事内で用語表記が不統一"
-            ],
-            "audit_at": "2026-10-12 10:53:47"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-12 11:28:29",
+            "published_to_note": true,
+            "published_at": "2026-10-12 11:30:29"
         }
     }
 }

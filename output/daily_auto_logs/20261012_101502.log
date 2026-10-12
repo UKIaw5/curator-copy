@@ -230,3 +230,84 @@ Update available: cloakbrowser 0.5.8 → 0.6.1. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-13 09:26!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261012_101536.md`!
+To github.com:UKIaw5/curator-copy.git
+   e16555c..c9bc9ef  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261012_103656.md (raw: output_prex_posts_20261012_101536.md, idx: 0)
+    理由: 本文34行目に「ネイペーン」という意味不明な破綻語がある(おそらく「ネイティブ」の誤り)
+    理由: 本文複数箇所(storytold/wordcraft、.docx等)にMarkdownのバッククォートが除去されずに残存している
+
+- note_article_20261012_104212.md (raw: output_prex_posts_20261012_101536.md, idx: 2)
+    理由: 「モジュール式設計」の段落で、元データの推測表現(suggests)が生成記事では断定表現(「分離されています」「可能となります」)に変換されており、ヘッジが失われたハルシネーションに該当する箇所がある
+
+- note_article_20261012_104831.md (raw: output_prex_posts_20261012_101536.md, idx: 4)
+    理由: 「■ 筆者の視点」セクション内で2段落目と3段落目がほぼ一字一句同一の内容を繰り返しており、生成時の重複崩れが発生している
+
+- note_article_20261012_105135.md (raw: output_prex_posts_20261012_101536.md, idx: 5)
+    理由: 「この記事で得られること」セクションで元データに存在しない「売上情報の誤認率」という誤った内容を事実として記載している(元データは「世間話の誤認率」であり無関係な概念に置き換わっている)
+    理由: 本文46行目で正しい用語「二重符号化仮説」が「二重符号感仮説」という誤字になっており、記事内で用語表記が不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261012_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-12 12:03
+   - 2026-10-12 15:26
+   - 2026-10-12 19:14
+   - 2026-10-12 21:54
+   - 2026-10-13 07:29
+   - 2026-10-13 09:26
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261012_103656.md (raw: output_prex_posts_20261012_101536.md, idx: 0)
+    理由: 本文34行目に「ネイペーン」という意味不明な破綻語がある(おそらく「ネイティブ」の誤り)
+    理由: 本文複数箇所(storytold/wordcraft、.docx等)にMarkdownのバッククォートが除去されずに残存している
+
+- note_article_20261012_104212.md (raw: output_prex_posts_20261012_101536.md, idx: 2)
+    理由: 「モジュール式設計」の段落で、元データの推測表現(suggests)が生成記事では断定表現(「分離されています」「可能となります」)に変換されており、ヘッジが失われたハルシネーションに該当する箇所がある
+
+- note_article_20261012_104831.md (raw: output_prex_posts_20261012_101536.md, idx: 4)
+    理由: 「■ 筆者の視点」セクション内で2段落目と3段落目がほぼ一字一句同一の内容を繰り返しており、生成時の重複崩れが発生している
+
+- note_article_20261012_105135.md (raw: output_prex_posts_20261012_101536.md, idx: 5)
+    理由: 「この記事で得られること」セクションで元データに存在しない「売上情報の誤認率」という誤った内容を事実として記載している(元データは「世間話の誤認率」であり無関係な概念に置き換わっている)
+    理由: 本文46行目で正しい用語「二重符号化仮説」が「二重符号感仮説」という誤字になっており、記事内で用語表記が不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+⚠️ エラー/❌行が1件検出されました(抜粋):
+   Warning: Failed to fetch arXiv (cs.AI) - 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.AI&sortBy=submittedDate&sortOrder=descending&start=0&max_resu
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Mon Oct 12 11:02:48 JST 2026 ===
