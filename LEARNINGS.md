@@ -45,3 +45,9 @@
 - 原因: (バグではなく新規調査) 記事一覧は`https://note.com/notes`、各記事の「...」メニューに「編集」があり`https://editor.note.com/notes/<note_id>/edit/`に遷移する。本文中の対象テキストを`get_by_text(old, exact=True).click(click_count=3)`→Backspace→`keyboard.insert_text(new)`で安全に置換できる(relink_urls_in_editorと同じ安全パターン)。「一時保存」はドラフトの保存のみで**公開済み記事のライブ内容は更新しない**(`headless=True`だと`draft_save`APIがCORSエラーで失敗することも確認。`headless=False`必須、既存スクリプトも全てheadless=False)。ライブを更新するには「公開に進む」(公開設定画面へ遷移、ボタン名は新規投稿時の「投稿」ではなく「更新する」で、ハッシュタグ・有料無料設定等は自動的に保持される)→「更新する」の2段階が必要
 - 対策: 今回は手動のワンオフスクリプトで実施、まだ正式なスクリプト化はしていない。今後同様の修正が必要になったら、この手順(headless=False必須、一時保存では不十分、編集→公開に進む→更新する)をテンプレートとして再利用すること。頻度が増えるようなら`for-note-post/`配下に正式なスクリプトとして切り出すことを検討
 - 再発回数: 1
+
+### 2026-10-12 | Opera記事のURLをリンクカード化(ラベル同居URLの対処法)
+- 状況: ブラケット構文は除去済みだったが、本文のURLがプレーンテキストのままでクリック不可だった。ユーザーから「リンクカード化はUXへの影響が大きいため優先度高め」と明示指示があり対応。CLAUDE.md 5章にも反映済み
+- 原因: `relink_urls_in_editor()`方式(`get_by_text(url, exact=True)`)は、URLが段落内で単独行の場合のみ機能する。「・ GitHub: {url}」のようにラベル文と同じ段落にURLがあると一致しない
+- 対策: [実施済み・2026-10-12] ラベル行とURL行を別の段落に分ける編集(ラベルを`insert_text`→`Enter`→URLを`keyboard.type(url, delay=20)`→`Enter`)を先に行い、その結果URLが単独行になった状態で通常のrelink(クリック選択→削除→再入力→Enter)を適用。GitHub・HuggingFaceとも正しいリンクカードが生成されることを公開ページで確認済み(`<a>`要素が本文・参考リンク欄の両方で検出された)
+- 再発回数: 1
