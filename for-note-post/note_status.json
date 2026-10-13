@@ -1649,13 +1649,13 @@
     "output_prex_posts_20261013_101618.md": {
         "0": {
             "note_used": true,
-            "generated_at": "20261013_103539",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261013_103539.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "本文(■筆者の視点セクション)の「相容性」という語が中国語の単語であり、正しい日本語は「互換性」であるべき"
-            ],
-            "audit_at": "2026-10-13 10:51:32"
+            "generated_at": "20261013_111504",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261013_111504.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-13 11:24:42",
+            "published_to_note": true,
+            "published_at": "2026-10-13 11:25:23"
         },
         "1": {
             "note_used": true,
@@ -1669,13 +1669,13 @@
         },
         "2": {
             "note_used": true,
-            "generated_at": "20261013_104056",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261013_104056.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "本文「建築、機械、電子部品など、様々な分野で利用されています」が、元データに存在しない具体的な利用実績を断定的事実として記述している(元データは研究開発・教育・小規模事業主向け製図という想定利用例のみ)"
-            ],
-            "audit_at": "2026-10-13 10:51:32"
+            "generated_at": "20261013_111657",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261013_111657.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-13 11:24:42",
+            "published_to_note": true,
+            "published_at": "2026-10-13 11:25:51"
         },
         "3": {
             "note_used": true,
@@ -1699,13 +1699,13 @@
         },
         "5": {
             "note_used": true,
-            "generated_at": "20261013_104901",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261013_104901.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「良意のあるユーザーの要求/シナリオ」という表現が2箇所あるが、正しい日本語は「善意」であり「良意」は誤った表記"
-            ],
-            "audit_at": "2026-10-13 10:51:32"
+            "generated_at": "20261013_111916",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261013_111916.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-13 11:24:42",
+            "published_to_note": true,
+            "published_at": "2026-10-13 11:26:20"
         }
     }
 }
