@@ -1743,32 +1743,31 @@
             "note_used": true,
             "generated_at": "20261014_104137",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261014_104137.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル「■ ARTEXX 自動渗透テストシステムの革命」の「渗透」は中国語(簡体字)の文字混入、正しくは「浸透」等であるべき",
-                "見出し「■ 1. ARTEXXのツール概要と発種」の「発種」が目次の「発祥」と不一致な誤字"
-            ],
-            "audit_at": "2026-10-14 (audit-drafts skill run)"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-14 11:14:31",
+            "published_to_note": true,
+            "published_at": "2026-10-14 11:15:00"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261014_104416",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261014_104416.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「■ 筆者の視点」内に文字欠落で破損した単語「アドティビティ」が存在する(文字化け)"
-            ],
-            "audit_at": "2026-10-14 (audit-drafts skill run)"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-14 11:14:31",
+            "published_to_note": true,
+            "published_at": "2026-10-14 11:15:32"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261014_104700",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261014_104700.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「■ 技術的な詳細とユースケース」内のPythonコード例(def hyperthink_inference)がコードフェンスで囲まれておらず、見出し変換で#コメント行が壊れるリスクがある"
-            ],
-            "audit_at": "2026-10-14 (audit-drafts skill run)"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-14 11:14:31",
+            "published_to_note": true,
+            "published_at": "2026-10-14 11:16:01"
         }
     }
 }

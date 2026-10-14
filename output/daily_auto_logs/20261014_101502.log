@@ -251,3 +251,73 @@ Update available: cloakbrowser 0.5.8 → 0.6.2. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-15 09:36!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261014_101551.md`!
+To github.com:UKIaw5/curator-copy.git
+   6c37789..bf62e94  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が3件あります:
+
+- note_article_20261014_104137.md (raw: output_prex_posts_20261014_101551.md, idx: 3)
+    理由: タイトル「■ ARTEXX 自動渗透テストシステムの革命」の「渗透」は中国語(簡体字)の文字混入、正しくは「浸透」等であるべき
+    理由: 見出し「■ 1. ARTEXXのツール概要と発種」の「発種」が目次の「発祥」と不一致な誤字
+
+- note_article_20261014_104416.md (raw: output_prex_posts_20261014_101551.md, idx: 4)
+    理由: 「■ 筆者の視点」内に文字欠落で破損した単語「アドティビティ」が存在する(文字化け)
+
+- note_article_20261014_104700.md (raw: output_prex_posts_20261014_101551.md, idx: 5)
+    理由: 「■ 技術的な詳細とユースケース」内のPythonコード例(def hyperthink_inference)がコードフェンスで囲まれておらず、見出し変換で#コメント行が壊れるリスクがある
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261014_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-14 12:20
+   - 2026-10-14 15:15
+   - 2026-10-14 19:01
+   - 2026-10-14 22:10
+   - 2026-10-15 07:27
+   - 2026-10-15 09:36
+
+📝 note.com: 3件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が3件あります:
+
+- note_article_20261014_104137.md (raw: output_prex_posts_20261014_101551.md, idx: 3)
+    理由: タイトル「■ ARTEXX 自動渗透テストシステムの革命」の「渗透」は中国語(簡体字)の文字混入、正しくは「浸透」等であるべき
+    理由: 見出し「■ 1. ARTEXXのツール概要と発種」の「発種」が目次の「発祥」と不一致な誤字
+
+- note_article_20261014_104416.md (raw: output_prex_posts_20261014_101551.md, idx: 4)
+    理由: 「■ 筆者の視点」内に文字欠落で破損した単語「アドティビティ」が存在する(文字化け)
+
+- note_article_20261014_104700.md (raw: output_prex_posts_20261014_101551.md, idx: 5)
+    理由: 「■ 技術的な詳細とユースケース」内のPythonコード例(def hyperthink_inference)がコードフェンスで囲まれておらず、見出し変換で#コメント行が壊れるリスクがある
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Wed Oct 14 10:57:44 JST 2026 ===
