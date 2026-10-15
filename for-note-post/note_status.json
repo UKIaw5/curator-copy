@@ -1775,61 +1775,61 @@
             "note_used": true,
             "generated_at": "20261015_103348",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261015_103348.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "16行目「第二の制練は『文脈の断片化』」の『制練』は『制約』の誤字で、直前の『第一の制約』と不整合になっている"
-            ],
-            "audit_at": "2026-10-15 10:50:35"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-15 12:35:47",
+            "published_to_note": true,
+            "published_at": "2026-10-15 12:36:17"
         },
         "1": {
             "note_used": true,
             "generated_at": "20261015_103607",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261015_103607.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "本文2章冒頭(21行目)で製品名が「DeltaStreamAermer」という誤字(正しくは「DeltaStreamer」)で記載されている"
-            ],
-            "audit_at": "2026-10-15 10:50:35"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-15 12:35:47",
+            "published_to_note": true,
+            "published_at": "2026-10-15 12:36:46"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261015_103838",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261015_103838.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "50行目で製品名「Talorys」が「Talory」と誤記されている(末尾の\"s\"が脱落)"
-            ],
-            "audit_at": "2026-10-15 10:50:35"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-15 12:35:47",
+            "published_to_note": true,
+            "published_at": "2026-10-15 12:37:14"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261015_104130",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261015_104130.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "43行目「蒸慮プロセス」が誤字で、正しくは「蒸留プロセス」(distillation process)であるべきところ意味不明な単語になっている"
-            ],
-            "audit_at": "2026-10-15 10:50:35"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-15 12:35:47",
+            "published_to_note": true,
+            "published_at": "2026-10-15 12:37:43"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261015_104450",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261015_104450.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル「フルダブルクレジットシステム」という語が元データ・本文中のどこにも存在せず、本文で一貫して使われている『意思決定システム』と矛盾する誤訳/誤生成である"
-            ],
-            "audit_at": "2026-10-15 10:50:35"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-15 12:35:47",
+            "published_to_note": true,
+            "published_at": "2026-10-15 12:38:12"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261015_104757",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261015_104757.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "本文19行目『挙件を強化します』の『挙件』が存在しない語で誤字(『挙動』の誤変換と推測される)、文意が破綻している"
-            ],
-            "audit_at": "2026-10-15 10:50:35"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-15 12:35:47",
+            "published_to_note": true,
+            "published_at": "2026-10-15 12:38:41"
         }
     }
 }
