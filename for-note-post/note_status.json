@@ -1831,5 +1831,67 @@
             "published_to_note": true,
             "published_at": "2026-10-15 12:38:41"
         }
+    },
+    "output_prex_posts_20261016_101552.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261016_103445",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261016_103445.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-16 10:50:23",
+            "published_to_note": true,
+            "published_at": "2026-10-16 10:54:41"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261016_103734",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261016_103734.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-16 10:50:23",
+            "published_to_note": true,
+            "published_at": "2026-10-16 10:55:10"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261016_104036",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261016_104036.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-16 10:50:23",
+            "published_to_note": true,
+            "published_at": "2026-10-16 10:55:39"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261016_104252",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261016_104252.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行・「## この記事で得られること」・「## 目次」の見出しが■へ未変換のまま残っている(note.comはMarkdownをレンダリングしないため#/##がそのまま表示される)"
+            ],
+            "audit_at": "2026-10-16 10:50:23"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261016_104523",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261016_104523.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「## この記事で得られること」・「## 目次」の見出しが■へ未変換のまま残っている(note.comはMarkdownをレンダリングしないため##がそのまま表示される)"
+            ],
+            "audit_at": "2026-10-16 10:50:23"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261016_104750",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261016_104750.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-16 10:50:23",
+            "published_to_note": true,
+            "published_at": "2026-10-16 10:56:07"
+        }
     }
 }
