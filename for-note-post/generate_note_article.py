@@ -472,6 +472,16 @@ Raw Data:
 """
     print(f"💡 Step 1: Generating specific title and TOC with {TOC_MODEL}...")
     part_intro = call_llm(TOC_MODEL, intro_prompt)
+    # 💡 コーダー系モデル(qwen2.5-coder)が、コード例ではないTOCブロック全体を
+    # ```markdownフェンスで丸ごと囲んで返すことがある(2026-10-16確認、同じ
+    # raw dataで再現テストしたところ2/2回再現)。この場合、lint_markdown()の
+    # フェンス保護ロジックが(コード保護としては正しい動作のまま)TOC内の
+    # タイトル・見出しの■変換まで止めてしまい、"#"/"##"が未変換のまま
+    # note.comに公開される事故が実際に発生した。TOCは見出し変換が必須の
+    # プレーンテキストなので、ここで囲みフェンスだけを剥がす
+    if part_intro:
+        part_intro = re.sub(r'^```[a-zA-Z]*\n?', '', part_intro.strip())
+        part_intro = re.sub(r'\n?```$', '', part_intro).strip()
     if not part_intro or not is_japanese_text(part_intro):
         part_intro = "# 技術解説記事\n\n## この記事で得られること\n- 最新ツールの解説\n- アーキテクチャの理解\n- 実装への応用\n\n## 目次\n1. 概要\n2. 仕組み\n3. まとめ"
 

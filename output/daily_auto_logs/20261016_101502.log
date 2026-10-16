@@ -273,3 +273,65 @@ Update available: cloakbrowser 0.5.8 → 0.6.3. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-17 09:16!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261016_101552.md`!
+To github.com:UKIaw5/curator-copy.git
+   175a6a5..74fcd67  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が2件あります:
+
+- note_article_20261016_104252.md (raw: output_prex_posts_20261016_101552.md, idx: 3)
+    理由: タイトル行・「## この記事で得られること」・「## 目次」の見出しが■へ未変換のまま残っている(note.comはMarkdownをレンダリングしないため#/##がそのまま表示される)
+
+- note_article_20261016_104523.md (raw: output_prex_posts_20261016_101552.md, idx: 4)
+    理由: 「## この記事で得られること」・「## 目次」の見出しが■へ未変換のまま残っている(note.comはMarkdownをレンダリングしないため##がそのまま表示される)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261016_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-16 12:04
+   - 2026-10-16 15:21
+   - 2026-10-16 19:09
+   - 2026-10-16 22:05
+   - 2026-10-17 07:39
+   - 2026-10-17 09:16
+
+📝 note.com: 4件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が2件あります:
+
+- note_article_20261016_104252.md (raw: output_prex_posts_20261016_101552.md, idx: 3)
+    理由: タイトル行・「## この記事で得られること」・「## 目次」の見出しが■へ未変換のまま残っている(note.comはMarkdownをレンダリングしないため#/##がそのまま表示される)
+
+- note_article_20261016_104523.md (raw: output_prex_posts_20261016_101552.md, idx: 4)
+    理由: 「## この記事で得られること」・「## 目次」の見出しが■へ未変換のまま残っている(note.comはMarkdownをレンダリングしないため##がそのまま表示される)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Fri Oct 16 10:58:09 JST 2026 ===
