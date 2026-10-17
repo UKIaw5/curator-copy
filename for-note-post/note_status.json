@@ -1893,5 +1893,67 @@
             "published_to_note": true,
             "published_at": "2026-10-16 10:56:07"
         }
+    },
+    "output_prex_posts_20261017_101543.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261017_103444",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261017_103444.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「■ 筆者の視点」セクション末尾に簡体字中国語「总之」が混入している(正しい日本語は「要するに」「総じて」等であるべき)"
+            ],
+            "audit_at": "2026-10-17 10:49:41"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261017_103706",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261017_103706.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-17 10:49:41",
+            "published_to_note": true,
+            "published_at": "2026-10-17 10:55:23"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261017_103917",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261017_103917.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-17 10:49:41",
+            "published_to_note": true,
+            "published_at": "2026-10-17 10:55:51"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261017_104150",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261017_104150.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-17 10:49:41",
+            "published_to_note": true,
+            "published_at": "2026-10-17 10:56:20"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261017_104456",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261017_104456.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-17 10:49:41",
+            "published_to_note": true,
+            "published_at": "2026-10-17 10:56:48"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261017_104719",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261017_104719.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文(「なぜなら——」直前)に誤字「忠美度」(正しくは「忠実度」)がある"
+            ],
+            "audit_at": "2026-10-17 10:49:41"
+        }
     }
 }
