@@ -1971,33 +1971,31 @@
             "note_used": true,
             "generated_at": "20261018_103833",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261018_103833.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "固有名詞「Harness」の表記が記事内で不統一(タイトル等は英語「Harness」、本文2箇所は誤った片仮名「ハルネス」、正しくは「ハーネス」であり日本語として意味不明な誤変換)"
-            ],
-            "audit_at": "2026-10-18 10:52:08"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-18 11:30:49",
+            "published_to_note": true,
+            "published_at": "2026-10-18 11:31:26"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261018_104115",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261018_104115.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「■筆者の視点」内に句点直後へ不自然なハイフンが結合した文字列「-langDiTの成功は」が残っており、Markdown箇条書き記号の残骸と見られる破損がある",
-                "同箇所で固有名詞「LangDiT」が記事内の他の表記と異なり小文字始まりの「langDiT」に誤変換されている(表記不統一)"
-            ],
-            "audit_at": "2026-10-18 10:52:08"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-18 11:30:49",
+            "published_to_note": true,
+            "published_at": "2026-10-18 11:31:54"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261018_104353",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261018_104353.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "31行目「高解度テクスチャ」が正しくは「高解像度テクスチャ」であり文字が脱落した意味不明な語になっている",
-                "59行目「公式リマスター版に匹放する」が正しくは「匹敵する」であり誤変換により意味不明な語になっている"
-            ],
-            "audit_at": "2026-10-18 10:52:08"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-18 11:30:49",
+            "published_to_note": true,
+            "published_at": "2026-10-18 11:32:23"
         },
         "4": {
             "note_used": true,
@@ -2013,11 +2011,11 @@
             "note_used": true,
             "generated_at": "20261018_104907",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261018_104907.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル行の「Lean プローフアシスタント」は「プルーフ」の誤変換で、日本語として意味不明な片仮名語になっている(正しくは「プルーフアシスタント」)"
-            ],
-            "audit_at": "2026-10-18 10:52:08"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-18 11:30:49",
+            "published_to_note": true,
+            "published_at": "2026-10-18 11:32:52"
         }
     }
 }

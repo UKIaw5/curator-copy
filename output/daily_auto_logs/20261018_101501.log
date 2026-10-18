@@ -225,3 +225,81 @@ Update available: cloakbrowser 0.5.8 → 0.6.3. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-19 09:32!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261018_101539.md`!
+To github.com:UKIaw5/curator-copy.git
+   a421566..fd819d9  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261018_103833.md (raw: output_prex_posts_20261018_101539.md, idx: 1)
+    理由: 固有名詞「Harness」の表記が記事内で不統一(タイトル等は英語「Harness」、本文2箇所は誤った片仮名「ハルネス」、正しくは「ハーネス」であり日本語として意味不明な誤変換)
+
+- note_article_20261018_104115.md (raw: output_prex_posts_20261018_101539.md, idx: 2)
+    理由: 「■筆者の視点」内に句点直後へ不自然なハイフンが結合した文字列「-langDiTの成功は」が残っており、Markdown箇条書き記号の残骸と見られる破損がある
+    理由: 同箇所で固有名詞「LangDiT」が記事内の他の表記と異なり小文字始まりの「langDiT」に誤変換されている(表記不統一)
+
+- note_article_20261018_104353.md (raw: output_prex_posts_20261018_101539.md, idx: 3)
+    理由: 31行目「高解度テクスチャ」が正しくは「高解像度テクスチャ」であり文字が脱落した意味不明な語になっている
+    理由: 59行目「公式リマスター版に匹放する」が正しくは「匹敵する」であり誤変換により意味不明な語になっている
+
+- note_article_20261018_104907.md (raw: output_prex_posts_20261018_101539.md, idx: 5)
+    理由: タイトル行の「Lean プローフアシスタント」は「プルーフ」の誤変換で、日本語として意味不明な片仮名語になっている(正しくは「プルーフアシスタント」)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261018_101501.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-18 12:27
+   - 2026-10-18 15:30
+   - 2026-10-18 18:50
+   - 2026-10-18 22:12
+   - 2026-10-19 07:43
+   - 2026-10-19 09:32
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261018_103833.md (raw: output_prex_posts_20261018_101539.md, idx: 1)
+    理由: 固有名詞「Harness」の表記が記事内で不統一(タイトル等は英語「Harness」、本文2箇所は誤った片仮名「ハルネス」、正しくは「ハーネス」であり日本語として意味不明な誤変換)
+
+- note_article_20261018_104115.md (raw: output_prex_posts_20261018_101539.md, idx: 2)
+    理由: 「■筆者の視点」内に句点直後へ不自然なハイフンが結合した文字列「-langDiTの成功は」が残っており、Markdown箇条書き記号の残骸と見られる破損がある
+    理由: 同箇所で固有名詞「LangDiT」が記事内の他の表記と異なり小文字始まりの「langDiT」に誤変換されている(表記不統一)
+
+- note_article_20261018_104353.md (raw: output_prex_posts_20261018_101539.md, idx: 3)
+    理由: 31行目「高解度テクスチャ」が正しくは「高解像度テクスチャ」であり文字が脱落した意味不明な語になっている
+    理由: 59行目「公式リマスター版に匹放する」が正しくは「匹敵する」であり誤変換により意味不明な語になっている
+
+- note_article_20261018_104907.md (raw: output_prex_posts_20261018_101539.md, idx: 5)
+    理由: タイトル行の「Lean プローフアシスタント」は「プルーフ」の誤変換で、日本語として意味不明な片仮名語になっている(正しくは「プルーフアシスタント」)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Sun Oct 18 11:00:28 JST 2026 ===
