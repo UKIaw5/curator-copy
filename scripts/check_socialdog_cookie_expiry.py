@@ -56,7 +56,7 @@ def main():
     now = time.time()
 
     if expiry is None:
-        title = "🚨🍪 SocialDog Cookieが見つかりません！"
+        title = "⚠️⚠️⚠️ SocialDog Cookieが見つかりません！"
         color = COLOR_RED
         message = (
             "**SocialDogのセッションCookieが読み取れませんでした。**\n"
@@ -71,7 +71,7 @@ def main():
             return
         expiry_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(expiry))
         if days_left < 0:
-            title = "🚨🍪 SocialDog連携、切れとるで！！"
+            title = "⚠️⚠️⚠️ SocialDog連携、切れとるで！！"
             color = COLOR_RED
             message = (
                 f"**SocialDogのセッションCookieが既に期限切れです**({expiry_str}に失効)。\n"
@@ -79,7 +79,7 @@ def main():
                 "取得し直し、`automation/socialdog_cookies.json` を更新してください。"
             )
         else:
-            title = "⏰🍪 SocialDog Cookie、もうすぐ切れるで！"
+            title = "⚠️⚠️⚠️ SocialDog Cookie、もうすぐ切れるで！"
             color = COLOR_ORANGE
             message = (
                 f"**SocialDogのセッションCookieがあと{days_left:.1f}日で期限切れになります**"
