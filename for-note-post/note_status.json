@@ -2033,32 +2033,31 @@
             "note_used": true,
             "generated_at": "20261019_103655",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261019_103655.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "Chain-of-Thoughtがチェーン・オブ・サスペンションという意味不明な片仮名語に誤訳されている(正しくはチェーン・オブ・ソート)、タイトル・本文で一貫して誤訳が使われている"
-            ],
-            "audit_at": "2026-10-19 10:50:24"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-19 13:12:18",
+            "published_to_note": true,
+            "published_at": "2026-10-19 13:12:50"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261019_103906",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261019_103906.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "筆者の視点セクションに中国語の単語「如」が混入している",
-                "固有名詞Outcrawl ScoutがOut crawl Scoutと誤分割表記されている"
-            ],
-            "audit_at": "2026-10-19 10:50:24"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-19 13:12:18",
+            "published_to_note": true,
+            "published_at": "2026-10-19 13:13:18"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261019_104136",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261019_104136.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "元データにない「音声合成への応用」という事例を断定的に追加している(ハルシネーション)"
-            ],
-            "audit_at": "2026-10-19 10:50:24"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-19 13:12:18",
+            "published_to_note": true,
+            "published_at": "2026-10-19 13:13:47"
         },
         "4": {
             "note_used": true,
@@ -2074,11 +2073,11 @@
             "note_used": true,
             "generated_at": "20261019_104657",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261019_104657.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル行のCopy-Paste Language Modelsが「コピーパステーライブラリ」という本文と整合しない意味不明な片仮名語に誤訳されている"
-            ],
-            "audit_at": "2026-10-19 10:50:24"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-19 13:12:18",
+            "published_to_note": true,
+            "published_at": "2026-10-19 13:14:16"
         }
     }
 }

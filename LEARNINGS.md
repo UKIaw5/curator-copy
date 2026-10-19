@@ -127,5 +127,11 @@
 ### 2026-10-19 | SocialDogセッションCookie期限切れ時、socialdog_poster.pyが「成功」と誤報告してX投稿が0件のまま見逃されかけた
 - 状況: 2026-10-19の無人実行でX投稿が1件も予約されなかった(Discord通知は「X投稿: 0件」と正しく表示していたが、ログ上は"✅ SocialDog Poster executed successfully."と出ており気づきにくかった)。調査の結果、SocialDogのセッションCookie(`socialdogSessionV2`)が常駐プロファイル・`automation/socialdog_cookies.json`の両方で期限切れ(静的ファイル側は実行時点で約19時間前に失効済み)になっており、`https://web.social-dog.net/.../queue/list`へのアクセスが`/login`へリダイレクトされ、投稿欄のtextareaがDOM上に存在しないまま`schedule_post_on_socialdog()`が「Element not found in DOM」で例外を投げていた
 - 原因: (1) セッションCookie失効自体は想定内の運用事象(定期的な取り直しが必要、CLAUDE.md 3章に記載済み)。(2) ただし`process_batch_scheduling()`の例外ハンドラが`context.close()`後に`return`(戻り値なし=None)するだけで、呼び出し元の`run_today_pipeline_partb.py`の`subprocess.run(..., check=True)`はexit code 0を正常として扱うため、投稿0件でも「成功」と誤判定される構造的なバグだった(これは再現性のあるコードの不備なので即修正対象)
-- 対策: [実施済み・2026-10-19] `process_batch_scheduling()`が成功時True・失敗時Falseを返すよう全ての`return`文を修正し、`__main__`で`sys.exit(0 if ok else 1)`するよう変更。さらに`page.goto`直後に`/login`へのリダイレクトを明示的に検知し、「セッション期限切れ、cookie-editorで取り直してください」という分かりやすいメッセージを出すチェックを追加(以前は原因不明な要素未検出エラーだけだった)。Cookie自体の更新はユーザー操作が必要なため未実施(ユーザーに依頼)
+- 対策: [実施済み・2026-10-19] `process_batch_scheduling()`が成功時True・失敗時Falseを返すよう全ての`return`文を修正し、`__main__`で`sys.exit(0 if ok else 1)`するよう変更。さらに`page.goto`直後に`/login`へのリダイレクトを明示的に検知し、「セッション期限切れ、cookie-editorで取り直してください」という分かりやすいメッセージを出すチェックを追加(以前は原因不明な要素未検出エラーだけだった)。Cookie自体の更新はユーザー操作が必要なため未実施(ユーザーに依頼)。あわせて、note.com限定だった`/fix-audit-failed-notes`を`/complete-daily-cycle`に改名・拡張し、X投稿側の未完了(未投稿ファイルの検知→再試行→Cookie切れ等の原因診断→解決できない場合は明示的に未解決と報告)もカバーするようにした
+- 再発回数: 1
+
+### 2026-10-19 | 単発の誤字・誤訳4件(complete-daily-cycle初回実行、note.com側)
+- 状況: 本日生成の6記事中4件(idx1/2/3/5)が監査不合格。idx1「チェーン・オブ・サスペンション」(Chain-of-Thoughtの誤訳、正しくは「チェーン・オブ・ソート」、タイトル含む3箇所)、idx2「如Browserless」(中国語の「如」混入、Outcrawl Scoutの比較対象列挙部分)+「Out crawl Scout」(固有名詞の誤分割)、idx3「音声合成への応用」等の元データに無い分野を断定列挙するハルシネーション(Sample/Renderフェーズの説明文を元データに基づいて書き直し)、idx5タイトル「コピーパステーライブラリ」(Copy-Paste Language Modelsの誤訳、正しくは「コピー&ペースト言語モデル」、本文は正しくCPLMs/Copy-Pasteヘッド表記)
+- 原因: Gemma/Qwenのランダムな生成ノイズ。「如」は中国語の単語だが文字自体は日本語の漢字としても存在する(如何・欠如等)ため、`has_foreign_script_mixed()`の単純な文字ブロックリストには追加しない(「如」を禁止文字にすると「如何」等の正当な日本語が誤検知される。文脈依存の問題は監査のLLM判定に任せる)
+- 対策: 生成済みファイルを直接手で修正。コード/プロンプト変更は3回ルールの対象外(いずれも初出の誤字・誤訳パターン)。idx2は1回目の修正(「如」の除去)では不十分で、再監査により「Browserless、ScrapingBee、Apify」を誤って「他のオープンソースブラウザエージェント」と性質転換していたハルシネーションが追加で見つかった(元データではこれらはOutcrawl Scoutが代替するクローズドな商用サービスとして記載)。「クローズドな商用ブラウザ自動化サービス」に修正し2回目で合格
 - 再発回数: 1
