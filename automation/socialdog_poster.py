@@ -204,12 +204,12 @@ def process_batch_scheduling(limit: int = None):
     os.makedirs(ARCHIVE_DIR, exist_ok=True)
     file_path = get_latest_x_post_file()
     if not file_path:
-        return
+        return True
 
     posts = parse_posts_from_file(file_path)
     if not posts:
         print("⚠️ File contains no posts.")
-        return
+        return True
 
     if limit is not None:
         posts = posts[:limit]
@@ -231,12 +231,26 @@ def process_batch_scheduling(limit: int = None):
         print("✅ Persistent profile already has a valid SocialDog session, skipping cookie re-injection.")
     elif not load_cookies_to_context(context):
         context.close()
-        return
+        return False
 
     page = context.new_page()
     print(f"🌐 Navigating to {QUEUE_URL} ...")
     page.goto(QUEUE_URL, timeout=60000)
     time.sleep(3.0)
+
+    # 💡 2026-10-19: セッションCookieが期限切れの場合、/login にリダイレクトされ
+    # 投稿欄(textarea)がDOM上に存在しないため、後続のget_by_placeholder()が
+    # 「Element not found in DOM」という原因のわかりにくいエラーで失敗していた
+    # (実例: socialdogSessionV2がhas_valid_session_cookie()のローカル期限チェックは
+    # 通過したように見えても、サーバー側では無効化されているケースがある)。
+    # ここで明示的にログインページへのリダイレクトを検知し、原因を一目で
+    # わかるメッセージにしておく
+    if "/login" in page.url:
+        print(f"❌ Redirected to login page ({page.url}). SocialDog session has expired.")
+        print("   cookie-editorでweb.social-dog.netから新しいcookieを取得し、")
+        print("   automation/socialdog_cookies.json を更新してください。")
+        context.close()
+        return False
 
     schedule_times = compute_schedule_times(len(posts))
     print("🗓️ Target schedule times:")
@@ -277,7 +291,7 @@ def process_batch_scheduling(limit: int = None):
                 except EOFError:
                     pass
             context.close()
-            return
+            return False
 
     if limit is None:
         archive_path = os.path.join(ARCHIVE_DIR, os.path.basename(file_path))
@@ -299,8 +313,17 @@ def process_batch_scheduling(limit: int = None):
         except EOFError:
             pass
     context.close()
+    return True
 
 
 if __name__ == "__main__":
     test_limit = 1 if "--test" in sys.argv else None
-    process_batch_scheduling(limit=test_limit)
+    # 💡 2026-10-19: process_batch_scheduling()がバッチの途中で中断
+    # (セッション切れ、要素未検出等)しても、例外を再送出せずcontext.close()後に
+    # 静かにreturnするだけだったため、呼び出し元のsubprocess.run(check=True)が
+    # 「成功」と誤判定し、run_today_pipeline_partb.pyが"✅ SocialDog Poster
+    # executed successfully."と表示したまま実際には0件しか投稿されない事故が
+    # 実際に発生した(2026-10-19、SocialDogセッションCookie期限切れが原因)。
+    # 戻り値に応じて非ゼロ終了することで、呼び出し元が正しく失敗を検知できるようにする
+    ok = process_batch_scheduling(limit=test_limit)
+    sys.exit(0 if ok else 1)

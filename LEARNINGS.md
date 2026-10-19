@@ -123,3 +123,9 @@
 - 原因: 検出器のカバレッジ漏れ(2026-10-12にバッククォート・リンク構文除去を追加した際、同系統のイタリック記法が見落とされていた)。モデル出力のランダム性とは独立して、`*text*`が来れば毎回必ず素通りするため即修正
 - 対策: [実施済み・2026-10-18] 3ファイル(`autogenerate_note_article.py`/`_2.py`/`generate_note_article.py`)の`lint_markdown()`に、太字除去の直後に`re.sub(r'\*([^*\n]+)\*', r'\1', t)`を追加(`**`除去が先に完了しているため単一`*`ペアだけを安全に剥がせる)。既存のidx3記事も同じ正規表現で手動修正
 - 再発回数: 1
+
+### 2026-10-19 | SocialDogセッションCookie期限切れ時、socialdog_poster.pyが「成功」と誤報告してX投稿が0件のまま見逃されかけた
+- 状況: 2026-10-19の無人実行でX投稿が1件も予約されなかった(Discord通知は「X投稿: 0件」と正しく表示していたが、ログ上は"✅ SocialDog Poster executed successfully."と出ており気づきにくかった)。調査の結果、SocialDogのセッションCookie(`socialdogSessionV2`)が常駐プロファイル・`automation/socialdog_cookies.json`の両方で期限切れ(静的ファイル側は実行時点で約19時間前に失効済み)になっており、`https://web.social-dog.net/.../queue/list`へのアクセスが`/login`へリダイレクトされ、投稿欄のtextareaがDOM上に存在しないまま`schedule_post_on_socialdog()`が「Element not found in DOM」で例外を投げていた
+- 原因: (1) セッションCookie失効自体は想定内の運用事象(定期的な取り直しが必要、CLAUDE.md 3章に記載済み)。(2) ただし`process_batch_scheduling()`の例外ハンドラが`context.close()`後に`return`(戻り値なし=None)するだけで、呼び出し元の`run_today_pipeline_partb.py`の`subprocess.run(..., check=True)`はexit code 0を正常として扱うため、投稿0件でも「成功」と誤判定される構造的なバグだった(これは再現性のあるコードの不備なので即修正対象)
+- 対策: [実施済み・2026-10-19] `process_batch_scheduling()`が成功時True・失敗時Falseを返すよう全ての`return`文を修正し、`__main__`で`sys.exit(0 if ok else 1)`するよう変更。さらに`page.goto`直後に`/login`へのリダイレクトを明示的に検知し、「セッション期限切れ、cookie-editorで取り直してください」という分かりやすいメッセージを出すチェックを追加(以前は原因不明な要素未検出エラーだけだった)。Cookie自体の更新はユーザー操作が必要なため未実施(ユーザーに依頼)
+- 再発回数: 1
