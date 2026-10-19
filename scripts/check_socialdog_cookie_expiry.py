@@ -41,6 +41,7 @@ def find_session_cookie_expiry():
 
 
 def main():
+    force_test = "--test" in sys.argv
     expiry = find_session_cookie_expiry()
     now = time.time()
 
@@ -52,7 +53,7 @@ def main():
         )
     else:
         days_left = (expiry - now) / 86400
-        if days_left > WARN_DAYS:
+        if days_left > WARN_DAYS and not force_test:
             print(f"OK: socialdogSessionV2 expires in {days_left:.1f} day(s). No notification needed.")
             return
         expiry_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(expiry))
@@ -68,6 +69,9 @@ def main():
                 f"({expiry_str}に失効予定)。cookie-editorでweb.social-dog.netから"
                 "取得し直し、automation/socialdog_cookies.json を更新してください。"
             )
+
+    if force_test:
+        message = "[テスト通知] " + message
 
     print(message)
     env = load_env_file(ENV_FILE)
