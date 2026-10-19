@@ -40,16 +40,29 @@ def find_session_cookie_expiry():
     return None
 
 
+# 💡 日報(notify_daily_result.py)と同じpost_to_discord()を使い回すと、Discord上で
+# 埋め込みのタイトル・色が「curator-copy 日次実行レポート」(日報と同じ)になり、
+# 毎日届く日報に紛れて見逃される事故が実際にあった(2026-10-19、ユーザー報告)。
+# ここでは緊急度に応じて専用のタイトル・色(赤=要即対応、オレンジ=もうすぐ)を
+# 付け、日報と一目で見分けられるようにしている。本文は固定テンプレートのまま
+# (LLM生成ではない。生成コストを払う理由が無いため)
+COLOR_RED = 15158332     # 0xE74C3C: 既に期限切れ / 状態不明(=要即対応)
+COLOR_ORANGE = 15105570  # 0xE67E22: あと数日で期限切れ(=そろそろ対応)
+
+
 def main():
     force_test = "--test" in sys.argv
     expiry = find_session_cookie_expiry()
     now = time.time()
 
     if expiry is None:
+        title = "🚨🍪 SocialDog Cookieが見つかりません！"
+        color = COLOR_RED
         message = (
-            "⚠️ SocialDogセッションCookie(automation/socialdog_cookies.json)が"
-            "見つからないか、有効期限を読み取れませんでした。"
-            "cookie-editorでweb.social-dog.netから取得し直して配置してください。"
+            "**SocialDogのセッションCookieが読み取れませんでした。**\n"
+            "`automation/socialdog_cookies.json` が無いか壊れている可能性があります。\n"
+            "このままだとX投稿が予約されません。cookie-editorでweb.social-dog.netから"
+            "取得し直して配置してください。"
         )
     else:
         days_left = (expiry - now) / 86400
@@ -58,25 +71,30 @@ def main():
             return
         expiry_str = time.strftime("%Y-%m-%d %H:%M", time.localtime(expiry))
         if days_left < 0:
+            title = "🚨🍪 SocialDog連携、切れとるで！！"
+            color = COLOR_RED
             message = (
-                f"🔴 SocialDogセッションCookieが既に期限切れです({expiry_str}に失効)。"
-                "cookie-editorでweb.social-dog.netから取得し直し、"
-                "automation/socialdog_cookies.json を更新してください。"
+                f"**SocialDogのセッションCookieが既に期限切れです**({expiry_str}に失効)。\n"
+                "このままだとX投稿が予約されません。cookie-editorでweb.social-dog.netから"
+                "取得し直し、`automation/socialdog_cookies.json` を更新してください。"
             )
         else:
+            title = "⏰🍪 SocialDog Cookie、もうすぐ切れるで！"
+            color = COLOR_ORANGE
             message = (
-                f"⚠️ SocialDogセッションCookieがあと{days_left:.1f}日で期限切れになります"
-                f"({expiry_str}に失効予定)。cookie-editorでweb.social-dog.netから"
-                "取得し直し、automation/socialdog_cookies.json を更新してください。"
+                f"**SocialDogのセッションCookieがあと{days_left:.1f}日で期限切れになります**"
+                f"({expiry_str}に失効予定)。\n"
+                "切れる前にcookie-editorでweb.social-dog.netから取得し直し、"
+                "`automation/socialdog_cookies.json` を更新してください。"
             )
 
     if force_test:
-        message = "[テスト通知] " + message
+        title = "🧪 " + title + "(テスト通知)"
 
-    print(message)
+    print(f"{title}\n{message}")
     env = load_env_file(ENV_FILE)
     webhook_url = os.environ.get("DISCORD_WEBHOOK_URL") or env.get("DISCORD_WEBHOOK_URL")
-    post_to_discord(webhook_url, message)
+    post_to_discord(webhook_url, message, title=title, color=color)
 
 
 if __name__ == "__main__":

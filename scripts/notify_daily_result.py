@@ -85,7 +85,7 @@ def build_report(log_path):
     return "\n".join(parts)
 
 
-def post_to_discord(webhook_url, report_text):
+def post_to_discord(webhook_url, report_text, title="curator-copy 日次実行レポート", color=5763719):
     if not webhook_url:
         print("⚠️ DISCORD_WEBHOOK_URL not set in .env, skipping Discord notification.")
         return
@@ -95,9 +95,9 @@ def post_to_discord(webhook_url, report_text):
             "username": "post done!",
             "embeds": [
                 {
-                    "title": "curator-copy 日次実行レポート",
+                    "title": title,
                     "description": report_text[:4000],
-                    "color": 5763719,
+                    "color": color,
                 }
             ],
         }
