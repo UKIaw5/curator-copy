@@ -2079,5 +2079,69 @@
             "published_to_note": true,
             "published_at": "2026-10-19 13:14:16"
         }
+    },
+    "output_prex_posts_20261020_101540.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261020_103503",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261020_103503.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文25行目「上述した『暗理の保証』を修飾する」の「暗理の保証」が誤記で、記事内の他の全箇所(16, 23, 29, 49, 55行目)では同じ用語が「暗黙の保証」と表記されており、同一の専門用語の表記が記事内で不統一になっている"
+            ],
+            "audit_at": "2026-10-20 10:53:19"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261020_103751",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261020_103751.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行が元データの英語タイトルをほぼそのまま転記しただけで、日本語に一切翻訳されずに残っている(本文は適切に日本語化されているのに対し、タイトルだけが英語のまま公開される状態)"
+            ],
+            "audit_at": "2026-10-20 10:53:19"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261020_104037",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261020_104037.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-20 10:53:19",
+            "published_to_note": true,
+            "published_at": "2026-10-20 10:58:12"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261020_104311",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261020_104311.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "第4章に挿入された具体的なPythonコード例(check_response_anomaly関数、threshold=100、expected_length*2.0という数値・ロジック)は元データに一切存在しない創作であり、元データは具体的なアルゴリズム詳細が不明であると明記しているにもかかわらず断定的に提示している(ハルシネーション)"
+            ],
+            "audit_at": "2026-10-20 10:53:19"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261020_104720",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261020_104720.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文中に「クラッテリー」という意味不明な片仮名語(英語cluttedの破綻した音訳)が複数回使われている",
+                "見出しおよび筆者の視点内の「テクノロジーエンティシスト」も同様に意味不明な片仮名語(本来は「技術愛好家」等)で、日本語として成立していない"
+            ],
+            "audit_at": "2026-10-20 10:53:19"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261020_105031",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261020_105031.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "目次に記載されている「4. 開発者への関連性」セクションの見出しが本文中に存在せず、見出し番号が3→5に飛んでいる(フォーマット崩れ)",
+                "「インフェルエンスエンジン」という誤った片仮名表記が、本文中の正しい表記「推論(inference)」と不一致"
+            ],
+            "audit_at": "2026-10-20 10:53:19"
+        }
     }
 }
