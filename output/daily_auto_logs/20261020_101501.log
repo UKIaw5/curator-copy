@@ -185,3 +185,87 @@ Update available: cloakbrowser 0.5.8 → 0.6.3. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-21 12:00!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261020_101540.md`!
+To github.com:UKIaw5/curator-copy.git
+   cec338f..7464dbc  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261020_103503.md (raw: output_prex_posts_20261020_101540.md, idx: 0)
+    理由: 本文25行目「上述した『暗理の保証』を修飾する」の「暗理の保証」が誤記で、記事内の他の全箇所(16, 23, 29, 49, 55行目)では同じ用語が「暗黙の保証」と表記されており、同一の専門用語の表記が記事内で不統一になっている
+
+- note_article_20261020_103751.md (raw: output_prex_posts_20261020_101540.md, idx: 1)
+    理由: タイトル行が元データの英語タイトルをほぼそのまま転記しただけで、日本語に一切翻訳されずに残っている(本文は適切に日本語化されているのに対し、タイトルだけが英語のまま公開される状態)
+
+- note_article_20261020_104311.md (raw: output_prex_posts_20261020_101540.md, idx: 3)
+    理由: 第4章に挿入された具体的なPythonコード例(check_response_anomaly関数、threshold=100、expected_length*2.0という数値・ロジック)は元データに一切存在しない創作であり、元データは具体的なアルゴリズム詳細が不明であると明記しているにもかかわらず断定的に提示している(ハルシネーション)
+
+- note_article_20261020_104720.md (raw: output_prex_posts_20261020_101540.md, idx: 4)
+    理由: 本文中に「クラッテリー」という意味不明な片仮名語(英語cluttedの破綻した音訳)が複数回使われている
+    理由: 見出しおよび筆者の視点内の「テクノロジーエンティシスト」も同様に意味不明な片仮名語(本来は「技術愛好家」等)で、日本語として成立していない
+
+- note_article_20261020_105031.md (raw: output_prex_posts_20261020_101540.md, idx: 5)
+    理由: 目次に記載されている「4. 開発者への関連性」セクションの見出しが本文中に存在せず、見出し番号が3→5に飛んでいる(フォーマット崩れ)
+    理由: 「インフェルエンスエンジン」という誤った片仮名表記が、本文中の正しい表記「推論(inference)」と不一致
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261020_101501.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-20 15:38
+   - 2026-10-20 18:51
+   - 2026-10-20 22:10
+   - 2026-10-21 07:18
+   - 2026-10-21 09:29
+   - 2026-10-21 12:00
+
+📝 note.com: 1件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261020_103503.md (raw: output_prex_posts_20261020_101540.md, idx: 0)
+    理由: 本文25行目「上述した『暗理の保証』を修飾する」の「暗理の保証」が誤記で、記事内の他の全箇所(16, 23, 29, 49, 55行目)では同じ用語が「暗黙の保証」と表記されており、同一の専門用語の表記が記事内で不統一になっている
+
+- note_article_20261020_103751.md (raw: output_prex_posts_20261020_101540.md, idx: 1)
+    理由: タイトル行が元データの英語タイトルをほぼそのまま転記しただけで、日本語に一切翻訳されずに残っている(本文は適切に日本語化されているのに対し、タイトルだけが英語のまま公開される状態)
+
+- note_article_20261020_104311.md (raw: output_prex_posts_20261020_101540.md, idx: 3)
+    理由: 第4章に挿入された具体的なPythonコード例(check_response_anomaly関数、threshold=100、expected_length*2.0という数値・ロジック)は元データに一切存在しない創作であり、元データは具体的なアルゴリズム詳細が不明であると明記しているにもかかわらず断定的に提示している(ハルシネーション)
+
+- note_article_20261020_104720.md (raw: output_prex_posts_20261020_101540.md, idx: 4)
+    理由: 本文中に「クラッテリー」という意味不明な片仮名語(英語cluttedの破綻した音訳)が複数回使われている
+    理由: 見出しおよび筆者の視点内の「テクノロジーエンティシスト」も同様に意味不明な片仮名語(本来は「技術愛好家」等)で、日本語として成立していない
+
+- note_article_20261020_105031.md (raw: output_prex_posts_20261020_101540.md, idx: 5)
+    理由: 目次に記載されている「4. 開発者への関連性」セクションの見出しが本文中に存在せず、見出し番号が3→5に飛んでいる(フォーマット崩れ)
+    理由: 「インフェルエンスエンジン」という誤った片仮名表記が、本文中の正しい表記「推論(inference)」と不一致
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Tue Oct 20 11:00:18 JST 2026 ===
