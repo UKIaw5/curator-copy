@@ -2147,33 +2147,31 @@
             "note_used": true,
             "generated_at": "20261021_103352",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261021_103352.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "冒頭段落で元データの「DeepInfer typically represents the optimized serving engine...(ヘッジ表現、かつ元データ自身が「the specific repository description provided is concise」と前置きした推測)」を、生成記事では「このフレームワークは...スループットを最大化するように設計されています」と断定表現に変換しており、推測を事実として書いている",
-                "DeepSeek Sparse Attentionの段落末尾「これらの最適化により、DeepInferはメモリ帯域の制約を克服し、大規模なコンテキストを効率的に処理することが可能となります」も、元データでは当該3項目全体が「This likely includes native support for」というヘッジの傘下にあるにもかかわらず、断定的な結論文に書き換えられている"
-            ],
-            "audit_at": "2026-10-21 10:49:37"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:33:36"
         },
         "1": {
             "note_used": true,
             "generated_at": "20261021_103630",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261021_103630.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "日本語品質: 16行目「ブルートウェア」はbloatware(不要なプリインストールアプリ)の片仮名表記として誤っており、正しくは「ブロートウェア」であるべき(「ブルート」はbruteのように読め、意味不明な片仮名語になっている)",
-                "14行目「クラーター」はclutter(不要な要素)の片仮名表記として誤っており、正しくは「クラッター」であるべき(「クラーター」はcrater=クレーターと混同される意味不明な片仮名語になっている)"
-            ],
-            "audit_at": "2026-10-21 10:49:37"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:34:05"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261021_103853",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261021_103853.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル行(1行目)の「レバースエンジニアリング」は誤字で、正しくは「リバースエンジニアリング」(reverse engineering)である。本文中(14行目、16行目など)では正しく「リバースエンジニアリング」と表記されているのに対し、タイトルだけ「リ」が「レ」に誤変換されており、記事内で同一用語の表記が不統一"
-            ],
-            "audit_at": "2026-10-21 10:49:37"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:34:34"
         },
         "3": {
             "note_used": true,
@@ -2189,11 +2187,11 @@
             "note_used": true,
             "generated_at": "20261021_104422",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261021_104422.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「リターゲティング」という外来語の表記が記事内で統一されていない(29行目の見出しでは「リターゲティングによるシンセティックデータの拡張」、直後の30行目本文では「リターゲッティング戦略を採用している」と、同じ語の促音(っ)の有無が異なる表記になっている)"
-            ],
-            "audit_at": "2026-10-21 10:49:37"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:35:02"
         },
         "5": {
             "note_used": true,
@@ -2211,11 +2209,11 @@
             "note_used": true,
             "generated_at": "20261022_103542",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_103542.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "3つの枝刈り手法(ポジション/シーケンス/分岐)のうち、分岐(Branch)枝刈りの説明段落だけ対応する太字見出しが欠落しており、他2項目との並列構造が崩れている"
-            ],
-            "audit_at": "2026-10-22 10:53:22"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:35:31"
         },
         "1": {
             "note_used": true,
@@ -2231,34 +2229,31 @@
             "note_used": true,
             "generated_at": "20261022_104140",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_104140.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル・見出しに「アジャェント」という誤変換が繰り返し出現(正しくは「エージェント」)",
-                "結論部の表記「ハーンススケーリング」が他箇所の正しい表記「ハーネススケーリング」と不一致",
-                "本文で「サブセット」が「サブネス」に誤変換され表記が記事内で不一致"
-            ],
-            "audit_at": "2026-10-22 10:53:22"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:35:59"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261022_104516",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_104516.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル行が「500億パラメータ」になっているが、元データおよび本文中(4箇所)は一貫して「50億パラメータ(5B)」であり、タイトルのみ10倍の数値になっている自己矛盾・ハルシネーション"
-            ],
-            "audit_at": "2026-10-22 10:53:22"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:36:28"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261022_104757",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_104757.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "元データでは「Likely integrates」とヘッジされている記述が、生成記事では「統合しつつ...包摂します」という断定表現に変換されている",
-                "「■ 筆者の視点」内に「アアプローチ」という二重カタカナの誤変換がある(正しくは「アプローチ」)"
-            ],
-            "audit_at": "2026-10-22 10:53:22"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 19:32:59",
+            "published_to_note": true,
+            "published_at": "2026-10-22 19:36:57"
         },
         "5": {
             "note_used": true,
