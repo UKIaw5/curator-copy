@@ -219,3 +219,78 @@ Update available: cloakbrowser 0.5.8 → 0.6.3. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-22 09:18!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261021_101550.md`!
+To github.com:UKIaw5/curator-copy.git
+   dcade02..4d81800  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261021_103352.md (raw: output_prex_posts_20261021_101550.md, idx: 0)
+    理由: 冒頭段落で元データの「DeepInfer typically represents the optimized serving engine...(ヘッジ表現、かつ元データ自身が「the specific repository description provided is concise」と前置きした推測)」を、生成記事では「このフレームワークは...スループットを最大化するように設計されています」と断定表現に変換しており、推測を事実として書いている
+    理由: DeepSeek Sparse Attentionの段落末尾「これらの最適化により、DeepInferはメモリ帯域の制約を克服し、大規模なコンテキストを効率的に処理することが可能となります」も、元データでは当該3項目全体が「This likely includes native support for」というヘッジの傘下にあるにもかかわらず、断定的な結論文に書き換えられている
+
+- note_article_20261021_103630.md (raw: output_prex_posts_20261021_101550.md, idx: 1)
+    理由: 日本語品質: 16行目「ブルートウェア」はbloatware(不要なプリインストールアプリ)の片仮名表記として誤っており、正しくは「ブロートウェア」であるべき(「ブルート」はbruteのように読め、意味不明な片仮名語になっている)
+    理由: 14行目「クラーター」はclutter(不要な要素)の片仮名表記として誤っており、正しくは「クラッター」であるべき(「クラーター」はcrater=クレーターと混同される意味不明な片仮名語になっている)
+
+- note_article_20261021_103853.md (raw: output_prex_posts_20261021_101550.md, idx: 2)
+    理由: タイトル行(1行目)の「レバースエンジニアリング」は誤字で、正しくは「リバースエンジニアリング」(reverse engineering)である。本文中(14行目、16行目など)では正しく「リバースエンジニアリング」と表記されているのに対し、タイトルだけ「リ」が「レ」に誤変換されており、記事内で同一用語の表記が不統一
+
+- note_article_20261021_104422.md (raw: output_prex_posts_20261021_101550.md, idx: 4)
+    理由: 「リターゲティング」という外来語の表記が記事内で統一されていない(29行目の見出しでは「リターゲティングによるシンセティックデータの拡張」、直後の30行目本文では「リターゲッティング戦略を採用している」と、同じ語の促音(っ)の有無が異なる表記になっている)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261021_101501.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-21 12:06
+   - 2026-10-21 15:35
+   - 2026-10-21 19:10
+   - 2026-10-21 22:12
+   - 2026-10-22 07:28
+   - 2026-10-22 09:18
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261021_103352.md (raw: output_prex_posts_20261021_101550.md, idx: 0)
+    理由: 冒頭段落で元データの「DeepInfer typically represents the optimized serving engine...(ヘッジ表現、かつ元データ自身が「the specific repository description provided is concise」と前置きした推測)」を、生成記事では「このフレームワークは...スループットを最大化するように設計されています」と断定表現に変換しており、推測を事実として書いている
+    理由: DeepSeek Sparse Attentionの段落末尾「これらの最適化により、DeepInferはメモリ帯域の制約を克服し、大規模なコンテキストを効率的に処理することが可能となります」も、元データでは当該3項目全体が「This likely includes native support for」というヘッジの傘下にあるにもかかわらず、断定的な結論文に書き換えられている
+
+- note_article_20261021_103630.md (raw: output_prex_posts_20261021_101550.md, idx: 1)
+    理由: 日本語品質: 16行目「ブルートウェア」はbloatware(不要なプリインストールアプリ)の片仮名表記として誤っており、正しくは「ブロートウェア」であるべき(「ブルート」はbruteのように読め、意味不明な片仮名語になっている)
+    理由: 14行目「クラーター」はclutter(不要な要素)の片仮名表記として誤っており、正しくは「クラッター」であるべき(「クラーター」はcrater=クレーターと混同される意味不明な片仮名語になっている)
+
+- note_article_20261021_103853.md (raw: output_prex_posts_20261021_101550.md, idx: 2)
+    理由: タイトル行(1行目)の「レバースエンジニアリング」は誤字で、正しくは「リバースエンジニアリング」(reverse engineering)である。本文中(14行目、16行目など)では正しく「リバースエンジニアリング」と表記されているのに対し、タイトルだけ「リ」が「レ」に誤変換されており、記事内で同一用語の表記が不統一
+
+- note_article_20261021_104422.md (raw: output_prex_posts_20261021_101550.md, idx: 4)
+    理由: 「リターゲティング」という外来語の表記が記事内で統一されていない(29行目の見出しでは「リターゲティングによるシンセティックデータの拡張」、直後の30行目本文では「リターゲッティング戦略を採用している」と、同じ語の促音(っ)の有無が異なる表記になっている)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.p
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Wed Oct 21 10:58:02 JST 2026 ===

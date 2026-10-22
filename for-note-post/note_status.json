@@ -2205,5 +2205,70 @@
             "published_to_note": true,
             "published_at": "2026-10-21 10:56:02"
         }
+    },
+    "output_prex_posts_20261022_101540.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261022_103542",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_103542.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "3つの枝刈り手法(ポジション/シーケンス/分岐)のうち、分岐(Branch)枝刈りの説明段落だけ対応する太字見出しが欠落しており、他2項目との並列構造が崩れている"
+            ],
+            "audit_at": "2026-10-22 10:53:22"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261022_103817",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_103817.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 10:53:22",
+            "published_to_note": true,
+            "published_at": "2026-10-22 11:00:11"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261022_104140",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_104140.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル・見出しに「アジャェント」という誤変換が繰り返し出現(正しくは「エージェント」)",
+                "結論部の表記「ハーンススケーリング」が他箇所の正しい表記「ハーネススケーリング」と不一致",
+                "本文で「サブセット」が「サブネス」に誤変換され表記が記事内で不一致"
+            ],
+            "audit_at": "2026-10-22 10:53:22"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261022_104516",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_104516.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行が「500億パラメータ」になっているが、元データおよび本文中(4箇所)は一貫して「50億パラメータ(5B)」であり、タイトルのみ10倍の数値になっている自己矛盾・ハルシネーション"
+            ],
+            "audit_at": "2026-10-22 10:53:22"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261022_104757",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_104757.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データでは「Likely integrates」とヘッジされている記述が、生成記事では「統合しつつ...包摂します」という断定表現に変換されている",
+                "「■ 筆者の視点」内に「アアプローチ」という二重カタカナの誤変換がある(正しくは「アプローチ」)"
+            ],
+            "audit_at": "2026-10-22 10:53:22"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261022_105035",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261022_105035.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-22 10:53:22",
+            "published_to_note": true,
+            "published_at": "2026-10-22 11:00:40"
+        }
     }
 }
