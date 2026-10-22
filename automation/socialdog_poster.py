@@ -159,14 +159,16 @@ def set_schedule_datetime(page, target_time: datetime):
     直接入力するだけで設定できる。カレンダーの日付セルクリックや時・分の
     個別スピンボックス操作は不要。
     """
-    # 💡 日付ボタンのテキスト("2026/10/04 19:35"等)は毎回値が変わる上に
-    # get_by_textでの直接クリックが不安定だった。DevToolsで確認した
-    # "bp3-popover-wrapper datetime_picker_blueprint" という安定した
-    # Blueprint.js側のクラス名を使って、popoverのトリガー要素を直接狙う
-    date_button = page.locator(".datetime_picker_blueprint .bp3-popover-target").first
-    date_button.click()
-    time.sleep(1.0)
-
+    # 💡 2026-10-22: SocialDog側のUI更新で、外側を包んでいた固有のクラス名
+    # "datetime_picker_blueprint"自体がDOMから無くなり、
+    # ".datetime_picker_blueprint .bp3-popover-target"がElementNotAttachedErrorに
+    # なる事故が発生した(X投稿0件のまま検知された、CLAUDE.md 3章のセレクタ検証
+    # 手順の通りDevToolsで再確認して判明)。一方でBlueprint.js自体のクラス
+    # (.bp3-popover-wrapper/.bp3-popover-target)と、入力欄のaria-label="日付"は
+    # 変わっていなかった。そもそもこのinput要素自体が既にクリック可能な状態で
+    # DOM上に表示されているため、「別のトリガー要素を先にクリックしてポップオーバー
+    # を開く」という手順自体が不要だった(当初からオーバーエンジニアリングだった
+    # 可能性がある)。aria-labelで直接input要素を掴んでクリックするだけにする
     datetime_input = page.get_by_label("日付")
     datetime_input.click()
     page.keyboard.press("Control+A")

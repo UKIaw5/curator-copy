@@ -141,3 +141,9 @@
 - 原因: Gemma/Qwenのランダムな生成ノイズ。idx3のハルシネーションは「コード例は必ずコードフェンスで囲むこと」という既存のプロンプト指示はあるが、「元データに存在しない具体的な実装を創作しない」という指示が無いことが一因の可能性があるが、単発事象のため現時点でプロンプト変更はしない
 - 対策: 生成済みファイルを直接手で修正(idx3はコード例を削除し、元データの「アルゴリズム名は不明」という限定を明記する一文に置き換え。idx5は欠落していた見出し行を本文に追加)。コード/プロンプト変更は3回ルールの対象外。idx4は再監査のたびに新たな問題が見つかり計3回の修正サイクルを要した: (1回目)破綻音訳2件、(2回目)「デフラッティング」の表記統一+"underpowered"(非力な)を「パワフルな」と訳す意味反転、(3回目)"without the security risks..."(〜を伴わずに)を「〜を伴う」と訳す別の意味反転。1記事に意味反転ハルシネーションが2回連続したのは今回が初めてで、Gemmaが否定語(without/non-等)の訳出に弱い可能性があるが、まだ他記事での再現が無いため3回ルールに従いプロンプト変更は保留
 - 再発回数: 1
+
+### 2026-10-22 | SocialDog側のUI更新で日時ピッカーのセレクタが壊れ、X投稿が0件のまま検知
+- 状況: `/complete-daily-cycle`実行で、本日分のXポストが未投稿のまま(`output/output_x_posts_20261022_101540.md`が未アーカイブ)残っていた。ログには「⚠️ Aborting batch due to error on post 1: Element '.datetime_picker_blueprint .bp3-popover-target >> nth=0' failed attached check」とあり、2026-10-19の修正(失敗時に非ゼロ終了する)のおかげで「成功」と誤報告されずに正しく検知された
+- 原因: SocialDog側のUI更新で、日時ピッカーの外側を包んでいた固有クラス名`datetime_picker_blueprint`がDOMから消えていた(DevTools代わりにPlaywrightで実機確認して判明)。Blueprint.js自体のクラス(`.bp3-popover-wrapper`/`.bp3-popover-target`)と入力欄の`aria-label="日付"`は変わっておらず、さらに調査の結果この入力欄は元々クリック可能な状態でDOM上に直接存在しており、「別のトリガー要素を先にクリックしてポップオーバーを開く」という手順自体が過剰な実装だった可能性が高い
+- 対策: [実施済み・2026-10-22] `automation/socialdog_poster.py`の`set_schedule_datetime()`から、消えた`.datetime_picker_blueprint .bp3-popover-target`へのクリックを削除し、`aria-label="日付"`のinput要素を直接クリックするだけに簡略化。Playwrightで実機テストし、カレンダーが正しく開き日付が設定されることを確認済み(CLAUDE.md 5章の既存セレクタと同様、外部サイトのUI変更に対する脆弱性は残るため、再発したら同じ手順(Playwrightで実機のHTML構造を確認)で直すこと)
+- 再発回数: 1
