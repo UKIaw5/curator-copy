@@ -2265,5 +2265,67 @@
             "published_to_note": true,
             "published_at": "2026-10-22 11:00:40"
         }
+    },
+    "output_prex_posts_20261023_101551.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261023_103604",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261023_103604.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-23 10:51:59",
+            "published_to_note": true,
+            "published_at": "2026-10-23 10:57:19"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261023_103851",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261023_103851.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「メソッドology」という破損した用語(カタカナ「メソッド」と英語接尾辞「-ology」が混在する意味不明な表記)が記事内に3箇所で使われている。正しい日本語は「手法」または「メソドロジー」であるべき"
+            ],
+            "audit_at": "2026-10-23 10:51:59"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261023_104124",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261023_104124.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "カタカナ用語の表記が記事内で統一されていない。見出し等3箇所では誤った転写「レポジトリ」が使われているが、本文では正しい「リポジトリ」になっている"
+            ],
+            "audit_at": "2026-10-23 10:51:59"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261023_104344",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261023_104344.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文40行目「アテンッション」は促音(ッ)が誤って挿入された意味不明な片仮名語になっている(正しくは「アテンション」)。同じ用語が39行目では正しく表記されており記事内で不統一"
+            ],
+            "audit_at": "2026-10-23 10:51:59"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261023_104647",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261023_104647.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "エンドツーエンドの遅延を「522ミリ秒」と記載しているが元データは一貫して「520ms」であり、同記事内の表でも「520 ms」と記載されていて数値が矛盾(ハルシネーション); 「非編集属性の保持」の具体例として「ピッチ」を断定的に追記しているが元データに言及はない"
+            ],
+            "audit_at": "2026-10-23 10:51:59"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261023_104910",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261023_104910.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-23 10:51:59",
+            "published_to_note": true,
+            "published_at": "2026-10-23 10:57:48"
+        }
     }
 }
