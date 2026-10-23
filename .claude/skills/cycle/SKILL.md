@@ -1,6 +1,6 @@
 ---
-name: complete-daily-cycle
-description: 日次パイプラインでX投稿・note.com公開のいずれかが未完了のまま残っている場合に、原因を調査・修正し、両方とも完了させた上でDiscord通知まで行う(旧fix-audit-failed-notesをnote.com限定からX投稿も含む全体完了に拡張したもの)
+name: cycle
+description: 日次パイプラインでX投稿・note.com公開のいずれかが未完了のまま残っている場合に、原因を調査・修正し、両方とも完了させた上でDiscord通知まで行う(旧fix-audit-failed-notes→complete-daily-cycleを経て改名。X投稿+note.com両方の「やり残し」を一括完了させる)
 ---
 
 このSkillは、CLAUDE.md 7章の「監査不合格で未公開のまま残っている記事」サイクルに加えて、
