@@ -113,8 +113,9 @@ def get_active_raw_file():
 # 💡 簡体字中国語でしか使われない(日本語の漢字としては存在しない)文字の一部。
 # 網羅的ではなく、実際に生成記事で混入が確認された文字を中心にした経験的リスト。
 # 新しい混入パターンが見つかったら追加すること(QUBO記事で"扩散"を確認、2026-10-05。
-# "渗"をARTEXX記事で確認、2026-10-14。"总"をMLExpert記事で確認、2026-10-17)
-SIMPLIFIED_CHINESE_ONLY_CHARS = "扩这们还没很什传审渗总"
+# "渗"をARTEXX記事で確認、2026-10-14。"总"をMLExpert記事で確認、2026-10-17。
+# "编"をREA-Prompts記事で確認、2026-10-24)
+SIMPLIFIED_CHINESE_ONLY_CHARS = "扩这们还没很什传审渗总编"
 
 def has_foreign_script_mixed(text: str) -> bool:
     """日本語の文章に韓国語(ハングル)・簡体字中国語・キリル文字の単語が
