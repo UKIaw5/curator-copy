@@ -1,17 +1,16 @@
 """
 daily_auto_run.sh の最後に呼ばれる通知ステップ。
 
-その日のログファイルからサマリーを作り、
-1. Discord Webhook に投稿する
-2. Windowsのメモ帳(Notepad)でその場で開く(PCの前にいれば確実に見える)
+その日のログファイルからサマリーを作り、Discord Webhook に投稿する。
+失敗しても(Webhook未設定等)、daily_auto_run.sh 本体の成否には影響させない
+(常に正常終了する)。
 
-どちらかが失敗しても(Webhook未設定、Windows側呼び出し失敗等)、
-daily_auto_run.sh 本体の成否には影響させない(常に正常終了する)。
+💡 2026-10-24: Windowsのメモ帳(Notepad)を自動的に開く機能(open_in_notepad)は
+ユーザーの要望により削除済み。Discord通知のみで十分という判断。
 """
 import glob
 import os
 import re
-import subprocess
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_DIR = os.path.join(REPO_ROOT, "output", "daily_auto_logs")
@@ -110,45 +109,6 @@ def post_to_discord(webhook_url, report_text, title="curator-copy 日次実行�
         print(f"⚠️ Discord notification error: {e}")
 
 
-def open_in_notepad(report_text):
-    """💡 \\\\wsl.localhost\\...のUNCパスで直接notepad.exeを起動すると、
-    Windows 11の新Notepad(UWPサンドボックス版)がUNCパスのファイルオープンに
-    失敗し、空のウィンドウが開くだけになる実例を確認した(2026-10-08)。
-    Windows側のローカルパス(%TEMP%配下)にファイルを書き出してから、
-    そのWindowsパスで起動することで回避する。"""
-    try:
-        temp_win = subprocess.run(
-            ["cmd.exe", "/c", "echo %TEMP%"],
-            capture_output=True, text=True, timeout=15
-        ).stdout.strip()
-        if not temp_win:
-            print("⚠️ Could not resolve Windows TEMP dir, skipping Notepad launch.")
-            return
-
-        temp_wsl = subprocess.run(
-            ["wslpath", "-u", temp_win],
-            capture_output=True, text=True, timeout=15
-        ).stdout.strip()
-
-        report_path_wsl = os.path.join(temp_wsl, "curator_daily_report.txt")
-        with open(report_path_wsl, "w", encoding="utf-8") as f:
-            f.write(report_text)
-
-        report_path_win = temp_win + "\\curator_daily_report.txt"
-        # 💡 start_new_session=True + DEVNULLへのリダイレクトで完全にデタッチする。
-        # cmd.exe /c start 経由だとWSL interopがGUIプロセスの終了を待って
-        # ブロックする実例を確認したため、notepad.exeを直接起動する
-        subprocess.Popen(
-            ["notepad.exe", report_path_win],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-        )
-        print(f"✅ Opened report in Notepad: {report_path_win}")
-    except Exception as e:
-        print(f"⚠️ Failed to open Notepad: {e}")
-
-
 def main():
     env = load_env_file(ENV_FILE)
     webhook_url = os.environ.get("DISCORD_WEBHOOK_URL") or env.get("DISCORD_WEBHOOK_URL")
@@ -161,7 +121,6 @@ def main():
     print("--- end ---\n")
 
     post_to_discord(webhook_url, report_text)
-    open_in_notepad(report_text)
 
 
 if __name__ == "__main__":

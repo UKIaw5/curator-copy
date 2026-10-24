@@ -135,13 +135,14 @@ note.com限定だった`fix-audit-failed-notes`を拡張した。
     いるので、ここでは残っている変更分だけがコミットされる形になる。このプロジェクトはパイプライン
     スクリプト自身が自動でgit同期する設計であり、この修正サイクルも同じ運用に含める)。
 
-13. **通知**: 以下のように`scripts/notify_daily_result.py`内の既存のDiscord/Notepad通知関数を
-    再利用し、ログファイルからではなく今回の実行結果から組み立てたレポート文字列を渡して通知する:
+13. **通知**: 以下のように`scripts/notify_daily_result.py`内の既存のDiscord通知関数を再利用し、
+    ログファイルからではなく今回の実行結果から組み立てたレポート文字列を渡して通知する
+    (2026-10-24にNotepad自動起動機能はユーザーの要望で削除済み、Discordのみ):
 
     ```python
     import sys, os
     sys.path.insert(0, "/home/uk/Vault/curator-copy/scripts")
-    from notify_daily_result import load_env_file, post_to_discord, open_in_notepad, ENV_FILE
+    from notify_daily_result import load_env_file, post_to_discord, ENV_FILE
 
     env = load_env_file(ENV_FILE)
     webhook_url = os.environ.get("DISCORD_WEBHOOK_URL") or env.get("DISCORD_WEBHOOK_URL")
@@ -152,7 +153,6 @@ note.com限定だった`fix-audit-failed-notes`を拡張した。
     """
 
     post_to_discord(webhook_url, report_text)
-    open_in_notepad(report_text)
     ```
 
 14. 最後に、日本語でサマリーを報告する(X投稿: 予約件数/未解決理由の有無、note.com: 対象件数・
