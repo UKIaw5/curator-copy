@@ -211,3 +211,77 @@ Update available: cloakbrowser 0.5.8 → 0.6.3. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-24 15:36!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261023_101551.md`!
+To github.com:UKIaw5/curator-copy.git
+   a1bf577..9bb3f0e  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261023_103851.md (raw: output_prex_posts_20261023_101551.md, idx: 1)
+    理由: 「メソッドology」という破損した用語(カタカナ「メソッド」と英語接尾辞「-ology」が混在する意味不明な表記)が記事内に3箇所で使われている。正しい日本語は「手法」または「メソドロジー」であるべき
+
+- note_article_20261023_104124.md (raw: output_prex_posts_20261023_101551.md, idx: 2)
+    理由: カタカナ用語の表記が記事内で統一されていない。見出し等3箇所では誤った転写「レポジトリ」が使われているが、本文では正しい「リポジトリ」になっている
+
+- note_article_20261023_104344.md (raw: output_prex_posts_20261023_101551.md, idx: 3)
+    理由: 本文40行目「アテンッション」は促音(ッ)が誤って挿入された意味不明な片仮名語になっている(正しくは「アテンション」)。同じ用語が39行目では正しく表記されており記事内で不統一
+
+- note_article_20261023_104647.md (raw: output_prex_posts_20261023_101551.md, idx: 4)
+    理由: エンドツーエンドの遅延を「522ミリ秒」と記載しているが元データは一貫して「520ms」であり、同記事内の表でも「520 ms」と記載されていて数値が矛盾(ハルシネーション); 「非編集属性の保持」の具体例として「ピッチ」を断定的に追記しているが元データに言及はない
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261023_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-23 18:55
+   - 2026-10-23 21:52
+   - 2026-10-24 07:15
+   - 2026-10-24 09:17
+   - 2026-10-24 12:27
+   - 2026-10-24 15:36
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261023_103851.md (raw: output_prex_posts_20261023_101551.md, idx: 1)
+    理由: 「メソッドology」という破損した用語(カタカナ「メソッド」と英語接尾辞「-ology」が混在する意味不明な表記)が記事内に3箇所で使われている。正しい日本語は「手法」または「メソドロジー」であるべき
+
+- note_article_20261023_104124.md (raw: output_prex_posts_20261023_101551.md, idx: 2)
+    理由: カタカナ用語の表記が記事内で統一されていない。見出し等3箇所では誤った転写「レポジトリ」が使われているが、本文では正しい「リポジトリ」になっている
+
+- note_article_20261023_104344.md (raw: output_prex_posts_20261023_101551.md, idx: 3)
+    理由: 本文40行目「アテンッション」は促音(ッ)が誤って挿入された意味不明な片仮名語になっている(正しくは「アテンション」)。同じ用語が39行目では正しく表記されており記事内で不統一
+
+- note_article_20261023_104647.md (raw: output_prex_posts_20261023_101551.md, idx: 4)
+    理由: エンドツーエンドの遅延を「522ミリ秒」と記載しているが元データは一貫して「520ms」であり、同記事内の表でも「520 ms」と記載されていて数値が矛盾(ハルシネーション); 「非編集属性の保持」の具体例として「ピッチ」を断定的に追記しているが元データに言及はない
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+✅ Opened report in Notepad: C:\Users\shone\AppData\Local\Temp\curator_daily_report.txt
+
+=== Daily Auto Run finished: Fri Oct 23 10:59:42 JST 2026 ===
