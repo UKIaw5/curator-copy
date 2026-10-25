@@ -216,3 +216,78 @@ Update available: cloakbrowser 0.5.8 → 0.6.4. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-26 15:19!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261025_101612.md`!
+To github.com:UKIaw5/curator-copy.git
+   7d4e061..ab6f030  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261025_103610.md (raw: output_prex_posts_20261025_101612.md, idx: 0)
+    理由: 元データは具体的なモデル名を明示していない("though specific model names are not listed in the abstract")にもかかわらず、本文が断定的にLlama/Mistralという固有名詞を創作している
+
+- note_article_20261025_103830.md (raw: output_prex_posts_20261025_101612.md, idx: 1)
+    理由: 本文で「推覚ステップ」という誤変換(正しくは推論)が見られる
+    理由: 「開発者にとっての有用性」セクションで「修正・修正する」のような不自然な語の重複がある
+
+- note_article_20261025_104127.md (raw: output_prex_posts_20261025_101612.md, idx: 2)
+    理由: 本文見出し「概述と定義」の概述が中国語の単語であり、目次の「概要と定義」と表記が不一致になっている
+
+- note_article_20261025_104917.md (raw: output_prex_posts_20261025_101612.md, idx: 5)
+    理由: タイトル行に意味不明な片仮名語「ディオノット」が混入し破綻している(本文14行目は正しく「クォータローター専用のシミュレーション環境」と表記されており、タイトルのみ表記が不一致)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261025_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-25 19:06
+   - 2026-10-25 22:05
+   - 2026-10-26 07:31
+   - 2026-10-26 09:15
+   - 2026-10-26 12:18
+   - 2026-10-26 15:19
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261025_103610.md (raw: output_prex_posts_20261025_101612.md, idx: 0)
+    理由: 元データは具体的なモデル名を明示していない("though specific model names are not listed in the abstract")にもかかわらず、本文が断定的にLlama/Mistralという固有名詞を創作している
+
+- note_article_20261025_103830.md (raw: output_prex_posts_20261025_101612.md, idx: 1)
+    理由: 本文で「推覚ステップ」という誤変換(正しくは推論)が見られる
+    理由: 「開発者にとっての有用性」セクションで「修正・修正する」のような不自然な語の重複がある
+
+- note_article_20261025_104127.md (raw: output_prex_posts_20261025_101612.md, idx: 2)
+    理由: 本文見出し「概述と定義」の概述が中国語の単語であり、目次の「概要と定義」と表記が不一致になっている
+
+- note_article_20261025_104917.md (raw: output_prex_posts_20261025_101612.md, idx: 5)
+    理由: タイトル行に意味不明な片仮名語「ディオノット」が混入し破綻している(本文14行目は正しく「クォータローター専用のシミュレーション環境」と表記されており、タイトルのみ表記が不一致)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Sun Oct 25 10:59:23 JST 2026 ===

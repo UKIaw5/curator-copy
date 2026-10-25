@@ -19,7 +19,7 @@ fetch (fetchers/)
   → archive + Git同期
 ```
 
-Stage2+3は2026-10-07にGemma4:12b/Qwen(`generators/refiner.py`/`reviewer.py`)からClaude自身(`.claude/skills/refine-x-posts/`、Haiku経由)に置き換えた(4章参照)。
+Stage2+3は2026-10-07にGemma4:12b/Qwen(`generators/refiner.py`/`reviewer.py`)からClaude自身(`.claude/skills/refine-x-posts/`、2026-10-07時点はHaiku経由、2026-10-25にSonnetへ変更)に置き換えた(4章参照)。
 
 note.com向けには `for-note-post/` 配下に独立した並行パイプライン(記事生成→公開)がある。
 
@@ -82,7 +82,7 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 |---|---|---|---|
 | 記事選別(キュレーション) | `generators/curator.py` | `qwen3.8:27b` | `QWEN_MODEL` |
 | Stage1 詳細要約(英語) | `generators/generate_x_posts.py` | `qwen3.8:27b`(旧: `qwen2.5-coder:14b`) | `QWEN_MODEL` |
-| Stage2+3 投稿文精製・校正(日本語、**本番**) | `.claude/skills/refine-x-posts/` | Claude Haiku(`Agent`ツール経由、idxごとに個別呼び出し) | なし |
+| Stage2+3 投稿文精製・校正(日本語、**本番**) | `.claude/skills/refine-x-posts/` | Claude Sonnet(`Agent`ツール経由、idxごとに個別呼び出し。2026-10-25にHaikuから変更) | なし |
 | Stage2 投稿文精製(日本語、旧・手動比較用) | `generators/refiner.py` | `gemma4:12b` | `GEMMA_MODEL` |
 | 主語補完(Gemma出力の救済、旧) | `generators/refiner.py` | `qwen2.5-coder:14b` | `QWEN_MODEL` |
 | 日本語フォールバック圧縮(最終救済、旧) | `generators/refiner.py` (`generate_safe_japanese_fallback`) | `qwen2.5-coder:14b` | `QWEN_MODEL` |
@@ -161,7 +161,8 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 - Gitへの自動コミット/プッシュをパイプラインスクリプト自身が行う(`run_today_pipeline_parta.py`の`git pull`、`partb*.py`の`git add/commit/push`)。手動での変更作業中に自動実行すると競合する可能性があるので注意
 - `tests/`配下はCloakBrowserのステルス機能検証や履行移行(`test_migrate_history.py`)用のアドホックスクリプトが中心で、CIでの網羅的なテストスイートではない
 - **`.claude/skills/audit-drafts/`**: note.com下書き記事の**公開前監査**用Skill(2026-10-05導入、2026-10-09にHaiku→Sonnetへ変更)。生成記事と元データ(raw file + idx)のファイルパスを渡し、`Agent`ツール(`model: "sonnet"`)で対象ごとに個別の監査エージェントを呼び、ハルシネーション(元データにない事実の創作)・日本語品質(韓国語/簡体字中国語の混入)・フォーマット崩れ(見出し重複・コード破損)を判定する。note.comパイプラインの`<!-- PAYWALL -->`マーカー・ペイウォール・クリフハンガー(「なぜなら——」で文が切れる)・末尾ハッシュタグは**意図的な仕様**であり、監査プロンプト内で誤検知しないよう明記済み。`publish_to_note_free_batch.py`の`get_next_unpublished_article()`は`audit_passed is True`の記事だけを対象にするゲートを実装済み(2026-10-06)。**誤字検知の精度を優先してSonnetを使う**(誤字・ハルシネーションのような「大量の正しい文章から小さな違和感を拾う」検知タスクはモデルサイズが大きい方が精度が高い傾向があり、実機でHaikuが既知の誤字「ロールオート」を見逃す実例を確認した。処理量が少ない(1日4〜6記事)ため単価差があっても絶対的なコスト増は小さい判断)
-- **`.claude/skills/refine-x-posts/`**: Xポストの**Stage2+3(精製・校正)**をGemma/Qwenのローカルモデルの代わりにClaudeが直接行うSkill(Haikuモデル、2026-10-07導入)。生成側は品質に問題が出ていないためHaikuのまま維持している。`audit-drafts`と同じ設計(ファイルパスと位置情報だけを渡し、`Agent`ツールでidxごとに個別呼び出し、サブエージェント自身が生データを読んで分割・URL抽出・本文生成を行う)。文字数等のスタイル規則(5章参照)は`refiner.py`のプロンプトをそのまま移植してある。`refiner.py`/`reviewer.py`の現状は4章参照
+- **`.claude/skills/refine-x-posts/`**: Xポストの**Stage2+3(精製・校正)**をGemma/Qwenのローカルモデルの代わりにClaudeが直接行うSkill(2026-10-07導入時はHaiku、2026-10-25にSonnetへ変更)。`audit-drafts`と同じ設計(ファイルパスと位置情報だけを渡し、`Agent`ツールでidxごとに個別呼び出し、サブエージェント自身が生データを読んで分割・URL抽出・本文生成を行う)。文字数等のスタイル規則(5章参照)は`refiner.py`のプロンプトをそのまま移植してある。`refiner.py`/`reviewer.py`の現状は4章参照
+  - 💡 2026-10-25: Xのインプレッション低下(9月は100〜500、10月中旬以降は10〜30が多いというユーザー報告、5章参照)への対応として、Haiku→Sonnetへ変更しプロンプトも強化した。変更点: (1)本文を書く前に、元データ中の複数の事実から「最もインパクトのある単一の事実」を選び、それだけを軸に組み立てるステップを追加(情報を詰め込みすぎて逆に印象が薄まるのを防ぐ)。(2)Before→After・期待とのギャップ・単刀直入な数字提示という3種類の構成パターンを提示し、内容に合うものを選ばせる。(3)出力前の自己チェック(インパクトのある事実を選べているか・決まり文句になっていないか・文字数・文体)を追加。誤字検知(`audit-drafts`)と異なり効果の実測はできていない(インプレッション数の直接取得手段が無い、5章参照)ため、体感ベースでの改善として位置づけ
 - **⚠️ `Workflow`ツールは当てにできない(2026-10-09訂正)**: 両Skillとも当初`Workflow`という名前のツール(scriptPath指定で`.js`ファイルを実行し、内部で`agent()`/`parallel()`を呼ぶ想定)経由で実装されていた。2026-10-04時点ではこの呼び出しは実際に成功していた(`.claude/workflows/audit-note-drafts.js`をバックグラウンドで起動・完了させた実行履歴が残っている)が、2026-10-09に再検証した際は対話セッション・`claude -p`非対話セッションのどちらでも同じ呼び出しが失敗することを実機で確認した(原因未確定)。存在しない/使えない前提でツールを呼ぼうとすると、実行するClaude自身がその場で代替手段を即興で作ることになり、実際に「idxの取り違え」事故(生成物が誤った元データに紐づく)が発生した(自己検出・修正はできたが保証されない)。両Skillとも実在する`Agent`ツール(対象ごとに個別呼び出し、モデルは`audit-drafts`がsonnet、`refine-x-posts`がhaiku)を使う設計に書き換え済み。`.claude/workflows/`ディレクトリ自体は削除した。新しくSkillを追加する際、「Workflow」のような聞き覚えのあるツール名を実在確認せずに前提にしないこと
 - `scripts/daily_auto_run.sh`(2026-10-07導入、通称「プランB」): 日次パイプラインを無人化するオーケストレーションスクリプト。Windowsタスクスケジューラ(タスク名`CuratorCopyDailyAutoRun`、毎日11:00、`schtasks.exe`で登録済み、ログオン状態が必要)から`wsl.exe`経由で呼ばれる想定。`StartWhenAvailable`を有効化済み(2026-10-07)なので、11:00にPCがオフ/再起動中だった場合も次にログオンした時点で自動的に実行される。Active Hours(10:00〜翌4:00、Windows側の設定)が既にこの時間帯のWindows Update自動再起動を抑制している。Part A(Stage1まで)→note.com記事生成→`claude -p "まず /audit-drafts を実行して。完了したら、続けて /refine-x-posts を実行して。" --permission-mode bypassPermissions`(Claude Code非対話モード、サブスクリプション使用量内で完結、追加課金なし。監査とXポスト精製を1つのセッションにまとめ、セッション起動時の固定コンテキストコストを2回払わないようにしている)→note.com公開(`publish_to_note_free_batch.py`、`audit_passed is True`の記事のみ)→X投稿(`run_today_pipeline_partb.py`、SocialDog予約+Git push)の順で実行し、ログを`output/daily_auto_logs/`に残す。最後に、監査不合格のまま未公開で残っている記事があれば一覧表示する(原因調査→コード修正→該当idxだけ再生成→再監査→再公開、というサイクルを日々回す想定)。さらに`scripts/notify_daily_result.py`を呼び、その日のログからサマリー(X予約件数・note.com公開件数・監査不合格一覧・エラー行)を作ってDiscord Webhook(`.env`の`DISCORD_WEBHOOK_URL`、gitignore対象)に投稿する(2026-10-08導入。無人実行の結果を能動的に把握できるようにする目的)。このステップ自体の失敗はスクリプト全体の成否に影響させない。
   - 💡 2026-10-08〜2026-10-24: 当初はDiscord投稿に加えてWindows側の`%TEMP%`にレポートを書き出し`notepad.exe`で自動的に開く機能もあったが、不要になったためユーザーの要望で削除済み(現在はDiscord通知のみ)
