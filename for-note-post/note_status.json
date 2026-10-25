@@ -2389,5 +2389,68 @@
             "published_to_note": true,
             "published_at": "2026-10-24 12:27:12"
         }
+    },
+    "output_prex_posts_20261025_101612.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261025_103610",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261025_103610.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データは具体的なモデル名を明示していない(\"though specific model names are not listed in the abstract\")にもかかわらず、本文が断定的にLlama/Mistralという固有名詞を創作している"
+            ],
+            "audit_at": "2026-10-25 10:51:58"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261025_103830",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261025_103830.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文で「推覚ステップ」という誤変換(正しくは推論)が見られる",
+                "「開発者にとっての有用性」セクションで「修正・修正する」のような不自然な語の重複がある"
+            ],
+            "audit_at": "2026-10-25 10:51:58"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261025_104127",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261025_104127.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文見出し「概述と定義」の概述が中国語の単語であり、目次の「概要と定義」と表記が不一致になっている"
+            ],
+            "audit_at": "2026-10-25 10:51:58"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261025_104413",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261025_104413.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-25 10:51:58",
+            "published_to_note": true,
+            "published_at": "2026-10-25 10:57:08"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261025_104654",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261025_104654.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-25 10:51:58",
+            "published_to_note": true,
+            "published_at": "2026-10-25 10:57:37"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261025_104917",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261025_104917.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行に意味不明な片仮名語「ディオノット」が混入し破綻している(本文14行目は正しく「クォータローター専用のシミュレーション環境」と表記されており、タイトルのみ表記が不一致)"
+            ],
+            "audit_at": "2026-10-25 10:51:58"
+        }
     }
 }
