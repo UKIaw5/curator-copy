@@ -2457,22 +2457,21 @@
             "note_used": true,
             "generated_at": "20261026_103547",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261026_103547.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "筆者の視点内に簡体字中国語「重视」が混入(正しくは「重視」)、「高度重视」も中国語的表現で不自然"
-            ],
-            "audit_at": "2026-10-26 10:52:36"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-26 11:43:27",
+            "published_to_note": true,
+            "published_at": "2026-10-26 11:44:00"
         },
         "1": {
             "note_used": true,
             "generated_at": "20261026_103817",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261026_103817.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "第2章の3項目の箇条書きが記号・改行なしで1つの段落に結合され判読困難",
-                "タイトルは「tensorコア」(小文字)だが本文は「Tensorコア」(大文字)で表記が不統一"
-            ],
-            "audit_at": "2026-10-26 10:52:36"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-26 11:43:27",
+            "published_to_note": true,
+            "published_at": "2026-10-26 11:44:30"
         },
         "2": {
             "note_used": true,
@@ -2488,33 +2487,31 @@
             "note_used": true,
             "generated_at": "20261026_104329",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261026_104329.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "目次の見出しに簡体字中国語「为」が混入(正しくは「為」)",
-                "目次と本文見出しでセクション名の表記が不一致"
-            ],
-            "audit_at": "2026-10-26 10:52:36"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-26 11:43:27",
+            "published_to_note": true,
+            "published_at": "2026-10-26 11:44:58"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261026_104658",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261026_104658.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "筆者の視点内に簡体字中国語「创新」が混入(正しくは「創造」または「革新」)"
-            ],
-            "audit_at": "2026-10-26 10:52:36"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-26 11:43:27",
+            "published_to_note": true,
+            "published_at": "2026-10-26 11:45:27"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261026_104946",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261026_104946.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル行「構造基づく薬物設計」は助詞「に」が脱落した非文法的表記",
-                "本文では「構造に基づく薬物設計」と正しく表記され、タイトルと不一致"
-            ],
-            "audit_at": "2026-10-26 10:52:36"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-26 11:43:27",
+            "published_to_note": true,
+            "published_at": "2026-10-26 11:45:56"
         }
     }
 }
