@@ -200,3 +200,88 @@ Update available: cloakbrowser 0.5.8 → 0.6.4. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-27 12:11!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261026_101543.md`!
+To github.com:UKIaw5/curator-copy.git
+   bfa8fbb..6872076  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261026_103547.md (raw: output_prex_posts_20261026_101543.md, idx: 0)
+    理由: 筆者の視点内に簡体字中国語「重视」が混入(正しくは「重視」)、「高度重视」も中国語的表現で不自然
+
+- note_article_20261026_103817.md (raw: output_prex_posts_20261026_101543.md, idx: 1)
+    理由: 第2章の3項目の箇条書きが記号・改行なしで1つの段落に結合され判読困難
+    理由: タイトルは「tensorコア」(小文字)だが本文は「Tensorコア」(大文字)で表記が不統一
+
+- note_article_20261026_104329.md (raw: output_prex_posts_20261026_101543.md, idx: 3)
+    理由: 目次の見出しに簡体字中国語「为」が混入(正しくは「為」)
+    理由: 目次と本文見出しでセクション名の表記が不一致
+
+- note_article_20261026_104658.md (raw: output_prex_posts_20261026_101543.md, idx: 4)
+    理由: 筆者の視点内に簡体字中国語「创新」が混入(正しくは「創造」または「革新」)
+
+- note_article_20261026_104946.md (raw: output_prex_posts_20261026_101543.md, idx: 5)
+    理由: タイトル行「構造基づく薬物設計」は助詞「に」が脱落した非文法的表記
+    理由: 本文では「構造に基づく薬物設計」と正しく表記され、タイトルと不一致
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261026_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-26 15:22
+   - 2026-10-26 18:45
+   - 2026-10-26 22:13
+   - 2026-10-27 07:15
+   - 2026-10-27 09:33
+   - 2026-10-27 12:11
+
+📝 note.com: 1件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261026_103547.md (raw: output_prex_posts_20261026_101543.md, idx: 0)
+    理由: 筆者の視点内に簡体字中国語「重视」が混入(正しくは「重視」)、「高度重视」も中国語的表現で不自然
+
+- note_article_20261026_103817.md (raw: output_prex_posts_20261026_101543.md, idx: 1)
+    理由: 第2章の3項目の箇条書きが記号・改行なしで1つの段落に結合され判読困難
+    理由: タイトルは「tensorコア」(小文字)だが本文は「Tensorコア」(大文字)で表記が不統一
+
+- note_article_20261026_104329.md (raw: output_prex_posts_20261026_101543.md, idx: 3)
+    理由: 目次の見出しに簡体字中国語「为」が混入(正しくは「為」)
+    理由: 目次と本文見出しでセクション名の表記が不一致
+
+- note_article_20261026_104658.md (raw: output_prex_posts_20261026_101543.md, idx: 4)
+    理由: 筆者の視点内に簡体字中国語「创新」が混入(正しくは「創造」または「革新」)
+
+- note_article_20261026_104946.md (raw: output_prex_posts_20261026_101543.md, idx: 5)
+    理由: タイトル行「構造基づく薬物設計」は助詞「に」が脱落した非文法的表記
+    理由: 本文では「構造に基づく薬物設計」と正しく表記され、タイトルと不一致
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Mon Oct 26 10:58:46 JST 2026 ===

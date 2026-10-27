@@ -2513,5 +2513,68 @@
             "published_to_note": true,
             "published_at": "2026-10-26 11:45:56"
         }
+    },
+    "output_prex_posts_20261027_101543.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261027_103547",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261027_103547.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "■ この記事で得られること内の「最効的な防御策を提案する」という語が「最も効果的な」の誤変換(文字欠落)であり日本語として成立していない"
+            ],
+            "audit_at": "2026-10-27 10:51:38"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261027_103839",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261027_103839.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-27 10:51:38",
+            "published_to_note": true,
+            "published_at": "2026-10-27 10:54:48"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261027_104103",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261027_104103.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "1章(14〜18行目)でTypeScript型安全性やJest/Vitestのベストプラクティス適用を「実現しています」と断定しているが、元データは\"likely\"/\"might\"でヘッジされた推測に過ぎず、同じ内容を2章では正しく「推測されます」としている箇所との不整合もあり、ハルシネーションに該当する"
+            ],
+            "audit_at": "2026-10-27 10:51:38"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261027_104350",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261027_104350.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「強力なベースラインの成功率: 40%」と「強力なベース1の成功率は39%である」のように同じ概念が「ベースライン」と「ベース1」に表記分裂している",
+                "「動的な強化学流動（RL policy）を...」の「強化学流動」が日本語として成立しない崩れた表記になっている"
+            ],
+            "audit_at": "2026-10-27 10:51:38"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261027_104623",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261027_104623.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "■ 筆者の視点セクション末尾に「具体的な利用事例や実在しない具体的なデータは避けた上で、推測・類推・問いかけの形で考察を述べました」というモデルの執筆方針についてのメタ発言が本文に漏出している"
+            ],
+            "audit_at": "2026-10-27 10:51:38"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261027_104925",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261027_104925.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-27 10:51:38",
+            "published_to_note": true,
+            "published_at": "2026-10-27 10:55:17"
+        }
     }
 }
