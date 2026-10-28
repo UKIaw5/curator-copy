@@ -2575,5 +2575,70 @@
             "published_to_note": true,
             "published_at": "2026-10-27 10:55:17"
         }
+    },
+    "output_prex_posts_20261028_101544.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261028_103436",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261028_103436.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「■ REVAのパフォーマンスと指標」セクションで元データに存在しない「ネットワーク最適化」「データ処理の効率化」という無関係な内容を断定表現で記述している(ハルシネーション)",
+                "「■ 筆者の視点」内に「いつかい」という文脈上意味不明な語があり文が破綻している"
+            ],
+            "audit_at": "20261028_105133"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261028_103736",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261028_103736.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "20261028_105133",
+            "published_to_note": true,
+            "published_at": "2026-10-28 10:55:05"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261028_103954",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261028_103954.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「■ この記事で得られること」で「強化学習」が「リforcement Learning」という英語と片仮名が混在した壊れた表記になっている(本文中では正しく「強化学習（RL）」と表記されており不統一)",
+                "結論部分で製品名が「Ψ-06」と表記されており、タイトル・本文全体の正しい表記「Ψ-0.6」と不統一(小数点の脱落)"
+            ],
+            "audit_at": "20261028_105133"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261028_104231",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261028_104231.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "見出し「■ 4. 開発者向けのインパリケーション」の「インパリケーション」が英語implicationの片仮名表記として誤っている(正しくは「インプリケーション」)"
+            ],
+            "audit_at": "20261028_105133"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261028_104509",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261028_104509.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "20261028_105133",
+            "published_to_note": true,
+            "published_at": "2026-10-28 10:55:34"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261028_104742",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261028_104742.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "固有名詞「DecisionRAG」が本文中で一箇所「DecisionR4」という誤った表記になっており記事内で表記が不統一",
+                "元データの Natural Questions Benchmark が「ナチュラルキーボンズベンチマーク」という意味不明な片仮名語に誤変換されている"
+            ],
+            "audit_at": "20261028_105133"
+        }
     }
 }

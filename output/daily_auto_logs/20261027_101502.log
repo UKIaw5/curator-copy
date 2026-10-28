@@ -209,3 +209,78 @@ Update available: cloakbrowser 0.5.8 → 0.6.4. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-28 12:15!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261027_101543.md`!
+To github.com:UKIaw5/curator-copy.git
+   40731f2..95a85c0  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261027_103547.md (raw: output_prex_posts_20261027_101543.md, idx: 0)
+    理由: ■ この記事で得られること内の「最効的な防御策を提案する」という語が「最も効果的な」の誤変換(文字欠落)であり日本語として成立していない
+
+- note_article_20261027_104103.md (raw: output_prex_posts_20261027_101543.md, idx: 2)
+    理由: 1章(14〜18行目)でTypeScript型安全性やJest/Vitestのベストプラクティス適用を「実現しています」と断定しているが、元データは"likely"/"might"でヘッジされた推測に過ぎず、同じ内容を2章では正しく「推測されます」としている箇所との不整合もあり、ハルシネーションに該当する
+
+- note_article_20261027_104350.md (raw: output_prex_posts_20261027_101543.md, idx: 3)
+    理由: 「強力なベースラインの成功率: 40%」と「強力なベース1の成功率は39%である」のように同じ概念が「ベースライン」と「ベース1」に表記分裂している
+    理由: 「動的な強化学流動（RL policy）を...」の「強化学流動」が日本語として成立しない崩れた表記になっている
+
+- note_article_20261027_104623.md (raw: output_prex_posts_20261027_101543.md, idx: 4)
+    理由: ■ 筆者の視点セクション末尾に「具体的な利用事例や実在しない具体的なデータは避けた上で、推測・類推・問いかけの形で考察を述べました」というモデルの執筆方針についてのメタ発言が本文に漏出している
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261027_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-27 15:34
+   - 2026-10-27 19:02
+   - 2026-10-27 22:05
+   - 2026-10-28 07:15
+   - 2026-10-28 09:43
+   - 2026-10-28 12:15
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261027_103547.md (raw: output_prex_posts_20261027_101543.md, idx: 0)
+    理由: ■ この記事で得られること内の「最効的な防御策を提案する」という語が「最も効果的な」の誤変換(文字欠落)であり日本語として成立していない
+
+- note_article_20261027_104103.md (raw: output_prex_posts_20261027_101543.md, idx: 2)
+    理由: 1章(14〜18行目)でTypeScript型安全性やJest/Vitestのベストプラクティス適用を「実現しています」と断定しているが、元データは"likely"/"might"でヘッジされた推測に過ぎず、同じ内容を2章では正しく「推測されます」としている箇所との不整合もあり、ハルシネーションに該当する
+
+- note_article_20261027_104350.md (raw: output_prex_posts_20261027_101543.md, idx: 3)
+    理由: 「強力なベースラインの成功率: 40%」と「強力なベース1の成功率は39%である」のように同じ概念が「ベースライン」と「ベース1」に表記分裂している
+    理由: 「動的な強化学流動（RL policy）を...」の「強化学流動」が日本語として成立しない崩れた表記になっている
+
+- note_article_20261027_104623.md (raw: output_prex_posts_20261027_101543.md, idx: 4)
+    理由: ■ 筆者の視点セクション末尾に「具体的な利用事例や実在しない具体的なデータは避けた上で、推測・類推・問いかけの形で考察を述べました」というモデルの執筆方針についてのメタ発言が本文に漏出している
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Tue Oct 27 10:57:12 JST 2026 ===
