@@ -224,3 +224,82 @@ Update available: cloakbrowser 0.5.8 → 0.6.4. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-29 12:26!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261028_101544.md`!
+To github.com:UKIaw5/curator-copy.git
+   7e2f207..35cd557  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261028_103436.md (raw: output_prex_posts_20261028_101544.md, idx: 0)
+    理由: 「■ REVAのパフォーマンスと指標」セクションで元データに存在しない「ネットワーク最適化」「データ処理の効率化」という無関係な内容を断定表現で記述している(ハルシネーション)
+    理由: 「■ 筆者の視点」内に「いつかい」という文脈上意味不明な語があり文が破綻している
+
+- note_article_20261028_103954.md (raw: output_prex_posts_20261028_101544.md, idx: 2)
+    理由: 「■ この記事で得られること」で「強化学習」が「リforcement Learning」という英語と片仮名が混在した壊れた表記になっている(本文中では正しく「強化学習（RL）」と表記されており不統一)
+    理由: 結論部分で製品名が「Ψ-06」と表記されており、タイトル・本文全体の正しい表記「Ψ-0.6」と不統一(小数点の脱落)
+
+- note_article_20261028_104231.md (raw: output_prex_posts_20261028_101544.md, idx: 3)
+    理由: 見出し「■ 4. 開発者向けのインパリケーション」の「インパリケーション」が英語implicationの片仮名表記として誤っている(正しくは「インプリケーション」)
+
+- note_article_20261028_104742.md (raw: output_prex_posts_20261028_101544.md, idx: 5)
+    理由: 固有名詞「DecisionRAG」が本文中で一箇所「DecisionR4」という誤った表記になっており記事内で表記が不統一
+    理由: 元データの Natural Questions Benchmark が「ナチュラルキーボンズベンチマーク」という意味不明な片仮名語に誤変換されている
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261028_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-28 15:43
+   - 2026-10-28 19:02
+   - 2026-10-28 21:56
+   - 2026-10-29 07:29
+   - 2026-10-29 09:22
+   - 2026-10-29 12:26
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261028_103436.md (raw: output_prex_posts_20261028_101544.md, idx: 0)
+    理由: 「■ REVAのパフォーマンスと指標」セクションで元データに存在しない「ネットワーク最適化」「データ処理の効率化」という無関係な内容を断定表現で記述している(ハルシネーション)
+    理由: 「■ 筆者の視点」内に「いつかい」という文脈上意味不明な語があり文が破綻している
+
+- note_article_20261028_103954.md (raw: output_prex_posts_20261028_101544.md, idx: 2)
+    理由: 「■ この記事で得られること」で「強化学習」が「リforcement Learning」という英語と片仮名が混在した壊れた表記になっている(本文中では正しく「強化学習（RL）」と表記されており不統一)
+    理由: 結論部分で製品名が「Ψ-06」と表記されており、タイトル・本文全体の正しい表記「Ψ-0.6」と不統一(小数点の脱落)
+
+- note_article_20261028_104231.md (raw: output_prex_posts_20261028_101544.md, idx: 3)
+    理由: 見出し「■ 4. 開発者向けのインパリケーション」の「インパリケーション」が英語implicationの片仮名表記として誤っている(正しくは「インプリケーション」)
+
+- note_article_20261028_104742.md (raw: output_prex_posts_20261028_101544.md, idx: 5)
+    理由: 固有名詞「DecisionRAG」が本文中で一箇所「DecisionR4」という誤った表記になっており記事内で表記が不統一
+    理由: 元データの Natural Questions Benchmark が「ナチュラルキーボンズベンチマーク」という意味不明な片仮名語に誤変換されている
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Wed Oct 28 10:57:28 JST 2026 ===

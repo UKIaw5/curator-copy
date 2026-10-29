@@ -2637,5 +2637,70 @@
             "published_to_note": true,
             "published_at": "2026-10-28 12:48:50"
         }
+    },
+    "output_prex_posts_20261029_101541.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261029_103241",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261029_103241.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-29 10:49:26",
+            "published_to_note": true,
+            "published_at": "2026-10-29 10:55:30"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261029_103520",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261029_103520.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行・見出しで「AIアジェント」(エ脱落)と本文の「AIエージェント」で表記ゆれ",
+                "「埋らしている」という日本語として破綻した一文がある"
+            ],
+            "audit_at": "2026-10-29 10:49:26"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261029_103757",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261029_103757.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データの\"may\"でヘッジされた推測(特定アプリを切り替える可能性)を、生成記事が断定的な既遂事実として書いている"
+            ],
+            "audit_at": "2026-10-29 10:49:26"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261029_104013",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261029_104013.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データに存在しないライフタイム管理・メモリ管理の具体的な付与方法を断定的事実として記述している(ハルシネーション)",
+                "「長長期的」という二重誤変換の誤字がある"
+            ],
+            "audit_at": "2026-10-29 10:49:26"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261029_104230",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261029_104230.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「セキュリティプロトル」(セキュリティプロトコルの誤変換、文字欠落)",
+                "「entiments」(entitlementsの誤記)という用語破損がある"
+            ],
+            "audit_at": "2026-10-29 10:49:26"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261029_104516",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261029_104516.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「この記事で得られること」内は「世界予想メカニズム」、本文・筆者の視点内は「世界予測」で表記が一致していない(誤変換/タイポ)"
+            ],
+            "audit_at": "2026-10-29 10:49:26"
+        }
     }
 }
