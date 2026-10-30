@@ -186,3 +186,88 @@ Update available: cloakbrowser 0.5.8 → 0.6.4. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-30 12:17!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261029_101541.md`!
+To github.com:UKIaw5/curator-copy.git
+   e128269..b1b5430  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261029_103520.md (raw: output_prex_posts_20261029_101541.md, idx: 1)
+    理由: タイトル行・見出しで「AIアジェント」(エ脱落)と本文の「AIエージェント」で表記ゆれ
+    理由: 「埋らしている」という日本語として破綻した一文がある
+
+- note_article_20261029_103757.md (raw: output_prex_posts_20261029_101541.md, idx: 2)
+    理由: 元データの"may"でヘッジされた推測(特定アプリを切り替える可能性)を、生成記事が断定的な既遂事実として書いている
+
+- note_article_20261029_104013.md (raw: output_prex_posts_20261029_101541.md, idx: 3)
+    理由: 元データに存在しないライフタイム管理・メモリ管理の具体的な付与方法を断定的事実として記述している(ハルシネーション)
+    理由: 「長長期的」という二重誤変換の誤字がある
+
+- note_article_20261029_104230.md (raw: output_prex_posts_20261029_101541.md, idx: 4)
+    理由: 「セキュリティプロトル」(セキュリティプロトコルの誤変換、文字欠落)
+    理由: 「entiments」(entitlementsの誤記)という用語破損がある
+
+- note_article_20261029_104516.md (raw: output_prex_posts_20261029_101541.md, idx: 5)
+    理由: 「この記事で得られること」内は「世界予想メカニズム」、本文・筆者の視点内は「世界予測」で表記が一致していない(誤変換/タイポ)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261029_101502.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-29 15:31
+   - 2026-10-29 18:52
+   - 2026-10-29 21:45
+   - 2026-10-30 07:20
+   - 2026-10-30 09:17
+   - 2026-10-30 12:17
+
+📝 note.com: 1件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261029_103520.md (raw: output_prex_posts_20261029_101541.md, idx: 1)
+    理由: タイトル行・見出しで「AIアジェント」(エ脱落)と本文の「AIエージェント」で表記ゆれ
+    理由: 「埋らしている」という日本語として破綻した一文がある
+
+- note_article_20261029_103757.md (raw: output_prex_posts_20261029_101541.md, idx: 2)
+    理由: 元データの"may"でヘッジされた推測(特定アプリを切り替える可能性)を、生成記事が断定的な既遂事実として書いている
+
+- note_article_20261029_104013.md (raw: output_prex_posts_20261029_101541.md, idx: 3)
+    理由: 元データに存在しないライフタイム管理・メモリ管理の具体的な付与方法を断定的事実として記述している(ハルシネーション)
+    理由: 「長長期的」という二重誤変換の誤字がある
+
+- note_article_20261029_104230.md (raw: output_prex_posts_20261029_101541.md, idx: 4)
+    理由: 「セキュリティプロトル」(セキュリティプロトコルの誤変換、文字欠落)
+    理由: 「entiments」(entitlementsの誤記)という用語破損がある
+
+- note_article_20261029_104516.md (raw: output_prex_posts_20261029_101541.md, idx: 5)
+    理由: 「この記事で得られること」内は「世界予想メカニズム」、本文・筆者の視点内は「世界予測」で表記が一致していない(誤変換/タイポ)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Thu Oct 29 10:57:25 JST 2026 ===

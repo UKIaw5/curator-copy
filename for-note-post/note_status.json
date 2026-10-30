@@ -2699,5 +2699,66 @@
             "published_to_note": true,
             "published_at": "2026-10-29 11:22:31"
         }
+    },
+    "output_prex_posts_20261030_101542.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261030_103509",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261030_103509.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「2. ツールの動作原理」の箇条書きのうち、命名規則の強制・関数のサイズ制約・依存性の注入パターンの検証の3箇所で、元データの\"typically\"/\"may\"というヘッジ表現が、生成記事では「検証します」「促します」「向上させます」という断定表現に変換されている(同セクション内の4番目の箇条書きだけが正しく「可能性があります」とヘッジを保持しており、一貫性のない断定化である)"
+            ],
+            "audit_at": "2026-10-30 10:51:57"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261030_103740",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261030_103740.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行および「この記事で得られること」1項目目で「ランディングページ」が「ランドイングページ」という意味不明な片仮名語に誤変換されている",
+                "本文中(18行目・45行目)では正しく「ランディングページ」と表記されており、同一記事内で用語表記が不一致になっている"
+            ],
+            "audit_at": "2026-10-30 10:51:57"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261030_104148",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261030_104148.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-30 10:51:57",
+            "published_to_note": true,
+            "published_at": "2026-10-30 10:56:29"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261030_104428",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261030_104428.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-10-30 10:51:57"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261030_104647",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261030_104647.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データでは「weaker teacher models(弱い教師モデル)」と明記されているのに対し、生成記事では「より強力な教師モデル」と意味を反転させた断定的な記述になっている(16行目)"
+            ],
+            "audit_at": "2026-10-30 10:51:57"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261030_104919",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261030_104919.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル・本文全体で「ヒューマノイド(Humanoid)」が意味不明な片仮名語「ハイドロイド」に一貫して誤変換されている(タイトル行含む10箇所以上)"
+            ],
+            "audit_at": "2026-10-30 10:51:57"
+        }
     }
 }
