@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 def git_commit_and_push():
     try:
@@ -25,7 +26,7 @@ def main():
     print("\nStep 1: Launching SocialDog Auto-Scheduler...")
     os.environ["DISPLAY"] = ":0"
     try:
-        subprocess.run(["python3", "automation/socialdog_poster.py"], check=True)
+        subprocess.run([sys.executable, "automation/socialdog_poster.py"], check=True)
         print("✅ SocialDog Poster executed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"❌ Error during socialdog_poster.py execution: {e}")

@@ -222,3 +222,9 @@
 - 対策: 生成済みファイルを直接手で修正(idx0は3箇所にヘッジ表現を追加、idx4は「より強力な」→「弱い」、idx5は全箇所「ハイドロイド」→「ヒューマノイド」に置換)。コード/プロンプト変更は3回ルールの対象外
 - 再発回数: 1
 - 追記: idx0は再監査で「4. 技術的な主要なコンポーネントと指標」内の循環的複雑度の説明にも同種のヘッジ欠落(元データ"Likely...ensuring..."の後半だけ「保証します」と断定化)が見つかり、1回目では見落としていた。2回目の修正(「保証します」→「保証する可能性があります」)で対応
+
+### 2026-11-01 | run_today_pipeline_partb.pyがsocialdog_poster.pyをsystem python3で起動していた
+- 状況: 10/31分のX投稿予約で`.venv/bin/python3 run_today_pipeline_partb.py`を実行したところ、`socialdog_poster.py`が`ModuleNotFoundError: No module named 'cloakbrowser'`で失敗した
+- 原因: `run_today_pipeline_partb.py`の28行目が`subprocess.run(["python3", "automation/socialdog_poster.py"], ...)`と固定文字列"python3"でサブプロセスを起動していたため、`.venv/bin/python3 run_today_pipeline_partb.py`のように(`source .venv/bin/activate`せずに)直接venvのpythonで親プロセスを起動した場合、サブプロセス側はPATH上のsystem python3を使ってしまい、playwright/cloakbrowser等のvenv専用パッケージが見えない。`daily_auto_run.sh`は事前に`source .venv/bin/activate`しているため今まで気づかれなかった(venv化後はPATH上のpython3もvenvのものになるため)
+- 対策: [実施済み・2026-11-01] `sys.executable`を使うように修正(固定文字列"python3"を廃止)。再現性のあるコードの不具合のため3回ルール対象外、1回目で即修正
+- 再発回数: 初出
