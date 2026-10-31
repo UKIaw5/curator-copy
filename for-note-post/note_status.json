@@ -2761,5 +2761,67 @@
             "published_to_note": true,
             "published_at": "2026-10-30 13:29:13"
         }
+    },
+    "output_prex_posts_20261031_101631.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261031_101937",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261031_101937.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い"
+            ],
+            "audit_at": "2026-10-31 10:22:40"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261031_101957",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261031_101957.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い"
+            ],
+            "audit_at": "2026-10-31 10:22:40"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261031_102017",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261031_102017.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い"
+            ],
+            "audit_at": "2026-10-31 10:22:40"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261031_102037",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261031_102037.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い"
+            ],
+            "audit_at": "2026-10-31 10:22:40"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261031_102058",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261031_102058.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い"
+            ],
+            "audit_at": "2026-10-31 10:22:40"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261031_102118",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261031_102118.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い"
+            ],
+            "audit_at": "2026-10-31 10:22:40"
+        }
     }
 }

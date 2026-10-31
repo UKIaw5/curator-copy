@@ -217,3 +217,82 @@ Update available: cloakbrowser 0.5.8 → 0.6.4. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-10-31 12:08!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261030_101542.md`!
+To github.com:UKIaw5/curator-copy.git
+   9820b6d..334b00f  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261030_103509.md (raw: output_prex_posts_20261030_101542.md, idx: 0)
+    理由: 「2. ツールの動作原理」の箇条書きのうち、命名規則の強制・関数のサイズ制約・依存性の注入パターンの検証の3箇所で、元データの"typically"/"may"というヘッジ表現が、生成記事では「検証します」「促します」「向上させます」という断定表現に変換されている(同セクション内の4番目の箇条書きだけが正しく「可能性があります」とヘッジを保持しており、一貫性のない断定化である)
+
+- note_article_20261030_103740.md (raw: output_prex_posts_20261030_101542.md, idx: 1)
+    理由: タイトル行および「この記事で得られること」1項目目で「ランディングページ」が「ランドイングページ」という意味不明な片仮名語に誤変換されている
+    理由: 本文中(18行目・45行目)では正しく「ランディングページ」と表記されており、同一記事内で用語表記が不一致になっている
+
+- note_article_20261030_104647.md (raw: output_prex_posts_20261030_101542.md, idx: 4)
+    理由: 元データでは「weaker teacher models(弱い教師モデル)」と明記されているのに対し、生成記事では「より強力な教師モデル」と意味を反転させた断定的な記述になっている(16行目)
+
+- note_article_20261030_104919.md (raw: output_prex_posts_20261030_101542.md, idx: 5)
+    理由: タイトル・本文全体で「ヒューマノイド(Humanoid)」が意味不明な片仮名語「ハイドロイド」に一貫して誤変換されている(タイトル行含む10箇所以上)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261030_101501.log
+
+🐦 X投稿: 6件 予約
+   - 2026-10-30 15:17
+   - 2026-10-30 19:00
+   - 2026-10-30 21:49
+   - 2026-10-31 07:16
+   - 2026-10-31 09:24
+   - 2026-10-31 12:08
+
+📝 note.com: 1件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261030_103509.md (raw: output_prex_posts_20261030_101542.md, idx: 0)
+    理由: 「2. ツールの動作原理」の箇条書きのうち、命名規則の強制・関数のサイズ制約・依存性の注入パターンの検証の3箇所で、元データの"typically"/"may"というヘッジ表現が、生成記事では「検証します」「促します」「向上させます」という断定表現に変換されている(同セクション内の4番目の箇条書きだけが正しく「可能性があります」とヘッジを保持しており、一貫性のない断定化である)
+
+- note_article_20261030_103740.md (raw: output_prex_posts_20261030_101542.md, idx: 1)
+    理由: タイトル行および「この記事で得られること」1項目目で「ランディングページ」が「ランドイングページ」という意味不明な片仮名語に誤変換されている
+    理由: 本文中(18行目・45行目)では正しく「ランディングページ」と表記されており、同一記事内で用語表記が不一致になっている
+
+- note_article_20261030_104647.md (raw: output_prex_posts_20261030_101542.md, idx: 4)
+    理由: 元データでは「weaker teacher models(弱い教師モデル)」と明記されているのに対し、生成記事では「より強力な教師モデル」と意味を反転させた断定的な記述になっている(16行目)
+
+- note_article_20261030_104919.md (raw: output_prex_posts_20261030_101542.md, idx: 5)
+    理由: タイトル・本文全体で「ヒューマノイド(Humanoid)」が意味不明な片仮名語「ハイドロイド」に一貫して誤変換されている(タイトル行含む10箇所以上)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+⚠️ エラー/❌行が2件検出されました(抜粋):
+   Warning: Failed to fetch arXiv (cs.AI) - 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.AI&sortBy=submittedDate&sortOrder=descending&start=0&max_resu
+   ❌ Publication failed for this article. Stopping batch to prevent cascade errors.
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Fri Oct 30 10:58:41 JST 2026 ===
