@@ -190,3 +190,79 @@ Step 3: Generating detailed tech summaries (Stage 1 - Qwen)...
 
 --- Step 5: X post scheduling (SocialDog) + Git sync ---
 ⚠️ No pending X post files found in the output directory.
+To github.com:UKIaw5/curator-copy.git
+   ee2f7e2..0b5e8f9  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が6件あります:
+
+- note_article_20261031_101937.md (raw: output_prex_posts_20261031_101631.md, idx: 0)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_101957.md (raw: output_prex_posts_20261031_101631.md, idx: 1)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_102017.md (raw: output_prex_posts_20261031_101631.md, idx: 2)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_102037.md (raw: output_prex_posts_20261031_101631.md, idx: 3)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_102058.md (raw: output_prex_posts_20261031_101631.md, idx: 4)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_102118.md (raw: output_prex_posts_20261031_101631.md, idx: 5)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261031_101501.log
+
+🐦 X投稿: 0件 予約
+
+📝 note.com: 0件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が6件あります:
+
+- note_article_20261031_101937.md (raw: output_prex_posts_20261031_101631.md, idx: 0)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_101957.md (raw: output_prex_posts_20261031_101631.md, idx: 1)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_102017.md (raw: output_prex_posts_20261031_101631.md, idx: 2)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_102037.md (raw: output_prex_posts_20261031_101631.md, idx: 3)
+    理由: Ollama(gemma4:12b/qwen2.5-coder:14b)が生成時に全ステップで500 Internal Server Errorを返し、本文生成に失敗。本文はフォールバックの定型文(「元データを日本語化できなかったため、本文は省略しています」)のまま保存されている(6記事とも同一バイト列)。コンテンツの正確性・日本語品質の問題ではなく、生成時点でのOllama障害が原因。現在Ollamaは復旧済み(HTTP 200)のため、再生成すれば解消する可能性が高い
+
+- note_article_20261031_102058.md (raw: output_prex_posts_
+
+⚠️ エラー/❌行が58件検出されました(抜粋):
+   ⚠️ Qwen curation error: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate. Falling back to top 6 items.
+   ⚠️ Qwen API warning for 'Rethinking Neural Thickets Without Weight Perturbations': 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+   ⚠️ Qwen API warning for 'Read, Allocate, Route: Role-Coupled Tokenization for Pixel-Space Generative Transformers': 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+   ⚠️ Qwen API warning for 'Luggage re-identification: A study of strategies towards a real-world application': 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+   ⚠️ Qwen API warning for 'From extreme weather to agricultural consequences with agentic AI': 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Sat Oct 31 10:23:47 JST 2026 ===
