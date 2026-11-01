@@ -31,6 +31,20 @@ TARGET_TIME_SLOTS = [
     (22, 0),   # 就寝前
 ]
 
+# 💡 2026-11-01: SocialDog無料トライアルは同時に予約できる投稿数が10件までという
+# 仕様があり、上限に達すると「投稿を予約」ボタンがdisabledになる。以前はこれを
+# 検知しておらず、disabledボタンのクリック失敗という分かりにくいエラーで
+# バッチが止まり、原因調査にスクリーンショット撮影が必要だった(LEARNINGS.md
+# 2026-11-01「SocialDog無料トライアルの予約投稿上限」参照)。この例外は
+# その状態を明示的に表すためのもので、process_batch_scheduling側で
+# 「予期しないバグ」とは区別して穏やかに扱う(ファイルを未予約分だけに
+# 絞って残し、次回実行時に自動的に続きから予約させる)
+class SocialDogQueueLimitReached(Exception):
+    pass
+
+
+QUEUE_LIMIT_BANNER_TEXT = "予約投稿の上限に達しました"
+
 
 def has_valid_session_cookie(context, cookie_name):
     """💡 常駐プロファイル(USER_DATA_DIR)は既に自分でcookieを保持・延長できる。
@@ -196,6 +210,14 @@ def schedule_post_on_socialdog(page, text: str, target_time: datetime):
 
     set_schedule_datetime(page, target_time)
 
+    # 💡 上限到達時は「投稿を予約」ボタンがdisabledになり、そのままクリックすると
+    # actionability待ちの末にElementNotAttachedError等の分かりにくいエラーになる。
+    # クリックを試みる前に上限バナーの有無を明示的に確認する
+    if page.get_by_text(QUEUE_LIMIT_BANNER_TEXT).count() > 0:
+        raise SocialDogQueueLimitReached(
+            f"SocialDogの予約投稿上限に達しました(「{QUEUE_LIMIT_BANNER_TEXT}」を検知)"
+        )
+
     confirm_btn = page.get_by_role("button", name=re.compile("投稿を予約"))
     confirm_btn.click()
     print(f"✅ Scheduled for {target_time.strftime('%Y-%m-%d %H:%M')}!")
@@ -267,6 +289,29 @@ def process_batch_scheduling(limit: int = None):
                 # 💡 テスト実行(--test)ではゴールデンタイムの枠を消費させない
                 save_last_scheduled_time(target_time)
             time.sleep(random.uniform(2.0, 4.0))
+        except SocialDogQueueLimitReached as e:
+            # 💡 2026-11-01: これは「予期しないバグ」ではなく、SocialDog無料
+            # トライアルの仕様(同時予約10件まで)による想定内の停止。残りの
+            # 投稿はファイルに残して次回実行時に自動的に続きから予約させる
+            # (全件予約できた場合のみアーカイブするので、ここでは何もしない
+            # とファイル全体が残ってしまい次回また同じ投稿を重複予約して
+            # しまう。既に予約済みの冒頭(idx-1)件を取り除いた残りだけで
+            # ファイルを上書きする)
+            scheduled_count = idx - 1
+            remaining_posts = posts[scheduled_count:]
+            print(f"\n⏸️ {e}")
+            print(f"   {scheduled_count}/{len(posts)}件は予約済み。残り{len(remaining_posts)}件は"
+                  f"枠が空き次第、次回実行時に自動的に予約されます。")
+            if limit is None and remaining_posts:
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write("\n\n---\n\n".join(remaining_posts))
+            if sys.stdin.isatty() and not os.environ.get("CURATOR_UNATTENDED"):
+                try:
+                    input("Press Enter to close the browser...")
+                except EOFError:
+                    pass
+            context.close()
+            return True
         except Exception as e:
             print(f"⚠️ Aborting batch due to error on post {idx}: {e}")
             print("🔍 Leaving the browser open for inspection. Close it manually when done.")
