@@ -44,17 +44,29 @@ URL: {item_url}
         res.raise_for_status()
         data = res.json()
         summary = data.get("response", "").strip()
-        
+
         if summary:
             # Force append URL if it's missing from the generated summary
             if item_url and item_url not in summary:
                 summary = f"{summary}\n\nURL: {item_url}"
             return summary
-            
+
     except Exception as e:
         print(f"⚠️ Qwen API warning for '{item.get('title')}': {e}")
-    
-    return f"Title: {item.get('title')}\nURL: {item_url}"
+
+    # 💡 2026-11-01: 以前はここで "Title: ...\nURL: ..." というタイトルのみの
+    # スタブを静かに返していた。このスタブは一見正常な要約と区別がつかない形で
+    # Stage1出力(output/raw/output_prex_posts_*.md)に混入し、後続のnote.com記事
+    # 生成・/refine-x-postsがタイトルだけから架空の技術詳細を「捏造」する事故が
+    # 実際に発生した(Xに2件誤投稿、note.com下書き6件が汚染。2026-10-31
+    # バッチ、2026-11-01に発覚・修正)。Ollama障害時はスタブを返さず例外を
+    # 再送出し、呼び出し元(run())でこのitemをスキップさせる。スキップされた
+    # URLはseen_urlsに追加されないため、Ollamaが復旧すれば次回実行時に
+    # 自然に再試行される。
+    raise RuntimeError(
+        f"Qwen summary generation failed for '{item.get('title')}' "
+        f"({item_url}); skipping rather than falling back to a title-only stub"
+    )
 
 def run(items: list, output_dir: str = "output", filename: str = "latest_summaries.md"):
     os.makedirs(output_dir, exist_ok=True)
@@ -77,7 +89,14 @@ def run(items: list, output_dir: str = "output", filename: str = "latest_summari
             continue
 
         print(f"📝 Generating detailed English summary for: {item.get('title', '')[:40]}...")
-        summary_text = generate_detailed_summary(item)
+        try:
+            summary_text = generate_detailed_summary(item)
+        except Exception as e:
+            # 💡 Ollama障害時はこのitemを丸ごとスキップする(タイトルのみの
+            # スタブを混入させない。詳細はgenerate_detailed_summaryのコメント参照)。
+            # seen_urlsに追加しないため、次回実行時に自動的に再試行される。
+            print(f"⚠️ Skipping '{item.get('title', '')[:40]}' due to summary failure: {e}")
+            continue
         summaries.append(summary_text)
         seen_urls.add(url)
 
