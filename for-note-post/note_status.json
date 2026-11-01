@@ -2766,64 +2766,124 @@
         "0": {
             "note_used": true,
             "generated_at": "20261101_103457",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_103457.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_103457.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:46:33"
         },
         "1": {
             "note_used": true,
             "generated_at": "20261101_103743",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_103743.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_103743.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:47:01"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261101_104046",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_104046.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_104046.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:47:30"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261101_104400",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_104400.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_104400.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:47:59"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261101_104651",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_104651.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_104651.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:55:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:48:28"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261101_105006",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_105006.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_105006.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:48:57"
         }
     },
     "output_prex_posts_20261031_101631.md": {
         "0": {
             "note_used": true,
             "generated_at": "20261101_161611",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_161611.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_161611.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:49:25"
         },
         "1": {
             "note_used": true,
             "generated_at": "20261101_161848",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_161848.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_161848.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:49:54"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261101_162148",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162148.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162148.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:50:23"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261101_162417",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162417.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162417.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:50:51"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261101_162712",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162712.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162712.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:51:20"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261101_162944",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162944.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261101_162944.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-01 16:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-01 16:51:48"
         }
     }
 }
