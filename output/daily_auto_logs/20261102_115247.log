@@ -199,3 +199,74 @@ Update available: cloakbrowser 0.5.8 → 0.7.0. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-11-03 19:11!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261031_101631.md`!
+To github.com:UKIaw5/curator-copy.git
+   89825df..a7dbb57  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261102_121510.md (raw: output_prex_posts_20261102_115321.md, idx: 1)
+    理由: 見出し「工作フローとプロセス」(目次・本文2箇所)の「工作」は日本語の慣用的な意味ではworkflowを表せず、意味不明な誤訳になっている(中国語の工作=仕事の語義混入と考えられる)
+
+- note_article_20261102_121741.md (raw: output_prex_posts_20261102_115321.md, idx: 2)
+    理由: 「プレーン・エングリッシュ」が目次・見出し・本文・筆者の視点の4箇所で一貫して誤ったカタカナ表記(正: プレーン・イングリッシュ)になっている
+    理由: 「アーキフィットに反する構造」という元データに無い意味不明な造語的カタカナ語が本文にある
+
+- note_article_20261102_122037.md (raw: output_prex_posts_20261102_115321.md, idx: 3)
+    理由: タイトル行のテキストが両端を二重引用符("...")で囲まれたまま未除去で残っている
+
+- note_article_20261102_122320.md (raw: output_prex_posts_20261102_115321.md, idx: 4)
+    理由: タイトル行(1行目)が元データの英語タイトルのまま日本語に翻訳されずに残っている
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261102_115247.log
+
+🐦 X投稿: 2件 予約
+   - 2026-11-03 15:28
+   - 2026-11-03 19:11
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261102_121510.md (raw: output_prex_posts_20261102_115321.md, idx: 1)
+    理由: 見出し「工作フローとプロセス」(目次・本文2箇所)の「工作」は日本語の慣用的な意味ではworkflowを表せず、意味不明な誤訳になっている(中国語の工作=仕事の語義混入と考えられる)
+
+- note_article_20261102_121741.md (raw: output_prex_posts_20261102_115321.md, idx: 2)
+    理由: 「プレーン・エングリッシュ」が目次・見出し・本文・筆者の視点の4箇所で一貫して誤ったカタカナ表記(正: プレーン・イングリッシュ)になっている
+    理由: 「アーキフィットに反する構造」という元データに無い意味不明な造語的カタカナ語が本文にある
+
+- note_article_20261102_122037.md (raw: output_prex_posts_20261102_115321.md, idx: 3)
+    理由: タイトル行のテキストが両端を二重引用符("...")で囲まれたまま未除去で残っている
+
+- note_article_20261102_122320.md (raw: output_prex_posts_20261102_115321.md, idx: 4)
+    理由: タイトル行(1行目)が元データの英語タイトルのまま日本語に翻訳されずに残っている
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Mon Nov  2 12:34:55 JST 2026 ===
