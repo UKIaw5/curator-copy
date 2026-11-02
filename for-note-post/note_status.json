@@ -2885,5 +2885,68 @@
             "published_to_note": true,
             "published_at": "2026-11-01 16:51:48"
         }
+    },
+    "output_prex_posts_20261102_115321.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261102_121222",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261102_121222.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-02 12:28:42",
+            "published_to_note": true,
+            "published_at": "2026-11-02 12:33:31"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261102_121510",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261102_121510.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "見出し「工作フローとプロセス」(目次・本文2箇所)の「工作」は日本語の慣用的な意味ではworkflowを表せず、意味不明な誤訳になっている(中国語の工作=仕事の語義混入と考えられる)"
+            ],
+            "audit_at": "2026-11-02 12:28:42"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261102_121741",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261102_121741.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「プレーン・エングリッシュ」が目次・見出し・本文・筆者の視点の4箇所で一貫して誤ったカタカナ表記(正: プレーン・イングリッシュ)になっている",
+                "「アーキフィットに反する構造」という元データに無い意味不明な造語的カタカナ語が本文にある"
+            ],
+            "audit_at": "2026-11-02 12:28:42"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261102_122037",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261102_122037.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行のテキストが両端を二重引用符(\"...\")で囲まれたまま未除去で残っている"
+            ],
+            "audit_at": "2026-11-02 12:28:42"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261102_122320",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261102_122320.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行(1行目)が元データの英語タイトルのまま日本語に翻訳されずに残っている"
+            ],
+            "audit_at": "2026-11-02 12:28:42"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261102_122552",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261102_122552.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-02 12:28:42",
+            "published_to_note": true,
+            "published_at": "2026-11-02 12:34:03"
+        }
     }
 }
