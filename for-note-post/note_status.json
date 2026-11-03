@@ -2947,5 +2947,57 @@
             "published_to_note": true,
             "published_at": "2026-11-02 12:34:03"
         }
+    },
+    "output_prex_posts_20261103_101536.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261103_103250",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_103250.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-03 10:45:44",
+            "published_to_note": true,
+            "published_at": "2026-11-03 10:53:04"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261103_103529",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_103529.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データが「hundreds of millions to billions of tokens(数億〜数十億トークン)」としている数値を、生成記事が「数百万から数十億トークン」と下限を1桁小さく誤訳している(22行目・49行目の2箇所)"
+            ],
+            "audit_at": "2026-11-03 10:45:44"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261103_103807",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_103807.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文16〜18行目に「推覚的な深さ」という日本語として存在しない意味不明な造語がある(元データの\"effective depth\"=「実効的な深さ」の誤変換と推測される)"
+            ],
+            "audit_at": "2026-11-03 10:45:44"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261103_104014",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_104014.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「この記事で得られること」セクション(6行目)の「リガシーコードの現代化」が誤字で、本文セクション3(41行目)の正しい表記「レガシーコードの現代化」と不統一になっている(片仮名語の誤変換)"
+            ],
+            "audit_at": "2026-11-03 10:45:44"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261103_104249",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_104249.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "21行目「限定的なバックプロパゲーション(Restended Backpropagation)」の括弧内英語表記が誤り。元データでは\"Restricted Backpropagation\"であり、\"Restended\"は実在しない語への誤変換"
+            ],
+            "audit_at": "2026-11-03 10:45:44"
+        }
     }
 }
