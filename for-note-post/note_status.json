@@ -2999,5 +2999,48 @@
             ],
             "audit_at": "2026-11-03 10:45:44"
         }
+    },
+    "output_prex_posts_20261104_101540.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261104_102834",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261104_102834.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「■ この記事で得られること」1項目目がフレームワーク選択とモデル脆弱性の主語・目的語関係を逆転させ論理が反転している",
+                "本文2章末の「なぜなら〜」が直前の文と因果関係が成立しておらず文として破綻している"
+            ],
+            "audit_at": "2026-11-04 10:38:20"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261104_103108",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261104_103108.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 10:38:20",
+            "published_to_note": true,
+            "published_at": "2026-11-04 10:43:16"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261104_103340",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261104_103340.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 10:38:20",
+            "published_to_note": true,
+            "published_at": "2026-11-04 10:43:44"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261104_103610",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261104_103610.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「この記事で得られること」セクションで「シンボリックソーバー」という誤変換の片仮名語が使われており、記事内の他箇所の正しい表記「シンボリックソルバー」と不統一"
+            ],
+            "audit_at": "2026-11-04 10:38:20"
+        }
     }
 }
