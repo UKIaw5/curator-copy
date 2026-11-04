@@ -2963,41 +2963,41 @@
             "note_used": true,
             "generated_at": "20261103_103529",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_103529.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "元データが「hundreds of millions to billions of tokens(数億〜数十億トークン)」としている数値を、生成記事が「数百万から数十億トークン」と下限を1桁小さく誤訳している(22行目・49行目の2箇所)"
-            ],
-            "audit_at": "2026-11-03 10:45:44"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 14:30:00",
+            "published_to_note": true,
+            "published_at": "2026-11-04 14:11:21"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261103_103807",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_103807.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "本文16〜18行目に「推覚的な深さ」という日本語として存在しない意味不明な造語がある(元データの\"effective depth\"=「実効的な深さ」の誤変換と推測される)"
-            ],
-            "audit_at": "2026-11-03 10:45:44"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 14:30:00",
+            "published_to_note": true,
+            "published_at": "2026-11-04 14:11:52"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261103_104014",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_104014.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「この記事で得られること」セクション(6行目)の「リガシーコードの現代化」が誤字で、本文セクション3(41行目)の正しい表記「レガシーコードの現代化」と不統一になっている(片仮名語の誤変換)"
-            ],
-            "audit_at": "2026-11-03 10:45:44"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 14:30:00",
+            "published_to_note": true,
+            "published_at": "2026-11-04 14:12:24"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261103_104249",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261103_104249.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "21行目「限定的なバックプロパゲーション(Restended Backpropagation)」の括弧内英語表記が誤り。元データでは\"Restricted Backpropagation\"であり、\"Restended\"は実在しない語への誤変換"
-            ],
-            "audit_at": "2026-11-03 10:45:44"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 14:30:00",
+            "published_to_note": true,
+            "published_at": "2026-11-04 14:12:53"
         }
     },
     "output_prex_posts_20261104_101540.md": {
@@ -3005,12 +3005,11 @@
             "note_used": true,
             "generated_at": "20261104_102834",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261104_102834.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「■ この記事で得られること」1項目目がフレームワーク選択とモデル脆弱性の主語・目的語関係を逆転させ論理が反転している",
-                "本文2章末の「なぜなら〜」が直前の文と因果関係が成立しておらず文として破綻している"
-            ],
-            "audit_at": "2026-11-04 10:38:20"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 14:30:00",
+            "published_to_note": true,
+            "published_at": "2026-11-04 14:13:22"
         },
         "1": {
             "note_used": true,
@@ -3036,11 +3035,11 @@
             "note_used": true,
             "generated_at": "20261104_103610",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261104_103610.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「この記事で得られること」セクションで「シンボリックソーバー」という誤変換の片仮名語が使われており、記事内の他箇所の正しい表記「シンボリックソルバー」と不統一"
-            ],
-            "audit_at": "2026-11-04 10:38:20"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-04 14:30:00",
+            "published_to_note": true,
+            "published_at": "2026-11-04 14:13:52"
         }
     }
 }
