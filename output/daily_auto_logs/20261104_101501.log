@@ -173,3 +173,89 @@ Update available: cloakbrowser 0.5.8 → 0.7.0. Run: pip install --upgrade cloak
 ❌ Redirected to login page (https://web.social-dog.net/login?redirect=%2Fteams%2F1418529%2Fpublish%2Fqueue%2Flist). SocialDog session has expired.
    cookie-editorでweb.social-dog.netから新しいcookieを取得し、
    automation/socialdog_cookies.json を更新してください。
+To github.com:UKIaw5/curator-copy.git
+   93ac698..828addd  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+❌ Error during socialdog_poster.py execution: Command '['/home/uk/Vault/curator-copy/.venv/bin/python3', 'automation/socialdog_poster.py']' returned non-zero exit status 1.
+⚠️ Continuing to Git sync so any work already done (scheduled posts, archived files) isn't left unsynced.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が6件あります:
+
+- note_article_20261103_103529.md (raw: output_prex_posts_20261103_101536.md, idx: 1)
+    理由: 元データが「hundreds of millions to billions of tokens(数億〜数十億トークン)」としている数値を、生成記事が「数百万から数十億トークン」と下限を1桁小さく誤訳している(22行目・49行目の2箇所)
+
+- note_article_20261103_103807.md (raw: output_prex_posts_20261103_101536.md, idx: 2)
+    理由: 本文16〜18行目に「推覚的な深さ」という日本語として存在しない意味不明な造語がある(元データの"effective depth"=「実効的な深さ」の誤変換と推測される)
+
+- note_article_20261103_104014.md (raw: output_prex_posts_20261103_101536.md, idx: 3)
+    理由: 「この記事で得られること」セクション(6行目)の「リガシーコードの現代化」が誤字で、本文セクション3(41行目)の正しい表記「レガシーコードの現代化」と不統一になっている(片仮名語の誤変換)
+
+- note_article_20261103_104249.md (raw: output_prex_posts_20261103_101536.md, idx: 4)
+    理由: 21行目「限定的なバックプロパゲーション(Restended Backpropagation)」の括弧内英語表記が誤り。元データでは"Restricted Backpropagation"であり、"Restended"は実在しない語への誤変換
+
+- note_article_20261104_102834.md (raw: output_prex_posts_20261104_101540.md, idx: 0)
+    理由: 「■ この記事で得られること」1項目目がフレームワーク選択とモデル脆弱性の主語・目的語関係を逆転させ論理が反転している
+    理由: 本文2章末の「なぜなら〜」が直前の文と因果関係が成立しておらず文として破綻している
+
+- note_article_20261104_103610.md (raw: output_prex_posts_20261104_101540.md, idx: 3)
+    理由: 「この記事で得られること」セクションで「シンボリックソーバー」という誤変換の片仮名語が使われており、記事内の他箇所の正しい表記「シンボリックソルバー」と不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261104_101501.log
+
+🐦 X投稿: 0件 予約
+
+📝 note.com: 2件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が6件あります:
+
+- note_article_20261103_103529.md (raw: output_prex_posts_20261103_101536.md, idx: 1)
+    理由: 元データが「hundreds of millions to billions of tokens(数億〜数十億トークン)」としている数値を、生成記事が「数百万から数十億トークン」と下限を1桁小さく誤訳している(22行目・49行目の2箇所)
+
+- note_article_20261103_103807.md (raw: output_prex_posts_20261103_101536.md, idx: 2)
+    理由: 本文16〜18行目に「推覚的な深さ」という日本語として存在しない意味不明な造語がある(元データの"effective depth"=「実効的な深さ」の誤変換と推測される)
+
+- note_article_20261103_104014.md (raw: output_prex_posts_20261103_101536.md, idx: 3)
+    理由: 「この記事で得られること」セクション(6行目)の「リガシーコードの現代化」が誤字で、本文セクション3(41行目)の正しい表記「レガシーコードの現代化」と不統一になっている(片仮名語の誤変換)
+
+- note_article_20261103_104249.md (raw: output_prex_posts_20261103_101536.md, idx: 4)
+    理由: 21行目「限定的なバックプロパゲーション(Restended Backpropagation)」の括弧内英語表記が誤り。元データでは"Restricted Backpropagation"であり、"Restended"は実在しない語への誤変換
+
+- note_article_20261104_102834.md (raw: output_prex_posts_20261104_101540.md, idx: 0)
+    理由: 「■ この記事で得られること」1項目目がフレームワーク選択とモデル脆弱性の主語・目的語関係を逆転させ論理が反転している
+    理由: 本文2章末の「なぜなら〜」が直前の文と因果関係が成立しておらず文として破綻している
+
+- note_article_20261104_103610.md (raw: output_prex_posts_20261104_101540.md, idx: 3)
+    理由: 「この記事で得られること」セクションで「シンボリックソーバー」という誤変換の片仮名語が使われており、記事内の他箇所の正しい表記「シンボリックソルバー」と不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord 
+
+⚠️ エラー/❌行が2件検出されました(抜粋):
+   ❌ Redirected to login page (https://web.social-dog.net/login?redirect=%2Fteams%2F1418529%2Fpublish%2Fqueue%2Flist). SocialDog session has expired.
+   ❌ Error during socialdog_poster.py execution: Command '['/home/uk/Vault/curator-copy/.venv/bin/python3', 'automation/socialdog_poster.py']' returned non-zero exit status 1.
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Wed Nov  4 10:43:59 JST 2026 ===
