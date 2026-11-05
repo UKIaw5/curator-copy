@@ -3046,27 +3046,52 @@
         "0": {
             "note_used": true,
             "generated_at": "20261105_103036",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103036.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103036.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-05 14:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-05 14:37:29"
         },
         "1": {
             "note_used": true,
             "generated_at": "20261105_103307",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103307.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103307.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-05 14:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-05 14:37:59"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261105_103621",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103621.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103621.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-05 14:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-05 14:38:31"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261105_103916",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103916.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103916.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-05 14:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-05 14:39:00"
         },
         "4": {
             "note_used": true,
             "generated_at": "20261105_104206",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_104206.md"
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_104206.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-05 14:50:00",
+            "published_to_note": true,
+            "published_at": "2026-11-05 14:39:32"
         }
     }
 }
