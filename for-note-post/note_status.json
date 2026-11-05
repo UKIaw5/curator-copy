@@ -3041,5 +3041,32 @@
             "published_to_note": true,
             "published_at": "2026-11-04 14:13:52"
         }
+    },
+    "output_prex_posts_20261105_101539.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261105_103036",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103036.md"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261105_103307",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103307.md"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261105_103621",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103621.md"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261105_103916",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_103916.md"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261105_104206",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261105_104206.md"
+        }
     }
 }
