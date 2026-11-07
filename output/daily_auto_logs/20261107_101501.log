@@ -161,3 +161,73 @@ Update available: cloakbrowser 0.5.8 → 0.7.0. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-11-08 15:37!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261106_101541.md`!
+To github.com:UKIaw5/curator-copy.git
+   f9013bd..ed11f1d  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261106_145239.md (raw: output_prex_posts_20261106_101541.md, idx: 5)
+    理由: Step2(本文生成)が3回連続(自動実行時+手動再生成2回)で同一の生成失敗フォールバック文を返しており、同一raw dataに対して再現性のある失敗。これ以上の自動リトライは行わず、手動調査待ちとして記録
+
+- note_article_20261107_102818.md (raw: output_prex_posts_20261107_101536.md, idx: 0)
+    理由: 17行目「最先端のLLMに匹乗する」が日本語として意味不明な誤変換(正しくは「匹敵する」)
+
+- note_article_20261107_103208.md (raw: output_prex_posts_20261107_101536.md, idx: 1)
+    理由: 41行目「低いパープレキションの数値」・47行目「パープレキションのドリフト」が誤表記(正しくは「パープレキシティ」)で表記が記事内で不統一
+
+- note_article_20261107_103450.md (raw: output_prex_posts_20261107_101536.md, idx: 2)
+    理由: 本文中「Coca-Lolaを用いた実験では...」が固有名詞の誤字(正しくは「Coca-Cola」)で記事内の表記が不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261107_101501.log
+
+🐦 X投稿: 3件 予約
+   - 2026-11-08 09:30
+   - 2026-11-08 12:26
+   - 2026-11-08 15:37
+
+📝 note.com: 1件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261106_145239.md (raw: output_prex_posts_20261106_101541.md, idx: 5)
+    理由: Step2(本文生成)が3回連続(自動実行時+手動再生成2回)で同一の生成失敗フォールバック文を返しており、同一raw dataに対して再現性のある失敗。これ以上の自動リトライは行わず、手動調査待ちとして記録
+
+- note_article_20261107_102818.md (raw: output_prex_posts_20261107_101536.md, idx: 0)
+    理由: 17行目「最先端のLLMに匹乗する」が日本語として意味不明な誤変換(正しくは「匹敵する」)
+
+- note_article_20261107_103208.md (raw: output_prex_posts_20261107_101536.md, idx: 1)
+    理由: 41行目「低いパープレキションの数値」・47行目「パープレキションのドリフト」が誤表記(正しくは「パープレキシティ」)で表記が記事内で不統一
+
+- note_article_20261107_103450.md (raw: output_prex_posts_20261107_101536.md, idx: 2)
+    理由: 本文中「Coca-Lolaを用いた実験では...」が固有名詞の誤字(正しくは「Coca-Cola」)で記事内の表記が不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Sat Nov  7 10:45:43 JST 2026 ===
