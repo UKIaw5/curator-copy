@@ -310,6 +310,17 @@ def main(draft_only=False):
                     print(f"🔗 Relinking {len(urls)} URL(s) in editor...")
                     relink_urls_in_editor(page, urls)
 
+                # 💡 2026-11-06/07/08に3回、本文・タイトルとも画面上は正しく
+                # 入力されているにもかかわらず、「公開に進む」直後に
+                # 「タイトル、本文を入力してください」という誤ったバリデーション
+                # エラーが出て失敗する事故が発生した(いずれも1回の再試行で解消)。
+                # 本文insert_text直後のwait(1500ms)はあるが、その後のURL
+                # relink(リンクカード生成を伴う非同期処理)が終わった直後は
+                # noteエディタの内部状態がまだ同期しきっていない可能性がある。
+                # 「公開に進む」をクリックする前に猶予を置き、状態が落ち着く
+                # 時間を与える(relink_urls_in_editor自体やその中身は変更しない)
+                page.wait_for_timeout(2500)
+
                 if draft_only:
                     # --- 下書き保存で停止し、本公開はしない ---
                     print("🧪 Clicking '下書き保存' (draft-only mode, will NOT publish)...")
