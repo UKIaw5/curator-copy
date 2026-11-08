@@ -3197,5 +3197,69 @@
             "published_to_note": true,
             "published_at": "2026-11-07 10:44:40"
         }
+    },
+    "output_prex_posts_20261108_101539.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261108_103321",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261108_103321.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-08 10:50:19",
+            "published_to_note": true,
+            "published_at": "2026-11-08 10:55:21"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261108_103535",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261108_103535.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-08 10:50:19",
+            "published_to_note": true,
+            "published_at": "2026-11-08 10:55:50"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261108_103813",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261108_103813.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データにない具体的技術詳細（「バイナリレベルでバイパス」等）を断定表現で追加している",
+                "元データが\"likely\"でヘッジしている「エージェントがコマンドを直接発行しシーングラフを操作する」という記述を、生成記事はヘッジを外して断定表現に変えている"
+            ],
+            "audit_at": "2026-11-08 10:50:19"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261108_104037",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261108_104037.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「潜在空間(latent space)」が一部で「ラテン空間」と誤訳されており、記事内で表記が不統一",
+                "「プログラムシンセシス(program synthesis)」が「プログラムシンテシ」という不完全な片仮名語に誤変換されている"
+            ],
+            "audit_at": "2026-11-08 10:50:19"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261108_104310",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261108_104310.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-08 10:50:19",
+            "published_to_note": true,
+            "published_at": "2026-11-08 10:56:19"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261108_104551",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261108_104551.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データにない具体的技術詳細（状態管理・自動微分・並列処理の抽象化の違い、CUDA最適化、XLA等）を断定表現で追加している（元データはframework-specific differences / hardware-specific optimizationsとしか述べていない）"
+            ],
+            "audit_at": "2026-11-08 10:50:19"
+        }
     }
 }
