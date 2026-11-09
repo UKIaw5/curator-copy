@@ -3259,5 +3259,29 @@
             "published_to_note": true,
             "published_at": "2026-11-08 18:49:23"
         }
+    },
+    "output_prex_posts_20261109_101535.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261109_102421",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261109_102421.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-09 10:28:47",
+            "published_to_note": true,
+            "published_at": "2026-11-09 10:32:51"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261109_102707",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261109_102707.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データでは「likely leveraging libraries such as...」とヘッジされていたMatplotlib/Pygame/Pillow/WebGL/Three.jsの利用に関する記述が、生成記事(第2章「プログラムによるフレーム構築」)では「...を利用して、コードを生成します」と断定表現に変わっている",
+                "同様に元データで「likely FFmpeg under the hood」とヘッジされていたエンコーディング処理が、生成記事(第4章「エンコーディングと配信」)では「FFmpegなどのビデオエンコーディングライブラリを用いて統合されます」と断定表現になっている",
+                "「■ この記事で得られること」の1行目に「コードファーストアアプローチ」という誤字(「アプローチ」の前に不要な「ア」が重複)がある"
+            ],
+            "audit_at": "2026-11-09 10:28:47"
+        }
     }
 }
