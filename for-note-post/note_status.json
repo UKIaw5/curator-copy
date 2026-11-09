@@ -3147,13 +3147,13 @@
         },
         "5": {
             "note_used": true,
-            "generated_at": "20261106_145239",
-            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261106_145239.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "Step2(本文生成)が3回連続(自動実行時+手動再生成2回)で同一の生成失敗フォールバック文を返しており、同一raw dataに対して再現性のある失敗。これ以上の自動リトライは行わず、手動調査待ちとして記録"
-            ],
-            "audit_at": "2026-11-06 15:10:00"
+            "generated_at": "20261109_133843",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261109_133843.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-09 13:42:27",
+            "published_to_note": true,
+            "published_at": "2026-11-09 13:43:21"
         }
     },
     "output_prex_posts_20261107_101536.md": {
@@ -3275,13 +3275,11 @@
             "note_used": true,
             "generated_at": "20261109_102707",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261109_102707.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "元データでは「likely leveraging libraries such as...」とヘッジされていたMatplotlib/Pygame/Pillow/WebGL/Three.jsの利用に関する記述が、生成記事(第2章「プログラムによるフレーム構築」)では「...を利用して、コードを生成します」と断定表現に変わっている",
-                "同様に元データで「likely FFmpeg under the hood」とヘッジされていたエンコーディング処理が、生成記事(第4章「エンコーディングと配信」)では「FFmpegなどのビデオエンコーディングライブラリを用いて統合されます」と断定表現になっている",
-                "「■ この記事で得られること」の1行目に「コードファーストアアプローチ」という誤字(「アプローチ」の前に不要な「ア」が重複)がある"
-            ],
-            "audit_at": "2026-11-09 10:28:47"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-09 13:42:47",
+            "published_to_note": true,
+            "published_at": "2026-11-09 13:43:53"
         }
     }
 }
