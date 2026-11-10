@@ -266,3 +266,57 @@ Update available: cloakbrowser 0.5.8 → 0.7.1. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-11-11 12:06!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261110_101542.md`!
+To github.com:UKIaw5/curator-copy.git
+   9d7f1d4..69436af  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が1件あります:
+
+- note_article_20261110_103516.md (raw: output_prex_posts_20261110_101542.md, idx: 2)
+    理由: タイトルでは「エージェント型本体知性」としているが、本文冒頭では「エンボディド(身体性)マルチエージェントフレームワーク」、結論部では「エージェント型エンボディド知性」と表記しており、同じ概念(Agentic Embodied Intelligence)の訳語がタイトルと本文で不統一になっている(「本体知性」は「身体性知能」等の正しい訳語とは異なる不自然な訳)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261110_101501.log
+
+🐦 X投稿: 5件 予約
+   - 2026-11-10 18:56
+   - 2026-11-10 22:07
+   - 2026-11-11 07:23
+   - 2026-11-11 09:19
+   - 2026-11-11 12:06
+
+📝 note.com: 4件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が1件あります:
+
+- note_article_20261110_103516.md (raw: output_prex_posts_20261110_101542.md, idx: 2)
+    理由: タイトルでは「エージェント型本体知性」としているが、本文冒頭では「エンボディド(身体性)マルチエージェントフレームワーク」、結論部では「エージェント型エンボディド知性」と表記しており、同じ概念(Agentic Embodied Intelligence)の訳語がタイトルと本文で不統一になっている(「本体知性」は「身体性知能」等の正しい訳語とは異なる不自然な訳)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Tue Nov 10 10:49:46 JST 2026 ===
