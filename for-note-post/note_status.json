@@ -3281,5 +3281,57 @@
             "published_to_note": true,
             "published_at": "2026-11-09 13:43:53"
         }
+    },
+    "output_prex_posts_20261110_101542.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261110_103026",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261110_103026.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-10 10:42:37",
+            "published_to_note": true,
+            "published_at": "2026-11-10 10:46:29"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261110_103238",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261110_103238.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-10 10:42:37",
+            "published_to_note": true,
+            "published_at": "2026-11-10 10:47:01"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261110_103516",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261110_103516.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトルでは「エージェント型本体知性」としているが、本文冒頭では「エンボディド(身体性)マルチエージェントフレームワーク」、結論部では「エージェント型エンボディド知性」と表記しており、同じ概念(Agentic Embodied Intelligence)の訳語がタイトルと本文で不統一になっている(「本体知性」は「身体性知能」等の正しい訳語とは異なる不自然な訳)"
+            ],
+            "audit_at": "2026-11-10 10:42:37"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261110_103723",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261110_103723.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-10 10:42:37",
+            "published_to_note": true,
+            "published_at": "2026-11-10 10:47:36"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261110_103950",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261110_103950.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-10 10:42:37",
+            "published_to_note": true,
+            "published_at": "2026-11-10 10:48:08"
+        }
     }
 }
