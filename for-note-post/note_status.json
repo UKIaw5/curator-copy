@@ -3333,5 +3333,58 @@
             "published_to_note": true,
             "published_at": "2026-11-10 10:48:08"
         }
+    },
+    "output_prex_posts_20261111_101541.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261111_103057",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261111_103057.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-11 10:44:41",
+            "published_to_note": true,
+            "published_at": "2026-11-11 10:49:41"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261111_103354",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261111_103354.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-11 10:44:41",
+            "published_to_note": true,
+            "published_at": "2026-11-11 10:50:13"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261111_103604",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261111_103604.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "見出し「Sage-Taiyiの動作机制」の「机制」が簡体字中国語表記(正しくは「機構」「メカニズム」)",
+                "セクション4の見出し「実際的な応用と検証」に「■」記号が付いておらず見出し書式が崩れている"
+            ],
+            "audit_at": "2026-11-11 10:44:41"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261111_103854",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261111_103854.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「1.4から2.6エポクロ」という意味不明な片仮名語への誤変換(正しくは「エポック」)。同一文中の「25エポック」と表記が不統一"
+            ],
+            "audit_at": "2026-11-11 10:44:41"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261111_104144",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261111_104144.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-11 10:44:41",
+            "published_to_note": true,
+            "published_at": "2026-11-11 10:50:44"
+        }
     }
 }
