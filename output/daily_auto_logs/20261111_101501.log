@@ -255,3 +255,69 @@ Update available: cloakbrowser 0.5.8 → 0.7.2. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-11-12 09:24!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261111_101541.md`!
+To github.com:UKIaw5/curator-copy.git
+   3ef0251..f963ee8  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が2件あります:
+
+- note_article_20261111_103604.md (raw: output_prex_posts_20261111_101541.md, idx: 2)
+    理由: 見出し「Sage-Taiyiの動作机制」の「机制」が簡体字中国語表記(正しくは「機構」「メカニズム」)
+    理由: セクション4の見出し「実際的な応用と検証」に「■」記号が付いておらず見出し書式が崩れている
+
+- note_article_20261111_103854.md (raw: output_prex_posts_20261111_101541.md, idx: 3)
+    理由: 「1.4から2.6エポクロ」という意味不明な片仮名語への誤変換(正しくは「エポック」)。同一文中の「25エポック」と表記が不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261111_101501.log
+
+🐦 X投稿: 5件 予約
+   - 2026-11-11 15:15
+   - 2026-11-11 18:48
+   - 2026-11-11 21:56
+   - 2026-11-12 07:38
+   - 2026-11-12 09:24
+
+📝 note.com: 3件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が2件あります:
+
+- note_article_20261111_103604.md (raw: output_prex_posts_20261111_101541.md, idx: 2)
+    理由: 見出し「Sage-Taiyiの動作机制」の「机制」が簡体字中国語表記(正しくは「機構」「メカニズム」)
+    理由: セクション4の見出し「実際的な応用と検証」に「■」記号が付いておらず見出し書式が崩れている
+
+- note_article_20261111_103854.md (raw: output_prex_posts_20261111_101541.md, idx: 3)
+    理由: 「1.4から2.6エポクロ」という意味不明な片仮名語への誤変換(正しくは「エポック」)。同一文中の「25エポック」と表記が不統一
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+⚠️ エラー/❌行が2件検出されました(抜粋):
+   | 2 | 103604.md (Sage-Taiyi) | ❌ 不合格 |
+   | 3 | 103854.md (e-means) | ❌ 不合格 |
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Wed Nov 11 10:52:20 JST 2026 ===

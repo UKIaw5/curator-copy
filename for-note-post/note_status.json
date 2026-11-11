@@ -3359,22 +3359,21 @@
             "note_used": true,
             "generated_at": "20261111_103604",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261111_103604.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "見出し「Sage-Taiyiの動作机制」の「机制」が簡体字中国語表記(正しくは「機構」「メカニズム」)",
-                "セクション4の見出し「実際的な応用と検証」に「■」記号が付いておらず見出し書式が崩れている"
-            ],
-            "audit_at": "2026-11-11 10:44:41"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-11 15:17:45",
+            "published_to_note": true,
+            "published_at": "2026-11-11 15:18:20"
         },
         "3": {
             "note_used": true,
             "generated_at": "20261111_103854",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261111_103854.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「1.4から2.6エポクロ」という意味不明な片仮名語への誤変換(正しくは「エポック」)。同一文中の「25エポック」と表記が不統一"
-            ],
-            "audit_at": "2026-11-11 10:44:41"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-11 15:16:24",
+            "published_to_note": true,
+            "published_at": "2026-11-11 15:18:51"
         },
         "4": {
             "note_used": true,
