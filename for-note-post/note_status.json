@@ -3385,5 +3385,71 @@
             "published_to_note": true,
             "published_at": "2026-11-11 10:50:44"
         }
+    },
+    "output_prex_posts_20261112_101536.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261112_103502",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261112_103502.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "専門用語「コントラストディスカバリ」が記事中3箇所で「コントラストディスカリ」(バ脱落)と誤表記されタイトル/他箇所と混在",
+                "「ポイントワイズ」が46・53・68行目で「ポイントワイス」(濁点脱落)になっており表記が一貫していない"
+            ],
+            "audit_at": "2026-11-12T10:50:27"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261112_103711",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261112_103711.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-12T10:50:27",
+            "published_to_note": true,
+            "published_at": "2026-11-12 10:56:22"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261112_103917",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261112_103917.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行は「拡張技術」だが本文13〜14行目では同じ対象を「加速技術」と表記しており用語が揺れている(元データは acceleration technique)",
+                "21行目にLaTeX記法のドル記号($t$, $t+1$)がMarkdown残骸として残っている",
+                "23行目に「次方のブロック」という日本語として不自然な誤変換が2回ある"
+            ],
+            "audit_at": "2026-11-12T10:50:27"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261112_104206",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261112_104206.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-12T10:50:27",
+            "published_to_note": true,
+            "published_at": "2026-11-12 10:56:53"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261112_104433",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261112_104433.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-12T10:50:27",
+            "published_to_note": true,
+            "published_at": "2026-11-12 10:57:25"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261112_104704",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261112_104704.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "見出し行「Deletion Tuningの利点と適用状況」に見出し記号「■」が欠落している(他の見出しは全て■付き)",
+                "タイトル行は「後期学習」だが本文14・21・41行目では同じ概念を「ポストトレーニング」と表記しており訳語が不一致"
+            ],
+            "audit_at": "2026-11-12T10:50:27"
+        }
     }
 }
