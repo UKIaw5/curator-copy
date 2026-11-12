@@ -262,3 +262,78 @@ Update available: cloakbrowser 0.5.8 → 0.7.2. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-11-13 09:21!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261112_101536.md`!
+To github.com:UKIaw5/curator-copy.git
+   c1de757..967cf78  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が3件あります:
+
+- note_article_20261112_103502.md (raw: output_prex_posts_20261112_101536.md, idx: 0)
+    理由: 専門用語「コントラストディスカバリ」が記事中3箇所で「コントラストディスカリ」(バ脱落)と誤表記されタイトル/他箇所と混在
+    理由: 「ポイントワイズ」が46・53・68行目で「ポイントワイス」(濁点脱落)になっており表記が一貫していない
+
+- note_article_20261112_103917.md (raw: output_prex_posts_20261112_101536.md, idx: 2)
+    理由: タイトル行は「拡張技術」だが本文13〜14行目では同じ対象を「加速技術」と表記しており用語が揺れている(元データは acceleration technique)
+    理由: 21行目にLaTeX記法のドル記号($t$, $t+1$)がMarkdown残骸として残っている
+    理由: 23行目に「次方のブロック」という日本語として不自然な誤変換が2回ある
+
+- note_article_20261112_104704.md (raw: output_prex_posts_20261112_101536.md, idx: 5)
+    理由: 見出し行「Deletion Tuningの利点と適用状況」に見出し記号「■」が欠落している(他の見出しは全て■付き)
+    理由: タイトル行は「後期学習」だが本文14・21・41行目では同じ概念を「ポストトレーニング」と表記しており訳語が不一致
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261112_101459.log
+
+🐦 X投稿: 6件 予約
+   - 2026-11-12 12:21
+   - 2026-11-12 15:16
+   - 2026-11-12 18:52
+   - 2026-11-12 21:59
+   - 2026-11-13 07:31
+   - 2026-11-13 09:21
+
+📝 note.com: 3件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が3件あります:
+
+- note_article_20261112_103502.md (raw: output_prex_posts_20261112_101536.md, idx: 0)
+    理由: 専門用語「コントラストディスカバリ」が記事中3箇所で「コントラストディスカリ」(バ脱落)と誤表記されタイトル/他箇所と混在
+    理由: 「ポイントワイズ」が46・53・68行目で「ポイントワイス」(濁点脱落)になっており表記が一貫していない
+
+- note_article_20261112_103917.md (raw: output_prex_posts_20261112_101536.md, idx: 2)
+    理由: タイトル行は「拡張技術」だが本文13〜14行目では同じ対象を「加速技術」と表記しており用語が揺れている(元データは acceleration technique)
+    理由: 21行目にLaTeX記法のドル記号($t$, $t+1$)がMarkdown残骸として残っている
+    理由: 23行目に「次方のブロック」という日本語として不自然な誤変換が2回ある
+
+- note_article_20261112_104704.md (raw: output_prex_posts_20261112_101536.md, idx: 5)
+    理由: 見出し行「Deletion Tuningの利点と適用状況」に見出し記号「■」が欠落している(他の見出しは全て■付き)
+    理由: タイトル行は「後期学習」だが本文14・21・41行目では同じ概念を「ポストトレーニング」と表記しており訳語が不一致
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Thu Nov 12 10:59:18 JST 2026 ===
