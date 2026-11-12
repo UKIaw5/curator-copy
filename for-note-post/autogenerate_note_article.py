@@ -524,6 +524,7 @@ Write a comprehensive, deep-dive Japanese technical article based on the raw dat
 4. Provide deep explanations for every section. Ensure high volume and detail.
 5. If you include any code, command, or config snippet, wrap it in a triple-backtick fenced code block (e.g. ```python ... ```). Never start a line inside such a snippet with "# " as a section heading — that line-start pattern is reserved for real Markdown headings elsewhere in the article.
 6. CRITICAL: If the raw data hedges a claim (words like "likely", "probably", "appears to", "suggests", "may"), you MUST preserve that uncertainty in Japanese (e.g. "〜と考えられる", "〜と推測される", "〜とみられる"). Do NOT state a hedged claim as a flat, definitive fact. This applies to every section, not just the author's-perspective one.
+7. CRITICAL: The title (the first line of [Target Table of Contents] below) already contains a Japanese translation of this article's key technical term(s)/concept name(s). Whenever you refer to that same concept anywhere in the body (including section headings, prose, and the 筆者の視点 section), you MUST reuse that exact same Japanese wording. Do NOT invent or switch to a different translation for a concept that the title has already named in Japanese.
 
 [Target Table of Contents]
 {part_intro}
