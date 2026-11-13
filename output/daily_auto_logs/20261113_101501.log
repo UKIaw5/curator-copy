@@ -209,3 +209,95 @@ Update available: cloakbrowser 0.5.8 → 0.7.2. Run: pip install --upgrade cloak
 ✅ Scheduled for 2026-11-14 09:44!
 
 🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261113_101555.md`!
+To github.com:UKIaw5/curator-copy.git
+   b35455e..780fac7  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261113_103441.md (raw: output_prex_posts_20261113_101555.md, idx: 0)
+    理由: 元データの「256 GB300 GPUs」(GB300という型番のGPUを256基)を、生成記事が「最大256 GBのGPU構成」(256GBのメモリを持つGPU)という異なる仕様に断定的に書き換えており、ハルシネーション(技術詳細の誤った創作)に該当する
+
+- note_article_20261113_103658.md (raw: output_prex_posts_20261113_101555.md, idx: 1)
+    理由: タイトル行に「人間類の複雑な動きを学習する」という不自然な日本語表記があり、「人間のような」等の意図したであろう表現が意味不明な「人間類」になっている(タイトル行の品質問題)
+    理由: 本文36行目「ヒューマノンドの動作」は「ヒューマノイド」の誤字(カタカナ語の表記崩れ)であり、正しい用語に修正が必要
+
+- note_article_20261113_103936.md (raw: output_prex_posts_20261113_101555.md, idx: 2)
+    理由: 3行目・17行目で「エージェント」が「アジェント」という誤表記になっている
+    理由: 61行目で「エージェントは」が「エージェンス」という意味不明な片仮名語に誤変換されている
+
+- note_article_20261113_104436.md (raw: output_prex_posts_20261113_101555.md, idx: 4)
+    理由: 66行目「AIの多模态統合能力が向上する可能性があります」に簡体字中国語「多模态」(正しくは「マルチモーダル」等の日本語)が混入している
+    理由: 33行目「プラトン的表現仮ß説」にドイツ語のエスツェット(ß)が誤って混入し、「仮説」という語が破損している
+    理由: 12行目・41行目の「インパリケーション」は英語"implications"の誤変換で日本語として意味不明な片仮名語であり(正しくは「インプリケーション」)、さらに41行目はTOCの4番目のセクション見出しに相当するが「■」見出しマーカーが付与されておらず未変換のまま残っている
+
+- note_article_20261113_104707.md (raw: output_prex_posts_20261113_101555.md, idx: 5)
+    理由: 「学生モデルの訓練」セクションで「ファインチューナーを行う」という誤ったカタカナ語(正しくは「ファインチューニングを行う」)が使われており、同記事内の他箇所(「ファインチューニングを行う」)と表記が不統一になっている
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261113_101501.log
+
+🐦 X投稿: 6件 予約
+   - 2026-11-13 12:06
+   - 2026-11-13 15:18
+   - 2026-11-13 18:51
+   - 2026-11-13 22:14
+   - 2026-11-14 07:35
+   - 2026-11-14 09:44
+
+📝 note.com: 1件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261113_103441.md (raw: output_prex_posts_20261113_101555.md, idx: 0)
+    理由: 元データの「256 GB300 GPUs」(GB300という型番のGPUを256基)を、生成記事が「最大256 GBのGPU構成」(256GBのメモリを持つGPU)という異なる仕様に断定的に書き換えており、ハルシネーション(技術詳細の誤った創作)に該当する
+
+- note_article_20261113_103658.md (raw: output_prex_posts_20261113_101555.md, idx: 1)
+    理由: タイトル行に「人間類の複雑な動きを学習する」という不自然な日本語表記があり、「人間のような」等の意図したであろう表現が意味不明な「人間類」になっている(タイトル行の品質問題)
+    理由: 本文36行目「ヒューマノンドの動作」は「ヒューマノイド」の誤字(カタカナ語の表記崩れ)であり、正しい用語に修正が必要
+
+- note_article_20261113_103936.md (raw: output_prex_posts_20261113_101555.md, idx: 2)
+    理由: 3行目・17行目で「エージェント」が「アジェント」という誤表記になっている
+    理由: 61行目で「エージェントは」が「エージェンス」という意味不明な片仮名語に誤変換されている
+
+- note_article_20261113_104436.md (raw: output_prex_posts_20261113_101555.md, idx: 4)
+    理由: 66行目「AIの多模态統合能力が向上する可能性があります」に簡体字中国語「多模态」(正しくは「マルチモーダル」等の日本語)が混入している
+    理由: 33行目「プラトン的表現仮ß説」にドイツ語のエスツェット(ß)が誤って混入し、「仮説」という語が破損している
+    理由: 12行目・41行目の「インパリケーション」は英語"implications"の誤変換で日本語として意味不明な片仮名語であり(正しくは「インプリケーション」)、さらに41行目はTOCの4番目のセクション見出しに相当するが「■」見出しマーカーが付与されておらず未変換のまま残っている
+
+- note_article_20261113_104707.md (raw: output_prex_posts_20261113_101555.md, idx: 5)
+    理由: 「学生モデルの訓練」セクションで「ファインチューナーを行う」という誤ったカタカナ語(正しくは「ファインチューニングを行う」)が使われており、同記事内の他箇所(「ファインチューニングを行う」)と表記が不統一になっている
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_t
+
+⚠️ エラー/❌行が5件検出されました(抜粋):
+   | Evolving Infra | ❌ | 「256 GB300 GPUs」(GB300を256基)→「最大256 GBのGPU構成」と誤変換(ハルシネーション) |
+   | SuperMimic | ❌ | タイトル「人間類」、本文「ヒューマノンド」 |
+   | agentes-chat | ❌ | 「アジェント」「エージェンス」の誤表記 |
+   | プラトン的表現仮説 | ❌ | 簡体字「多模态」、「仮ß説」(エスツェット混入)、「インパリケーション」+■未変換 |
+   | 潜意識学習(VLM) | ❌ | 「ファインチューナーを行う」(表記不統一) |
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Fri Nov 13 10:59:28 JST 2026 ===

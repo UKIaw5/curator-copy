@@ -3453,33 +3453,31 @@
             "note_used": true,
             "generated_at": "20261113_103441",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261113_103441.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "元データの「256 GB300 GPUs」(GB300という型番のGPUを256基)を、生成記事が「最大256 GBのGPU構成」(256GBのメモリを持つGPU)という異なる仕様に断定的に書き換えており、ハルシネーション(技術詳細の誤った創作)に該当する"
-            ],
-            "audit_at": "2026-11-13T10:51:20"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-13 14:59:56",
+            "published_to_note": true,
+            "published_at": "2026-11-13 15:00:35"
         },
         "1": {
             "note_used": true,
             "generated_at": "20261113_103658",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261113_103658.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "タイトル行に「人間類の複雑な動きを学習する」という不自然な日本語表記があり、「人間のような」等の意図したであろう表現が意味不明な「人間類」になっている(タイトル行の品質問題)",
-                "本文36行目「ヒューマノンドの動作」は「ヒューマノイド」の誤字(カタカナ語の表記崩れ)であり、正しい用語に修正が必要"
-            ],
-            "audit_at": "2026-11-13T10:51:20"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-13 14:59:56",
+            "published_to_note": true,
+            "published_at": "2026-11-13 15:01:06"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261113_103936",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261113_103936.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "3行目・17行目で「エージェント」が「アジェント」という誤表記になっている",
-                "61行目で「エージェントは」が「エージェンス」という意味不明な片仮名語に誤変換されている"
-            ],
-            "audit_at": "2026-11-13T10:51:20"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-13 14:59:56",
+            "published_to_note": true,
+            "published_at": "2026-11-13 15:01:38"
         },
         "3": {
             "note_used": true,
@@ -3495,23 +3493,21 @@
             "note_used": true,
             "generated_at": "20261113_104436",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261113_104436.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "66行目「AIの多模态統合能力が向上する可能性があります」に簡体字中国語「多模态」(正しくは「マルチモーダル」等の日本語)が混入している",
-                "33行目「プラトン的表現仮ß説」にドイツ語のエスツェット(ß)が誤って混入し、「仮説」という語が破損している",
-                "12行目・41行目の「インパリケーション」は英語\"implications\"の誤変換で日本語として意味不明な片仮名語であり(正しくは「インプリケーション」)、さらに41行目はTOCの4番目のセクション見出しに相当するが「■」見出しマーカーが付与されておらず未変換のまま残っている"
-            ],
-            "audit_at": "2026-11-13T10:51:20"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-13 14:59:56",
+            "published_to_note": true,
+            "published_at": "2026-11-13 15:02:14"
         },
         "5": {
             "note_used": true,
             "generated_at": "20261113_104707",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261113_104707.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「学生モデルの訓練」セクションで「ファインチューナーを行う」という誤ったカタカナ語(正しくは「ファインチューニングを行う」)が使われており、同記事内の他箇所(「ファインチューニングを行う」)と表記が不統一になっている"
-            ],
-            "audit_at": "2026-11-13T10:51:20"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-13 14:59:56",
+            "published_to_note": true,
+            "published_at": "2026-11-13 15:02:46"
         }
     }
 }
