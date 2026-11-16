@@ -167,7 +167,14 @@ def strip_duplicate_intro(draft_body: str) -> str:
     箇条書き)すべて切り落とす。この関数はlint_markdown()より前(見出しが
     まだ"#"/"##"のMarkdown形式のまま、"■"に変換される前)に呼ばれるため、
     検出パターンは"#+"と"■"の両方を許容する(2026-10-07、初版は"■"のみを
-    見ていたため常に素通りしていた)。"""
+    見ていたため常に素通りしていた)。
+    💡 2026-11-16: 見出し検出パターンは当初"見出し記号+番号"(例: "■ 1. ...")
+    必須だったが、現行のStep2プロンプトは実際のセクション見出しに番号を
+    付けない(番号付きリストは「目次」内の案内文だけ)ため、本文中のどの
+    見出しにも一度もマッチせずsection_idxが常にNoneになり、このフォール
+    バックが実質的に死んでいた(EgoX/Unbundling Multimodal Vision Encoding
+    /FFmpeg-GUI-Editor-Windows記事で確認)。番号必須条件を外し、見出し記号の
+    直後に何らかの文字がある行全般にマッチするよう一般化した。"""
     stripped = draft_body.strip()
     if not stripped:
         return stripped
@@ -208,7 +215,7 @@ def strip_duplicate_intro(draft_body: str) -> str:
     lines = stripped.splitlines()
     section_idx = None
     for i, line in enumerate(lines[:30]):
-        if re.match(r'^(?:#+|■)\s*\d+[\.\、]', line.strip()):
+        if re.match(r'^(?:#+|■)\s*\S', line.strip()):
             section_idx = i
             break
     if section_idx is not None and section_idx > 0:

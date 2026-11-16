@@ -315,6 +315,22 @@ def process_batch_scheduling(limit: int = None):
         except Exception as e:
             print(f"⚠️ Aborting batch due to error on post {idx}: {e}")
             print("🔍 Leaving the browser open for inspection. Close it manually when done.")
+            # 💡 2026-11-16: 無人実行では「ブラウザを手動で確認する」が実質不可能
+            # (CURATOR_UNATTENDED時はこの直後でcontext.close()される)。
+            # 原因不明のエラー(例: pointer_events check: element is covered by <DIV>
+            # のような、何らかのオーバーレイが投稿欄を覆っているケース)が起きても
+            # 事後調査の手がかりが無かったため、publish_to_note_free_batch.pyの
+            # 既存パターン(診断スクショをtempdirに保存)を踏襲してここにも追加する
+            try:
+                import tempfile as _tempfile
+                shot_path = os.path.join(
+                    _tempfile.gettempdir(),
+                    f"socialdog_post_fail_debug_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+                )
+                page.screenshot(path=shot_path)
+                print(f"📸 Screenshot saved to: {shot_path}")
+            except Exception as shot_err:
+                print(f"⚠️ Failed to save debug screenshot: {shot_err}")
             # 💡 バックグラウンド実行(標準入力がTTYでない)場合、input()は
             # EOFErrorで例外を投げて異常終了してしまう(実例で確認: 実際には
             # 投稿・アーカイブ移動まで完了していたのに、この後のinput()失敗で

@@ -158,3 +158,86 @@ Update available: cloakbrowser 0.5.8 → 0.7.2. Run: pip install --upgrade cloak
 📋 Composing post (Target Schedule: 2026-11-16 12:12)...
 ⚠️ Aborting batch due to error on post 1: Element 'internal:attr=[placeholder="投稿内容を入力"i]' failed pointer_events check: element is covered by <DIV>
 🔍 Leaving the browser open for inspection. Close it manually when done.
+To github.com:UKIaw5/curator-copy.git
+   91d29d2..dc7e632  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+❌ Error during socialdog_poster.py execution: Command '['/home/uk/Vault/curator-copy/.venv/bin/python3', 'automation/socialdog_poster.py']' returned non-zero exit status 1.
+⚠️ Continuing to Git sync so any work already done (scheduled posts, archived files) isn't left unsynced.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が6件あります:
+
+- note_article_20261116_103817.md (raw: output_prex_posts_20261116_101535.md, idx: 0)
+    理由: 17行目「アシスタントインターフェス」が誤字(正しくは「インターフェース」)で、同記事14行目の「チャットインターフェース」と表記が不統一になっている
+
+- note_article_20261116_104100.md (raw: output_prex_posts_20261116_101535.md, idx: 1)
+    理由: タイトル行および本文で「マルチ・グランチュリティー」という日本語として意味不明な片仮名語への誤変換がある(正しくは「マルチグラニュラリティ」、英語Multi-Granularityの誤変換、既知の「フラントモデル」型エラーと同種)
+
+- note_article_20261116_104331.md (raw: output_prex_posts_20261116_101535.md, idx: 2)
+    理由: 日本語品質: 「クロスエボデミンターナメント」「クロスエボデミンターナンメント」という存在しない意味不明な片仮名語が記事全体(タイトル・目次・本文複数箇所)で使われている。正しくは「クロスエンボディメント(cross-embodiment)」の誤変換であり、記事内の正しい表記「エンボディメント」とも矛盾している。さらにタイトル行では「ターナンメント」、本文では「ターナメント」と表記自体が記事内で一致していない
+    理由: フォーマット崩れ: 「■ 目次」の直後に、見出し無しで「この記事で得られること」相当の箇条書きリストがほぼ同内容(一部文言のみ変化)で重複して再掲されており、重複コンテンツの残骸が残っている
+
+- note_article_20261116_104625.md (raw: output_prex_posts_20261116_101535.md, idx: 3)
+    理由: 「■ この記事で得られること」の箇条書き3項目(プレトレーニング不要のエンコーダー設計/視覚専用容量の重要性/視覚モジュール配置位置の検討)が、見出し無しのまま13〜15行目でそのまま重複している(目次の直後、最初のセクション見出しの直前に宙に浮いた状態で出現)
+
+- note_article_20261116_104832.md (raw: output_prex_posts_20261116_101535.md, idx: 4)
+    理由: 「この記事で得られること」直下の箇条書き3点(4〜6行目)と「目次」直下の見出しなし箇条書き3点(13〜15行目)がほぼ同一内容で重複出現しており、構成が崩れている
+    理由: タイトル行で「無損失ビデオトリミング」(漢字表記)、本文では「ロスレスビデオトリミング」(カタカナ表記)と訳語が不一致
+
+- note_article_20261116_105128.md (raw: output_prex_posts_20261116_101535.md, idx: 5)
+    理由: 「ジャイルブレック」という誤った片仮名表記が2箇所(4行目・27行目)に出現している(正しくは「ジェイルブレイク」)。日本語として意味不明な片仮名語への誤変換に該当する
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261116_101501.log
+
+🐦 X投稿: 0件 予約
+
+📝 note.com: 0件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が6件あります:
+
+- note_article_20261116_103817.md (raw: output_prex_posts_20261116_101535.md, idx: 0)
+    理由: 17行目「アシスタントインターフェス」が誤字(正しくは「インターフェース」)で、同記事14行目の「チャットインターフェース」と表記が不統一になっている
+
+- note_article_20261116_104100.md (raw: output_prex_posts_20261116_101535.md, idx: 1)
+    理由: タイトル行および本文で「マルチ・グランチュリティー」という日本語として意味不明な片仮名語への誤変換がある(正しくは「マルチグラニュラリティ」、英語Multi-Granularityの誤変換、既知の「フラントモデル」型エラーと同種)
+
+- note_article_20261116_104331.md (raw: output_prex_posts_20261116_101535.md, idx: 2)
+    理由: 日本語品質: 「クロスエボデミンターナメント」「クロスエボデミンターナンメント」という存在しない意味不明な片仮名語が記事全体(タイトル・目次・本文複数箇所)で使われている。正しくは「クロスエンボディメント(cross-embodiment)」の誤変換であり、記事内の正しい表記「エンボディメント」とも矛盾している。さらにタイトル行では「ターナンメント」、本文では「ターナメント」と表記自体が記事内で一致していない
+    理由: フォーマット崩れ: 「■ 目次」の直後に、見出し無しで「この記事で得られること」相当の箇条書きリストがほぼ同内容(一部文言のみ変化)で重複して再掲されており、重複コンテンツの残骸が残っている
+
+- note_article_20261116_104625.md (raw: output_prex_posts_20261116_101535.md, idx: 3)
+    理由: 「■ この記事で得られること」の箇条書き3項目(プレトレーニング不要のエンコーダー設計/視覚専用容量の重要性/視覚モジュール配置位置の検討)が、見出し無しのまま13〜15行目でそのまま重複している(目次の直後、最初のセクション見出しの直前に宙に浮いた状態で出現)
+
+- note_article_20261116_104832.md (raw: output_prex_posts_20261116_101535.md, idx: 4)
+    理由: 「この記事で得られること」直下の箇条書き3点(4〜6行目)と「目次」直下の見出しなし箇条書き3点(13〜15行目)がほぼ同一内容で重複出現しており、構成が崩れている
+    理由: タイトル行で「無損失ビデオトリミング」(漢字表記)、本文では「ロスレスビデオトリミング」(カタカナ表記)と訳語が不一致
+
+- note_article_20261116_105128.md (raw: output_prex_posts_20261116_101535.md, idx: 5)
+    理由: 「ジャイルブレック」という誤った片仮名表記が2箇所(4行目・27行目)に出現し
+
+⚠️ エラー/❌行が3件検出されました(抜粋):
+   Warning: Failed to fetch arXiv (cs.AI) - 429 Client Error: Unknown Error for url: https://export.arxiv.org/api/query?search_query=cat%3Acs.AI&sortBy=submittedDate&sortOrder=descending&start=0&max_resu
+   ⚠️ Aborting batch due to error on post 1: Element 'internal:attr=[placeholder="投稿内容を入力"i]' failed pointer_events check: element is covered by <DIV>
+   ❌ Error during socialdog_poster.py execution: Command '['/home/uk/Vault/curator-copy/.venv/bin/python3', 'automation/socialdog_poster.py']' returned non-zero exit status 1.
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Mon Nov 16 11:02:07 JST 2026 ===
