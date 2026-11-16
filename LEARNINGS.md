@@ -12,6 +12,12 @@
 
 ## 記録
 
+### 2026-11-16 | strip_duplicate_intro()のStep Cが現行の無番号見出しに対応しておらず、「この記事で得られること」相当の箇条書きが本文冒頭に重複残留(/audit-drafts、note.com側)
+- 状況: 本日生成6記事全件が監査不合格、うち3件(idx2 EgoX/idx3 Unbundling Multimodal Vision Encoding/idx4 FFmpeg-GUI-Editor-Windows)で、「■ 目次」の直後・最初の本文セクション見出しの直前に、見出し無しの箇条書き3点(「■ この記事で得られること」とほぼ同内容、文言のみ微修正)がそのまま残留していた
+- 原因: `strip_duplicate_intro()`のStep C(フォールバック)は、本文の正しい開始位置を`^(?:#+|■)\s*\d+[\.\、]`(見出し記号の直後に番号が続く行)で検出する設計だが、現在のStep2生成プロンプトは実際のセクション見出しに番号を付けない(番号付きリストは「■ 目次」内の案内文だけで、本文側の見出しは「■ EgoXの概要と課題」のように無番号)。このため正規表現が本文中のどの見出しにも一度もマッチせず`section_idx`が常に`None`になり、Step Cのフォールバックが実質的に死んでいた。モデル出力のランダム性とは無関係に、無番号見出し+本文冒頭への箇条書き漏れが重なれば毎回同じ壊れ方をする構造的バグ(`generate_note_article.py`/`autogenerate_note_article.py`/`autogenerate_note_article_2.py`の3ファイル全てに同じ正規表現があり、同じ不備を共有)
+- 対策: [未実施、ユーザー承認待ち] 再現性のあるコードバグのため運用ルール上は1回目で即修正の対象だが、`strip_duplicate_intro()`はCLAUDE.md 5章で「慎重に扱う」指定のある関数のため、ユーザーに提案の上で修正する。修正案: section_idx検出の正規表現から`\s*\d+[\.\、]`の番号必須条件を外し、`^(?:#+|■)\s*\S`(見出し記号の後に何らか文字がある行全般)に一般化する
+- 再発回数: 初出(ただし本日1日で3件同時発生のため、コードバグとして優先度高)
+
 ### 2026-11-01 | run_today_pipeline_partb.pyがsocialdog_poster.pyをsystem python3で起動していた
 - 状況: 10/31分のX投稿予約で`.venv/bin/python3 run_today_pipeline_partb.py`を実行したところ、`socialdog_poster.py`が`ModuleNotFoundError: No module named 'cloakbrowser'`で失敗した
 - 原因: `run_today_pipeline_partb.py`の28行目が`subprocess.run(["python3", "automation/socialdog_poster.py"], ...)`と固定文字列"python3"でサブプロセスを起動していたため、`.venv/bin/python3 run_today_pipeline_partb.py`のように(`source .venv/bin/activate`せずに)直接venvのpythonで親プロセスを起動した場合、サブプロセス側はPATH上のsystem python3を使ってしまい、playwright/cloakbrowser等のvenv専用パッケージが見えない。`daily_auto_run.sh`は事前に`source .venv/bin/activate`しているため今まで気づかれなかった(venv化後はPATH上のpython3もvenvのものになるため)

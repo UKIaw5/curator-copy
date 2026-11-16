@@ -3633,5 +3633,69 @@
             "published_to_note": true,
             "published_at": "2026-11-15 11:37:23"
         }
+    },
+    "output_prex_posts_20261116_101535.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261116_103817",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261116_103817.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "17行目「アシスタントインターフェス」が誤字(正しくは「インターフェース」)で、同記事14行目の「チャットインターフェース」と表記が不統一になっている"
+            ],
+            "audit_at": "2026-11-16 10:55:08"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261116_104100",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261116_104100.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "タイトル行および本文で「マルチ・グランチュリティー」という日本語として意味不明な片仮名語への誤変換がある(正しくは「マルチグラニュラリティ」、英語Multi-Granularityの誤変換、既知の「フラントモデル」型エラーと同種)"
+            ],
+            "audit_at": "2026-11-16 10:55:08"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261116_104331",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261116_104331.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "日本語品質: 「クロスエボデミンターナメント」「クロスエボデミンターナンメント」という存在しない意味不明な片仮名語が記事全体(タイトル・目次・本文複数箇所)で使われている。正しくは「クロスエンボディメント(cross-embodiment)」の誤変換であり、記事内の正しい表記「エンボディメント」とも矛盾している。さらにタイトル行では「ターナンメント」、本文では「ターナメント」と表記自体が記事内で一致していない",
+                "フォーマット崩れ: 「■ 目次」の直後に、見出し無しで「この記事で得られること」相当の箇条書きリストがほぼ同内容(一部文言のみ変化)で重複して再掲されており、重複コンテンツの残骸が残っている"
+            ],
+            "audit_at": "2026-11-16 10:55:08"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261116_104625",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261116_104625.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「■ この記事で得られること」の箇条書き3項目(プレトレーニング不要のエンコーダー設計/視覚専用容量の重要性/視覚モジュール配置位置の検討)が、見出し無しのまま13〜15行目でそのまま重複している(目次の直後、最初のセクション見出しの直前に宙に浮いた状態で出現)"
+            ],
+            "audit_at": "2026-11-16 10:55:08"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261116_104832",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261116_104832.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「この記事で得られること」直下の箇条書き3点(4〜6行目)と「目次」直下の見出しなし箇条書き3点(13〜15行目)がほぼ同一内容で重複出現しており、構成が崩れている",
+                "タイトル行で「無損失ビデオトリミング」(漢字表記)、本文では「ロスレスビデオトリミング」(カタカナ表記)と訳語が不一致"
+            ],
+            "audit_at": "2026-11-16 10:55:08"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261116_105128",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261116_105128.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「ジャイルブレック」という誤った片仮名表記が2箇所(4行目・27行目)に出現している(正しくは「ジェイルブレイク」)。日本語として意味不明な片仮名語への誤変換に該当する"
+            ],
+            "audit_at": "2026-11-16 10:55:08"
+        }
     }
 }
