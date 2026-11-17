@@ -3695,5 +3695,73 @@
             "published_to_note": true,
             "published_at": "2026-11-16 14:47:51"
         }
+    },
+    "output_prex_posts_20261117_101539.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261117_103310",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261117_103310.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "目次(9行目)に簡体字中国語「系统」が混入している(正しくは「システム」であるべき)",
+                "3-6行目の「この記事で得られること」と14-17行目の「エクスプレス可能な内容」が同一内容の重複ブロックである(見出し名が異なるため既存の重複除去ロジックで検出されていない)"
+            ],
+            "audit_at": "2026-11-17 10:57:45"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261117_103545",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261117_103545.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "目次の直後に「この記事で得られること」の箇条書きが見出し無しでそのまま重複して出現している",
+                "「ハイブリッドインフェリエンス戦略」等の「インフェリエンス」という片仮名表記が意味不明な誤変換(正しくはインファレンス/推論)で記事内に繰り返し使用されている"
+            ],
+            "audit_at": "2026-11-17 10:57:45"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261117_103757",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261117_103757.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-17 10:57:45",
+            "published_to_note": true,
+            "published_at": "2026-11-17 11:02:34"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261117_104023",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261117_104023.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "目次の直後に「この記事で得られること」とほぼ同一の3行が見出し無しで重複挿入されている",
+                "「蒸留済みチェックポイント」が「蒸慮済みチェックポイント」という存在しない語に誤変換されている",
+                "「ディストリビューションモデル」という訳語が、本文で説明されている核心概念「知識蒸留/蒸留モデル」と異なる誤訳で記事内に混在している"
+            ],
+            "audit_at": "2026-11-17 10:57:45"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261117_104322",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261117_104322.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「リazoning」という破損した訳語がタイトル・見出し・本文全体で繰り返し使われている(正しくは「推論」または「リーズニング」)",
+                "「型付きアクショントレース」と「型付きアクショントレーズ」の表記が記事内で不統一",
+                "目次の直後に「この記事で得られること」と同じ3行が見出し無しで重複出現している"
+            ],
+            "audit_at": "2026-11-17 10:57:45"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261117_104549",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261117_104549.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "目次の直後に、3行目「この記事で得られること」の内容とほぼ同一の見出しなし箇条書きブロックが重複挿入されている"
+            ],
+            "audit_at": "2026-11-17 10:57:45"
+        }
     }
 }
