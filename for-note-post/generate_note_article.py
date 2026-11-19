@@ -212,7 +212,18 @@ def strip_duplicate_intro(draft_body: str) -> str:
     lines = stripped.splitlines()
     section_idx = None
     for i, line in enumerate(lines[:30]):
-        if re.match(r'^(?:#+|■)\s*\S', line.strip()):
+        s = line.strip()
+        if re.match(r'^(?:#+|■)\s*\S', s):
+            # 💡 2026-11-19: 見出し検出を2026-11-16に一般化した副作用で、
+            # draft_body自身が「■ この記事で得られること」や「■ 目次」の
+            # 見出しテキストまで(箇条書きだけでなく)丸ごと繰り返すケース
+            # (LLaM/ViRA/ATI/CADMAGEDDON記事等で確認、2026-11-19)で、その
+            # 重複見出し自体がsection_idx=0としてマッチしてしまい、
+            # 「すでに正しい位置から始まっている」と誤判定して本来の
+            # 重複除去が素通りしていた。イントロ由来の見出しは本当の
+            # 最初の本文セクションとして採用せず、次の見出しを探し続ける
+            if '得られること' in s or re.match(r'^(?:#+|■)\s*目次\s*$', s):
+                continue
             section_idx = i
             break
     if section_idx is not None and section_idx > 0:
