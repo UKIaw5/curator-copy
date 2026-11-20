@@ -160,6 +160,8 @@ Ollamaがローカルで起動している前提(`http://localhost:11434`)。
 
 **note.com/SocialDogの常駐プロファイル化(2026-10-07):** 以前は毎回フレッシュなPlaywright contextに`note_cookies.json`の静止スナップショットを注入するだけだったため、note.com側がセッションを延長しても反映されず、ファイル作成時点の固定の有効期限でいずれ切れていた。`for-note-post/publish_to_note*.py`を`launch_persistent_context(user_data_dir=.../note_user_data)`に変更し、`has_valid_session_cookie()`で「常駐プロファイルに有効なセッションが既にあればnote_cookies.jsonを再注入しない」ようにした。これにより、note.com側がセッションを延長する仕様であれば、日次の自動実行だけで有効期限が自然に伸び続け、手動でのcookie取り直し頻度が減る見込み。`automation/socialdog_poster.py`(元々`launch_persistent_context`を使用済み)にも同じガードを追加した。
 
+**⚠️ `has_valid_session_cookie()`はローカルのCookie有効期限しか見ない(2026-11-20訂正):** 上記の「常駐プロファイルに有効なセッションが既にあれば再注入しない」ガードには欠陥があった。常駐プロファイル側に残っている古いCookieの**ローカルの**有効期限がまだ先であれば、実際にはサーバー側で無効化されていても(他デバイス/ブラウザからの再ログインでサーバー側セッションが無効化されるケースが疑われる)このチェックは`True`を返し、`load_cookies_to_context()`(新しいCookieファイルの注入)が一度も呼ばれない。つまり**ユーザーがcookie-editorで新しいCookieを取得し、ファイルを配置しても、常駐プロファイル側の古いCookieがローカルに期限切れしていない限り反映されない**(2026-11-20にnote.com側でこの実例を確認: 新しいCookieを配置したのにライブ確認が失敗し続け、原因調査で発覚)。対策として、`for-note-post/publish_to_note_free_batch.py`に`_is_editor_reachable()`(editor.note.comへ実際にアクセスしログインページへリダイレクトされるか確認)と`ensure_note_session()`(ライブ確認→死んでいた場合のみ強制再注入→再確認)を追加し、バッチ開始前のプリフライトチェックと記事ごとのループ内の両方をこのロジックに統一した。`automation/socialdog_poster.py`にも同じ欠陥が実在することを確認し、ログインページへのリダイレクト検知時に`load_cookies_to_context()`を強制的に1回リトライするよう同様に修正した。**新しくセッションCookieの有効性を判定するコードを追加する際、ローカルの有効期限チェック(`has_valid_session_cookie()`)だけで「再注入が必要か」を判断しないこと** — 実際にページへアクセスしてログインページへリダイレクトされるかどうかで判定すること
+
 ## 7. その他
 
 - Gitへの自動コミット/プッシュをパイプラインスクリプト自身が行う(`run_today_pipeline_parta.py`の`git pull`、`partb*.py`の`git add/commit/push`)。手動での変更作業中に自動実行すると競合する可能性があるので注意

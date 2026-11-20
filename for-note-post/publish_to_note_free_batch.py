@@ -30,6 +30,55 @@ def has_valid_session_cookie(context, cookie_name):
             return True
     return False
 
+def _is_editor_reachable(context, timeout=30000):
+    page = context.new_page()
+    try:
+        page.goto("https://editor.note.com/new/", timeout=timeout)
+        page.wait_for_timeout(2000)
+        return "/login" not in page.url
+    finally:
+        page.close()
+
+def ensure_note_session(context):
+    """has_valid_session_cookie()はローカルのCookie有効期限しか見ないため、
+    サーバー側でセッションが無効化されているケース(2026-11-19/20に実際に発生、
+    原因は未確定だが他デバイス/ブラウザからの再ログインによるサーバー側の
+    セッション無効化が疑われる)を検知できない。実際に試してみると、常駐プロファイル
+    側に残っていた「ローカルの有効期限はまだ先だがサーバー側では死んでいる」古い
+    _note_session_v5がhas_valid_session_cookie()をTrueにしてしまい、
+    note_cookies.jsonを新しく配置してもload_cookies_to_context()が一度も
+    呼ばれず、新しいCookieが注入されないまま古い(死んだ)セッションで
+    動き続けてしまう実例を2026-11-20に確認した。
+    そのため、まず実際にeditor.note.comへアクセスして生死を確認し、死んでいた
+    場合のみnote_cookies.jsonを強制的に再注入してもう一度確認する(ローカルの
+    有効期限チェックだけで再注入の有無を決めない)。"""
+    try:
+        if _is_editor_reachable(context):
+            return True
+        print("⚠️ Current persistent-profile note.com session appears dead (live check redirected to login). Re-injecting note_cookies.json...")
+        if not load_cookies_to_context(context):
+            return False
+        return _is_editor_reachable(context)
+    except Exception as e:
+        print(f"⚠️ Session live-check failed with an error (treating as dead to be safe): {e}")
+        return False
+
+def check_note_session_alive():
+    """バッチ開始前に1回だけ呼び、死んでいればアイキャッチ生成やブラウザ起動を
+    記事ごとに繰り返す前に早期終了できるようにする(ensure_note_sessionの
+    使い捨てcontext版ラッパー)。"""
+    with sync_playwright() as p:
+        context = p.chromium.launch_persistent_context(
+            user_data_dir=USER_DATA_DIR,
+            headless=False,
+            viewport={"width": 1024, "height": 720},
+            args=["--window-size=1024,720"]
+        )
+        try:
+            return ensure_note_session(context)
+        finally:
+            context.close()
+
 def load_status():
     if os.path.exists(STATUS_FILE):
         with open(STATUS_FILE, "r", encoding="utf-8") as f:
@@ -219,6 +268,13 @@ def main(draft_only=False):
     if draft_only:
         print("🧪 DRAFT-ONLY MODE: will stop at '下書き保存', nothing will be published. Status/archive will NOT be updated.")
 
+    print("🔎 Checking note.com session is actually alive on the server (not just locally unexpired)...")
+    if not check_note_session_alive():
+        print("❌ note.com session appears to be invalid (live check was redirected to the login page).")
+        print("   for-note-post/note_cookies.json をcookie-editorで取得し直して配置してください。")
+        return
+    print("✅ note.com session is alive.")
+
     while True:
         raw_file, idx, file_path, status_data = get_next_unpublished_article()
         
@@ -259,10 +315,8 @@ def main(draft_only=False):
                 args=["--window-size=1024,720"]
             )
 
-            if has_valid_session_cookie(context, "_note_session_v5"):
-                print("✅ Persistent profile already has a valid note.com session, skipping cookie re-injection.")
-            elif not load_cookies_to_context(context):
-                print("❌ Failed to load cookies. Aborting batch.")
+            if not ensure_note_session(context):
+                print("❌ note.com session is invalid even after re-injecting note_cookies.json. Aborting batch.")
                 context.close()
                 break
             

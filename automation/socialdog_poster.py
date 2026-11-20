@@ -269,6 +269,21 @@ def process_batch_scheduling(limit: int = None):
     # 通過したように見えても、サーバー側では無効化されているケースがある)。
     # ここで明示的にログインページへのリダイレクトを検知し、原因を一目で
     # わかるメッセージにしておく
+    #
+    # 💡 2026-11-20: 上記の「ローカル期限チェックは通過したがサーバー側では無効」
+    # ケースだと、has_valid_session_cookie()がTrueを返すため、新しい
+    # socialdog_cookies.jsonを配置してもload_cookies_to_context()が一度も
+    # 呼ばれず、新しいCookieが永遠に反映されないバグをnote.com側
+    # (publish_to_note_free_batch.py)で発見した。同じ構造のここでも、
+    # 最初のログイン検知時に1回だけ強制再注入→再アクセスのリトライを行い、
+    # 常駐プロファイル側の「ローカルには有効だが死んでいる」古いCookieが
+    # 新しいCookieファイルの反映を妨げないようにする
+    if "/login" in page.url:
+        print("⚠️ Redirected to login page even though the local cookie expiry check passed. Force re-injecting automation/socialdog_cookies.json and retrying once...")
+        if load_cookies_to_context(context):
+            page.goto(QUEUE_URL, timeout=60000)
+            time.sleep(3.0)
+
     if "/login" in page.url:
         print(f"❌ Redirected to login page ({page.url}). SocialDog session has expired.")
         print("   cookie-editorでweb.social-dog.netから新しいcookieを取得し、")

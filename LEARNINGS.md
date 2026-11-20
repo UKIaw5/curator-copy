@@ -195,3 +195,9 @@
 - 原因: いずれもGemma/Qwenのランダムな生成ノイズ(1記事に複数の独立した誤字が重なった単純な不運で、検出器のカバレッジ漏れではない)
 - 対策: [未解決・スキップ] `note_status.json`のidx4は`audit_passed: false`のまま残し、公開しない。次回の`/cycle`実行時に手動で見出しの「自主ホスト」→「自ホスト」を修正してから再監査すれば解消できる見込み
 - 再発回数: 初出(1記事で3回連続不合格というパターン自体が初見)
+
+### 2026-11-20 | note.comの常駐プロファイルが「ローカル有効期限内の死んだセッション」を優先してしまい、新しいnote_cookies.jsonを配置しても再注入されないバグを発見・修正
+- 状況: ユーザーがcookie-editorで取得した新しいnote.com Cookie(`_note_session_v5`)を`note_cookies.json`に配置した後、`publish_to_note_free_batch.py`に追加したライブ確認機能(`check_note_session_alive`)で検証したところ、依然として`False`(死んでいる)と判定された。原因を調査すると、常駐プロファイル(`note_user_data`)側に残っていた**古い**`_note_session_v5`がローカルの有効期限的には数日先まで有効だったため、`has_valid_session_cookie()`が`True`を返し、`load_cookies_to_context()`(新しいCookieの注入)が一度も呼ばれていなかった。つまり、ユーザーが新しいCookieファイルを配置しても、常駐プロファイル側の古いCookieがローカルに期限切れしていない限り、**実際には一度も使われていなかった**可能性がある(2026-11-19のnote.comセッション切れ以降、何度か「ユーザー対応待ち」として報告していたが、実はユーザーが対応してもコード側の欠陥で反映されていなかった可能性がある)
+- 原因: `has_valid_session_cookie()`がローカルのCookie有効期限だけで「再注入が必要か」を判断しており、「サーバー側で無効化されているが、ローカルの期限はまだ先」という状態(今回の元々の障害そのもの)を再注入の判断軸として一切考慮していなかった、設計上のカバレッジ漏れ
+- 対策: [実施済み・2026-11-20] `publish_to_note_free_batch.py`に`_is_editor_reachable()`(editor.note.comへの実アクセスでログインページへリダイレクトされるか確認)と`ensure_note_session()`(まずライブ確認→死んでいた場合のみ`note_cookies.json`を強制再注入→再度ライブ確認)を追加。バッチ開始前の1回だけのプリフライトチェック(`check_note_session_alive()`)と、記事ごとのループ内の再注入判定(旧: `has_valid_session_cookie()`のみ→新: `ensure_note_session()`)の両方をこの新しいロジックに統一した。実機でこの修正により新しいCookieが正しく注入され、ライブ確認が`True`になることを確認済み
+- 再発回数: 初出。[確認済み・2026-11-20] `automation/socialdog_poster.py`にも同じ構造の欠陥が実在した(`has_valid_session_cookie()`→スキップ→`/login`検知時にそのまま失敗報告するだけで再注入しない)。こちらも、ログインページ検知時に`load_cookies_to_context()`を強制的に1回リトライするよう同日中に修正済み
