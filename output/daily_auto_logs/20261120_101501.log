@@ -196,3 +196,92 @@ Update available: cloakbrowser 0.5.8 → 0.7.2. Run: pip install --upgrade cloak
 
 ⏸️ SocialDogの予約投稿上限に達しました(「予約投稿の上限に達しました」を検知)
    5/6件は予約済み。残り1件は枠が空き次第、次回実行時に自動的に予約されます。
+To github.com:UKIaw5/curator-copy.git
+   77d9ceb..28d7452  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261120_103546.md (raw: output_prex_posts_20261120_101541.md, idx: 0)
+    理由: 「■ 筆者の視点」に簡体字中国語「市场」が混入(正しくは「市場」)
+
+- note_article_20261120_103800.md (raw: output_prex_posts_20261120_101541.md, idx: 1)
+    理由: 「強化学慮学習過程」という意味不明な誤変換(正しくは「強化学習過程」)
+    理由: 「トークン接頭辞言」という意味不明な誤変換(正しくは「トークン接頭辞」)
+
+- note_article_20261120_104325.md (raw: output_prex_posts_20261120_101541.md, idx: 3)
+    理由: full-duplexの訳語がタイトル・本文全体で「フルダブルクセス」という意味不明な片仮名語になっている(正しくは「フルデュプレックス」または「全二重」)
+
+- note_article_20261120_104538.md (raw: output_prex_posts_20261120_101541.md, idx: 4)
+    理由: 目次「キーマトリックス」と本文見出し「キーマリティクス」で同一用語の表記が不一致、かつ「キーマリティクス」は意味不明な誤変換
+
+- note_article_20261120_104744.md (raw: output_prex_posts_20261120_101541.md, idx: 5)
+    理由: 「カレキュレーション」という存在しない片仮名語(Curationの正しい訳語は「キュレーション」)
+    理由: タイトルの「サラスセン」はデータセット作者名sarahcenの片仮名転写として不自然
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261120_101501.log
+
+🐦 X投稿: 5件 予約
+   - 2026-11-21 09:41
+   - 2026-11-21 12:27
+   - 2026-11-21 15:45
+   - 2026-11-21 18:48
+   - 2026-11-21 22:00
+
+📝 note.com: 0件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が5件あります:
+
+- note_article_20261120_103546.md (raw: output_prex_posts_20261120_101541.md, idx: 0)
+    理由: 「■ 筆者の視点」に簡体字中国語「市场」が混入(正しくは「市場」)
+
+- note_article_20261120_103800.md (raw: output_prex_posts_20261120_101541.md, idx: 1)
+    理由: 「強化学慮学習過程」という意味不明な誤変換(正しくは「強化学習過程」)
+    理由: 「トークン接頭辞言」という意味不明な誤変換(正しくは「トークン接頭辞」)
+
+- note_article_20261120_104325.md (raw: output_prex_posts_20261120_101541.md, idx: 3)
+    理由: full-duplexの訳語がタイトル・本文全体で「フルダブルクセス」という意味不明な片仮名語になっている(正しくは「フルデュプレックス」または「全二重」)
+
+- note_article_20261120_104538.md (raw: output_prex_posts_20261120_101541.md, idx: 4)
+    理由: 目次「キーマトリックス」と本文見出し「キーマリティクス」で同一用語の表記が不一致、かつ「キーマリティクス」は意味不明な誤変換
+
+- note_article_20261120_104744.md (raw: output_prex_posts_20261120_101541.md, idx: 5)
+    理由: 「カレキュレーション」という存在しない片仮名語(Curationの正しい訳語は「キュレーション」)
+    理由: タイトルの「サラスセン」はデータセット作者名sarahcenの片仮名転写として不自然
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+⚠️ エラー/❌行が7件検出されました(抜粋):
+   | 0 | ❌ | 簡体字「**市场**」混入(正: 市場) |
+   | 1 | ❌ | 「**強化学慮**学習過程」「トークン**接頭辞言**」 |
+   | 3 | ❌ | full-duplex→「**フルダブルクセス**」(タイトル含め5箇所) |
+   | 4 | ❌ | 目次「キーマトリックス」↔本文「**キーマリティクス**」不一致 |
+   | 5 | ❌ | 「**カレキュレーション**」(正: キュレーション)3箇所 |
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Fri Nov 20 10:59:17 JST 2026 ===
