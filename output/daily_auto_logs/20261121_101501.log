@@ -235,3 +235,81 @@ Update available: cloakbrowser 0.5.8 → 0.7.3. Run: pip install --upgrade cloak
 
 ⏸️ SocialDogの予約投稿上限に達しました(「予約投稿の上限に達しました」を検知)
    5/6件は予約済み。残り1件は枠が空き次第、次回実行時に自動的に予約されます。
+To github.com:UKIaw5/curator-copy.git
+   21df2d5..c35156a  main -> main
+=== Starting Scheduling & Sync Pipeline (Part B: Schedule & Git) ===
+
+Step 1: Launching SocialDog Auto-Scheduler...
+✅ SocialDog Poster executed successfully.
+
+Step 2: Committing and pushing changes to Git...
+📦 Changes committed. Pushing to remote...
+🚀 Successfully pushed to Git!
+
+✅ Pipeline execution (Part B) completed!
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261120_104538.md (raw: output_prex_posts_20261120_101541.md, idx: 4)
+    理由: 見出し(1行目)の「自主ホスト」と本文(16/27/41/45/49/51行目)の「自ホスト」で表記不統一(2回の再監査サイクル上限に達したため今回はスキップ・未解決扱い)
+
+- note_article_20261121_103838.md (raw: output_prex_posts_20261121_101624.md, idx: 1)
+    理由: 中国語由来の「解耦」が2箇所に混入(正しくは「デカップリング」等)
+    理由: 「モジュラ」(長音脱落)と「モジュール性」で同一概念の表記が不統一
+
+- note_article_20261121_104127.md (raw: output_prex_posts_20261121_101624.md, idx: 2)
+    理由: 「キャusal生成メカニズム」というカタカナと英語が破綻して混在した意味不明な表記
+
+- note_article_20261121_104757.md (raw: output_prex_posts_20261121_101624.md, idx: 5)
+    理由: 「ハルウインション」という誤変換が複数箇所で使われている(正しくは「ハルシネーション」)
+    理由: 「フレームフレームワーク」という重複誤変換
+    理由: 「バイオメディリンツール」という意味不明な誤変換(正しくは「バイオメディカルツール」等)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+
+--- Notification report content ---
+📅 curator-copy 日次実行レポート
+ログ: 20261121_101501.log
+
+🐦 X投稿: 5件 予約
+   - 2026-11-22 07:16
+   - 2026-11-22 09:34
+   - 2026-11-22 12:20
+   - 2026-11-22 15:24
+   - 2026-11-22 18:58
+
+📝 note.com: 3件 公開
+
+--- Step 6: Final report (audit-failed articles still awaiting a fix) ---
+⚠️ 監査不合格で未公開のまま残っている記事が4件あります:
+
+- note_article_20261120_104538.md (raw: output_prex_posts_20261120_101541.md, idx: 4)
+    理由: 見出し(1行目)の「自主ホスト」と本文(16/27/41/45/49/51行目)の「自ホスト」で表記不統一(2回の再監査サイクル上限に達したため今回はスキップ・未解決扱い)
+
+- note_article_20261121_103838.md (raw: output_prex_posts_20261121_101624.md, idx: 1)
+    理由: 中国語由来の「解耦」が2箇所に混入(正しくは「デカップリング」等)
+    理由: 「モジュラ」(長音脱落)と「モジュール性」で同一概念の表記が不統一
+
+- note_article_20261121_104127.md (raw: output_prex_posts_20261121_101624.md, idx: 2)
+    理由: 「キャusal生成メカニズム」というカタカナと英語が破綻して混在した意味不明な表記
+
+- note_article_20261121_104757.md (raw: output_prex_posts_20261121_101624.md, idx: 5)
+    理由: 「ハルウインション」という誤変換が複数箇所で使われている(正しくは「ハルシネーション」)
+    理由: 「フレームフレームワーク」という重複誤変換
+    理由: 「バイオメディリンツール」という意味不明な誤変換(正しくは「バイオメディカルツール」等)
+
+次のサイクル: 原因を見てコードを修正 → 該当idxのnote_usedを外して再生成
+(autogenerate_note_article.py / --dry-run推奨) → /audit-drafts で再監査
+→ 合格したらpublish_to_note_free_batch.py / run_today_pipeline_partb.pyで公開
+
+--- Step 7: Notify (Discord + Notepad) ---
+--- end ---
+
+✅ Discord notification sent.
+
+=== Daily Auto Run finished: Sat Nov 21 11:00:02 JST 2026 ===
