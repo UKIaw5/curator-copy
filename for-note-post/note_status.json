@@ -3907,11 +3907,11 @@
             "note_used": true,
             "generated_at": "20261120_104538",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261120_104538.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "見出し(1行目)の「自主ホスト」と本文(16/27/41/45/49/51行目)の「自ホスト」で表記不統一(2回の再監査サイクル上限に達したため今回はスキップ・未解決扱い)"
-            ],
-            "audit_at": "2026-11-20T15:10:49.574327"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-21T12:27:10.816440",
+            "published_to_note": true,
+            "published_at": "2026-11-21 12:29:46"
         },
         "5": {
             "note_used": true,
@@ -3939,22 +3939,21 @@
             "note_used": true,
             "generated_at": "20261121_103838",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_103838.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "中国語由来の「解耦」が2箇所に混入(正しくは「デカップリング」等)",
-                "「モジュラ」(長音脱落)と「モジュール性」で同一概念の表記が不統一"
-            ],
-            "audit_at": "2026-11-21 10:51:05"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-21T12:27:10.816440",
+            "published_to_note": true,
+            "published_at": "2026-11-21 12:30:19"
         },
         "2": {
             "note_used": true,
             "generated_at": "20261121_104127",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_104127.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「キャusal生成メカニズム」というカタカナと英語が破綻して混在した意味不明な表記"
-            ],
-            "audit_at": "2026-11-21 10:51:05"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-21T12:27:10.816440",
+            "published_to_note": true,
+            "published_at": "2026-11-21 12:30:53"
         },
         "3": {
             "note_used": true,
@@ -3980,13 +3979,11 @@
             "note_used": true,
             "generated_at": "20261121_104757",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_104757.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "「ハルウインション」という誤変換が複数箇所で使われている(正しくは「ハルシネーション」)",
-                "「フレームフレームワーク」という重複誤変換",
-                "「バイオメディリンツール」という意味不明な誤変換(正しくは「バイオメディカルツール」等)"
-            ],
-            "audit_at": "2026-11-21 10:51:05"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-21T12:29:00.712984",
+            "published_to_note": true,
+            "published_at": "2026-11-21 12:31:26"
         }
     }
 }
