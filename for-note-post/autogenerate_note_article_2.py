@@ -124,6 +124,25 @@ def get_active_raw_file():
 # "场"をVibe-Trading記事の「市场」(正: 市場)で確認、2026-11-20
 SIMPLIFIED_CHINESE_ONLY_CHARS = "扩这们还很什传审渗总编视为创构态场"
 
+# 💡 2026-11-21導入: 文脈を問わず常に誤りである(他の正当な意味を持たない)
+# 既知の誤変換・誤字のみを登録する。文脈依存の誤用(同じ語が別の文脈では正しい、
+# 例: "インジェクション"はSQLインジェクション等では正しい単語だが"Ingestion"の
+# 訳語としては誤り)はここに含めないこと — 固定辞書による置換はそうした
+# ケースを安全に扱えないため、Agentツールによる監査に残す(2026-11-20の
+# linter導入検討時にユーザーと合意した方針)
+KNOWN_BAD_TERMS = {
+    "カレキュレーション": "キュレーション",  # AI供給チェーン記事, 2026-11-20
+    "インフェリエンス": "インファレンス(または推論)",  # yogurt記事2026-11-14、CADMAGEDDON/LuthorSQL記事2026-11-19
+    "フルダブルクセス": "フルデュプレックス",  # Kezek記事, 2026-11-20
+    "強化学慮学習過程": "強化学習過程",  # MRPD記事, 2026-11-20
+    "トークン接頭辞言": "トークン接頭辞",  # MRPD記事, 2026-11-20
+}
+
+def has_known_bad_term(text: str) -> list:
+    """KNOWN_BAD_TERMSに登録された既知の誤変換が含まれていないか確認する
+    (フラグのみ、ここでは置換しない)。"""
+    return [bad for bad in KNOWN_BAD_TERMS if bad in text]
+
 def has_foreign_script_mixed(text: str) -> bool:
     """日本語の文章に韓国語(ハングル)・簡体字中国語・キリル文字の単語が
     混入していないか検出する。実例: Gemmaが「にもかかわらず」の代わりに
@@ -144,6 +163,8 @@ def is_japanese_text(text: str, min_ratio: float = 0.3) -> bool:
     if not text:
         return False
     if has_foreign_script_mixed(text):
+        return False
+    if has_known_bad_term(text):
         return False
     japanese_chars = re.findall(r"[぀-ヿ一-鿿]", text)
     return (len(japanese_chars) / len(text)) >= min_ratio
