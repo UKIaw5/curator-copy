@@ -3923,5 +3923,70 @@
             "published_to_note": true,
             "published_at": "2026-11-20 16:05:39"
         }
+    },
+    "output_prex_posts_20261121_101624.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261121_103613",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_103613.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-21 10:51:05",
+            "published_to_note": true,
+            "published_at": "2026-11-21 10:57:05"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261121_103838",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_103838.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "中国語由来の「解耦」が2箇所に混入(正しくは「デカップリング」等)",
+                "「モジュラ」(長音脱落)と「モジュール性」で同一概念の表記が不統一"
+            ],
+            "audit_at": "2026-11-21 10:51:05"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261121_104127",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_104127.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「キャusal生成メカニズム」というカタカナと英語が破綻して混在した意味不明な表記"
+            ],
+            "audit_at": "2026-11-21 10:51:05"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261121_104336",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_104336.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-21 10:51:05",
+            "published_to_note": true,
+            "published_at": "2026-11-21 10:57:39"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261121_104548",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_104548.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-21 10:51:05",
+            "published_to_note": true,
+            "published_at": "2026-11-21 10:58:12"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261121_104757",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261121_104757.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "「ハルウインション」という誤変換が複数箇所で使われている(正しくは「ハルシネーション」)",
+                "「フレームフレームワーク」という重複誤変換",
+                "「バイオメディリンツール」という意味不明な誤変換(正しくは「バイオメディカルツール」等)"
+            ],
+            "audit_at": "2026-11-21 10:51:05"
+        }
     }
 }
