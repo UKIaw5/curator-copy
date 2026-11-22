@@ -3985,5 +3985,27 @@
             "published_to_note": true,
             "published_at": "2026-11-21 12:31:26"
         }
+    },
+    "output_prex_posts_20261122_101540.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261122_102354",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261122_102354.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "元データの「NVIDIA/AMD drivers」が生成記事で「NVIDIA/NVIDIAドライバ」に誤変換されており、AMDが脱落してNVIDIAが重複表記されている"
+            ],
+            "audit_at": "2026-11-22 10:28:57"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261122_102557",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261122_102557.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文30行目で固有名詞「Neonclipping」が「Neoncliping」に誤変換されており、記事内で表記が揺れている"
+            ],
+            "audit_at": "2026-11-22 10:28:57"
+        }
     }
 }

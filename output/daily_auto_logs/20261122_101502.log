@@ -1,0 +1,110 @@
+=== Daily Auto Run: Sun Nov 22 10:15:02 JST 2026 ===
+
+--- Step 1: Part A (fetch + curate + Stage1) ---
+=== Starting Daily Curation Pipeline (Part A: Fetch & Refine) ===
+Step 1: Pulling latest changes from Git...
+  [Git] Already up to date.
+📊 Loaded 391 published URLs from history/archive.
+
+Step 2: Fetching data from multiple sources...
+  - Fetched 5 items from Hacker News
+  - Fetched 15 items from arXiv
+  - Fetched 10 items from GitHub Trending
+  - Fetched 10 items from Hugging Face Papers
+🔍 Candidates after deduplication: 33 / 40 items.
+🤖 Qwen (qwen3.8:27b) is curating the best items from 33 candidates...
+✨ Qwen Curated: Selected 6 items out of 33 (target: 6).
+🎯 Curated 6 items for output.
+
+Step 3: Generating detailed tech summaries (Stage 1 - Qwen)...
+📝 Generating detailed English summary for: GitHub Trending: ItsNotRexed/Leonida...
+⏩ Skipping duplicate URL: https://huggingface.co/papers/2611.21885
+⏩ Skipping duplicate URL: https://arxiv.org/abs/2611.26596v1
+⏩ Skipping duplicate URL: https://arxiv.org/abs/2611.26540v1
+📝 Generating detailed English summary for: GitHub Trending: iamajmeena/neonclipping...
+⏩ Skipping duplicate URL: https://arxiv.org/abs/2611.26601v1
+📦 Created history backup: output/raw/seen_urls.json.bak
+💾 Saved 2 detailed summaries to `output/raw/output_prex_posts_20261122_101540.md`.
+
+📊 Extracted 2 summaries from Raw content.
+
+💾 Saved Stage 1 prex to `output/raw/output_prex_posts_20261122_101540.md`
+
+Stage2/3(Xポスト精製・校正)はClaude側の /refine-x-posts Skillで 行う設計に変更済み(daily_auto_run.sh参照)。このスクリプトはここで終了する。
+
+✅ Part A (Stage 1) completed successfully!
+
+--- Step 2: note.com article generation ---
+=== Note Article Generator v2.6 (Auto Batch Mode) ===
+
+🚀 Auto Processing: (Item #1) It is important to clarify immediately that the premise of the article...
+💡 Step 1: Generating specific title and TOC with qwen2.5-coder:14b...
+🤖 Step 2: Generating deep-dive body matching TOC with gemma4:12b...
+🧐 Step 3: Reviewing with qwen2.5-coder:14b...
+🪝 Step 4: Optimizing Paywall Cliffhanger with qwen2.5-coder:14b...
+💡 Step 5: Generating author's perspective with qwen2.5-coder:14b...
+🔗 Step 6: Extracting links with qwen2.5-coder:14b...
+🏷️ Step 6.5: Generating hashtags with qwen2.5-coder:14b...
+🧹 Step 7: Linting and assembling final article...
+💾 Saved Final Article: /home/uk/Vault/curator-copy/for-note-post/output/note_article_20261122_102354.md
+
+🚀 Auto Processing: (Item #2) ### Technical Summary: Neonclipping (iamajmeena/neonclipping)...
+💡 Step 1: Generating specific title and TOC with qwen2.5-coder:14b...
+🤖 Step 2: Generating deep-dive body matching TOC with gemma4:12b...
+🧐 Step 3: Reviewing with qwen2.5-coder:14b...
+🪝 Step 4: Optimizing Paywall Cliffhanger with qwen2.5-coder:14b...
+💡 Step 5: Generating author's perspective with qwen2.5-coder:14b...
+🔗 Step 6: Extracting links with qwen2.5-coder:14b...
+🏷️ Step 6.5: Generating hashtags with qwen2.5-coder:14b...
+🧹 Step 7: Linting and assembling final article...
+💾 Saved Final Article: /home/uk/Vault/curator-copy/for-note-post/output/note_article_20261122_102557.md
+ℹ️ No active raw files found. All items processed!
+✅ All batch generation tasks completed successfully!
+
+--- Step 3: Audit (/audit-drafts) + X post refine (/refine-x-posts), one session ---
+## 完了報告
+
+**`/audit-drafts`**: 2件監査、**2件とも不合格**。
+- idx0(GTA VI/Leonida): 「NVIDIA/AMD」→「NVIDIA/NVIDIA」の誤変換(AMD脱落)
+- idx1(Neonclipping): 本文1箇所で「Neonclipping」→「Neoncliping」の誤字
+
+`note_status.json`に`audit_passed: false`と理由を記録済み。`publish_to_note_free_batch.py`のゲートにより自動公開対象から除外される。
+
+**`/refine-x-posts`**: `output_prex_posts_20261122_101540.md`(2件)を精製し`output/output_x_posts_20261122_101540.md`を生成。
+- idx1(Neonclipping)で**idx取り違え事故**が発生(CLAUDE.md既知のパターン) — エージェントが誤ってidx0(GTA VI)の内容を生成したため、明示的な照合指示付きで再実行し修正。
+- GTA VI記事: 元データが「架空・不可能な前提」と明記していたため、その前提自体がフェイクであることを正直に伝える投稿にした(実効120文字)
+- Neonclipping記事: 実効127文字
+
+両件とも文字数制約内で、取り違えなしを確認済み。目視でのXポスト内容確認を推奨。
+
+--- Step 4: note.com publish (audit_passed articles only) ---
+=== Starting Note Free Batch Auto-Publisher == Selector Loop ===
+🔎 Checking note.com session is actually alive on the server (not just locally unexpired)...
+✅ note.com session is alive.
+
+✅ All articles have been successfully published as FREE posts!
+✅ All free batch publication tasks finished!
+
+--- Step 5: X post scheduling (SocialDog) + Git sync ---
+
+  CloakBrowser — stealth Chromium for automation
+  https://github.com/CloakHQ/CloakBrowser
+
+  Running the free binary (v146). The latest binary (v150) is free too, with 1 concurrent session.
+  Get your key: run  cloakbrowser login  or visit https://cloakbrowser.dev/free
+  For more than one concurrent session → https://cloakbrowser.dev
+  Star us if CloakBrowser helps your project!
+
+Update available: cloakbrowser 0.5.8 → 0.7.3. Run: pip install --upgrade cloakbrowser
+📖 Reading file: `output/output_x_posts_20261121_101624.md`
+🚀 Found 1 post(s) to schedule via SocialDog.
+✅ Persistent profile already has a valid SocialDog session, skipping cookie re-injection.
+🌐 Navigating to https://web.social-dog.net/teams/1418529/publish/queue/list ...
+🗓️ Target schedule times:
+   - 2026-11-22 (Sun) 21:48
+
+--- Processing Post 1/1 ---
+📋 Composing post (Target Schedule: 2026-11-22 21:48)...
+✅ Scheduled for 2026-11-22 21:48!
+
+🎉 All posts scheduled! Archived file to `output/archive/output_x_posts_20261121_101624.md`!
