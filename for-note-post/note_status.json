@@ -4007,5 +4007,47 @@
             "published_to_note": true,
             "published_at": "2026-11-22 20:23:41"
         }
+    },
+    "output_prex_posts_20261123_101602.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261123_102920",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261123_102920.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-23 10:39:02",
+            "published_to_note": true,
+            "published_at": "2026-11-23 10:44:28"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261123_103203",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261123_103203.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-23 10:39:02",
+            "published_to_note": true,
+            "published_at": "2026-11-23 10:45:01"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261123_103430",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261123_103430.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "本文13行目でリポジトリ名が「leanprover-community/rihmann-hypothesis」と誤字になっている(正しくは\"riemann-hypothesis\"、タイトル行や他の箇所では正しく表記されているため一貫性もない)"
+            ],
+            "audit_at": "2026-11-23 10:39:02"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261123_103700",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261123_103700.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-23 10:39:02",
+            "published_to_note": true,
+            "published_at": "2026-11-23 10:45:34"
+        }
     }
 }
