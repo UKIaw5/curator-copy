@@ -4033,11 +4033,11 @@
             "note_used": true,
             "generated_at": "20261123_103430",
             "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261123_103430.md",
-            "audit_passed": false,
-            "audit_reasons": [
-                "本文13行目でリポジトリ名が「leanprover-community/rihmann-hypothesis」と誤字になっている(正しくは\"riemann-hypothesis\"、タイトル行や他の箇所では正しく表記されているため一貫性もない)"
-            ],
-            "audit_at": "2026-11-23 10:39:02"
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-27T10:31:01.430484",
+            "published_to_note": true,
+            "published_at": "2026-11-27 10:33:02"
         },
         "3": {
             "note_used": true,
@@ -4048,6 +4048,71 @@
             "audit_at": "2026-11-23 10:39:02",
             "published_to_note": true,
             "published_at": "2026-11-23 10:45:34"
+        }
+    },
+    "output_prex_posts_20261128_101539.md": {
+        "0": {
+            "note_used": true,
+            "generated_at": "20261128_103452",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261128_103452.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "日本語誤字：「必要る」は存在しない活用形。正しくは「必要になる」「必要とされる」等"
+            ],
+            "audit_at": "2026-11-28 10:50:02"
+        },
+        "1": {
+            "note_used": true,
+            "generated_at": "20261128_103744",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261128_103744.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "ヘッジ剥がれ：「potentially」でヘッジされた情報が断定形に変換",
+                "固有名詞表記ゆれ：「VIctory-NVIDIA」vs「Victory-NVIDIA」"
+            ],
+            "audit_at": "2026-11-28 10:50:02"
+        },
+        "2": {
+            "note_used": true,
+            "generated_at": "20261128_104031",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261128_104031.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-28 10:50:02",
+            "published_to_note": true,
+            "published_at": "2026-11-28 10:55:16"
+        },
+        "3": {
+            "note_used": true,
+            "generated_at": "20261128_104226",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261128_104226.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "表記ゆれ：「ベアメタル」が見出しで「バレーメタル」に誤変換",
+                "表記ゆれ：「ブロート」と「ブローツ」の混在"
+            ],
+            "audit_at": "2026-11-28 10:50:02"
+        },
+        "4": {
+            "note_used": true,
+            "generated_at": "20261128_104453",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261128_104453.md",
+            "audit_passed": true,
+            "audit_reasons": [],
+            "audit_at": "2026-11-28 10:50:02",
+            "published_to_note": true,
+            "published_at": "2026-11-28 10:55:49"
+        },
+        "5": {
+            "note_used": true,
+            "generated_at": "20261128_104736",
+            "generated_file": "/home/uk/Vault/curator-copy/for-note-post/output/note_article_20261128_104736.md",
+            "audit_passed": false,
+            "audit_reasons": [
+                "日本語誤字：「エージェ語」は「エージェント」の誤変換",
+                "表記誤字：「インパリケーション」は「インプリケーション」の誤変換"
+            ],
+            "audit_at": "2026-11-28 10:50:02"
         }
     }
 }
